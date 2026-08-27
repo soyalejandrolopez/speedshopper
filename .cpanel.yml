@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/public_html/website_54d8238e
+    - export DEPLOYPATH=$HOME/public_html/website_54d8238e/core
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp -R . $DEPLOYPATH
     - /bin/rm -rf $DEPLOYPATH/.git
