@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-public-layout title="{{ __('Send us your purchase request') }}">
     <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-white to-white py-16 lg:py-24">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -start-32 top-0 h-96 w-96 rounded-full bg-emerald-100/80 blur-3xl"></div>

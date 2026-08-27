@@ -1,8 +1,28 @@
-<x-public-layout>
+<x-public-layout title="{{ __('Personal Shopper in Baytown, TX') }}">
+    @php
+        $organization = [
+            '@context' => 'https://schema.org',
+            '@type' => 'ProfessionalService',
+            'name' => \App\Models\Setting::get('company_name', config('app.name')),
+            'description' => __('Personal shopper en Baytown, TX: compramos, recibimos y enviamos tus compras de EE. UU. a Latinoamérica.'),
+            'url' => url('/'),
+            'telephone' => \App\Models\Setting::get('whatsapp_phone'),
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => \App\Models\Setting::get('warehouse_address'),
+                'addressLocality' => 'Baytown',
+                'addressRegion' => 'TX',
+                'addressCountry' => 'US',
+            ],
+            'areaServed' => 'Latin America',
+            'priceRange' => '$$',
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($organization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <section class="gradient-hero relative overflow-hidden">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-            <img src="{{ asset('images/hero-bg.jpg') }}" alt=""
-                 class="h-full w-full object-cover object-center" loading="lazy">
+            <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
+                 class="h-full w-full object-cover object-center" fetchpriority="high" decoding="async">
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>

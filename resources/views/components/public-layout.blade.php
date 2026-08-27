@@ -1,3 +1,5 @@
+@props(['title' => null])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -5,9 +7,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ isset($title) ? $title . ' — ' : '' }}{{ \App\Models\Setting::get('company_name', config('app.name')) }}</title>
+        <title>{{ $title ? $title.' — ' : '' }}{{ \App\Models\Setting::get('company_name', config('app.name')) }}</title>
 
         <x-brand-favicon />
+
+        <x-seo :title="$title" />
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" rel="stylesheet" />
