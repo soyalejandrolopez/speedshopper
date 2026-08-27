@@ -143,7 +143,7 @@ class SettingsIndex extends Component
                 'username' => $username,
                 'password' => $password,
                 'encryption' => $encryption ?: null,
-                'timeout' => null,
+                'timeout' => 10,
                 'local_domain' => env('MAIL_EHLO_DOMAIN'),
             ],
             'mail.from' => [
