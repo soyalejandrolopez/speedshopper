@@ -1,0 +1,12 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/website_54d8238e
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R . $DEPLOYPATH
+    - /bin/rm -rf $DEPLOYPATH/.git
+    - cd $DEPLOYPATH && if [ -f .env ]; then command -v composer >/dev/null 2>&1 && composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist || true; fi
+    - cd $DEPLOYPATH && if [ -f .env ]; then php artisan config:clear; php artisan view:clear; fi
+    - cd $DEPLOYPATH && if [ -f .env ]; then php artisan migrate --force; fi
+    - cd $DEPLOYPATH && if [ -f .env ]; then test -L public/storage || php artisan storage:link; fi
+    - cd $DEPLOYPATH && if [ -f .env ]; then php artisan config:cache; php artisan route:cache; php artisan view:cache; fi
