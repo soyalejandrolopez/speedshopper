@@ -111,3 +111,43 @@ git push -u origin main
 - `php artisan storage:link` / `config:cache` requieren terminal; en muchos planes cPanel está disponible en **Terminal** o por **SSH**.
 - Si la app marca 500 tras desplegar, revisa `storage/logs/laravel.log` y los permisos de `storage/`.
 - El login usa correo; la verificación de email requiere SMTP configurado.
+
+---
+
+## Despliegue rápido en `~/public_html/website_54d8238e`
+
+Tu sitio estará en **`public_html/website_54d8238e`**. Sigue esto:
+
+1. **Sube `speedshopper-cpanel.zip`** a `public_html/website_54d8238e` (File Manager → Subir) y descomprímelo ahí (que los archivos queden directamente en esa carpeta, sin una carpeta intermedia).
+
+2. **Pon el Document Root en la carpeta `public`** (recomendado):
+   - cPanel → **Domains** → tu dominio → editar → **Document Root** → `public_html/website_54d8238e/public`
+   - Si no puedes cambiarlo, el `.htaccess` raíz ya redirige a `public/`.
+
+3. **Terminal/SSH** dentro de `~/public_html/website_54d8238e`:
+   ```bash
+   # Permisos
+   find storage bootstrap/cache -type d -exec chmod 775 {} +
+   chmod 664 storage/framework/views/*.php storage/framework/sessions/* 2>/dev/null
+
+   # Dependencias (si el hosting trae Composer)
+   composer install --no-dev --optimize-autoloader
+
+   # Configuración
+   cp .env.example .env
+   #  → edita .env: APP_ENV=production, APP_DEBUG=false, APP_URL=https://tudominio.com,
+   #    DB_* (MySQL de cPanel), MAIL_* (SMTP)
+
+   # Llave, migraciones, storage y build
+   php artisan key:generate
+   php artisan migrate --force
+   php artisan storage:link
+   npm ci && npm run build        # si hay Node; si no, sube la carpeta public/build
+
+   # Optimización
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+4. Si tu plan **no tiene Terminal ni Composer**, dime y preparo un ZIP con `vendor/` y `public/build` incluidos para que la app corra sin terminal.
