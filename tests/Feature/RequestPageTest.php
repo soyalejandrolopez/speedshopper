@@ -100,9 +100,9 @@ it('creates a customer and a request from the page form', function () {
         ->set('form.name', 'María González')
         ->set('form.email', 'maria@example.com')
         ->set('form.whatsapp', '+50255550123')
-        ->set('form.product_name', 'Nike Air Max 270 — Talla 7.5')
-        ->set('form.product_url', 'https://nike.com/airmax')
-        ->set('form.description', 'Color negro')
+        ->set('items.0.product_name', 'Nike Air Max 270 — Talla 7.5')
+        ->set('items.0.product_url', 'https://nike.com/airmax')
+        ->set('items.0.description', 'Color negro')
         ->call('submit')
         ->assertHasNoErrors()
         ->assertSet('sent', true);
@@ -121,8 +121,45 @@ it('creates a customer and a request from the page form', function () {
         ->and($request->status->value)->toBe('new');
 });
 
+it('creates multiple purchase requests at once when multiple products are added', function () {
+    Livewire::test(PublicRequestForm::class)
+        ->set('form.name', 'Carlos Gómez')
+        ->set('form.email', 'carlos@example.com')
+        ->set('form.whatsapp', '+50255559999')
+        ->set('items.0.product_name', 'Zapatos Nike')
+        ->set('items.0.product_url', 'https://nike.com')
+        ->call('addItem')
+        ->set('items.1.product_name', 'Camisa Adidas')
+        ->set('items.1.product_url', 'https://adidas.com')
+        ->call('addItem')
+        ->set('items.2.product_name', 'Gorra Puma')
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('sent', true)
+        ->assertSet('createdCount', 3);
+
+    $customer = Customer::where('email', 'carlos@example.com')->first();
+    expect($customer)->not->toBeNull();
+
+    $requests = PurchaseRequest::where('customer_id', $customer->id)->get();
+    expect($requests)->toHaveCount(3)
+        ->and($requests->pluck('product_name')->toArray())->toBe(['Zapatos Nike', 'Camisa Adidas', 'Gorra Puma']);
+});
+
+it('can remove a product from the list', function () {
+    Livewire::test(PublicRequestForm::class)
+        ->set('items.0.product_name', 'Producto 1')
+        ->call('addItem')
+        ->set('items.1.product_name', 'Producto 2')
+        ->assertCount('items', 2)
+        ->call('removeItem', 0)
+        ->assertCount('items', 1)
+        ->assertSet('items.0.product_name', 'Producto 2');
+});
+
 it('requires a name, email and product on the request form', function () {
     Livewire::test(PublicRequestForm::class)
+        ->set('items.0.product_name', '')
         ->call('submit')
-        ->assertHasErrors(['form.name', 'form.email', 'form.product_name']);
+        ->assertHasErrors(['form.name', 'form.email', 'items.0.product_name']);
 });
