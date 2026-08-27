@@ -1,0 +1,62 @@
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Volt\Component;
+
+new #[Layout('layouts.guest')] class extends Component
+{
+    public string $password = '';
+
+    /**
+     * Confirm the current user's password.
+     */
+    public function confirmPassword(): void
+    {
+        $this->validate([
+            'password' => ['required', 'string'],
+        ]);
+
+        if (! Auth::guard('web')->validate([
+            'email' => Auth::user()->email,
+            'password' => $this->password,
+        ])) {
+            throw ValidationException::withMessages([
+                'password' => __('auth.password'),
+            ]);
+        }
+
+        session(['auth.password_confirmed_at' => time()]);
+
+        $this->redirectIntended(default: Auth::user()->dashboardRoute(), navigate: true);
+    }
+}; ?>
+
+<div>
+    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+    </div>
+
+    <h1 class="mt-4 text-xl font-bold text-gray-900">{{ __('Confirm Password') }}</h1>
+
+    <p class="mt-2 text-sm leading-relaxed text-gray-500">
+        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+    </p>
+
+    <form wire:submit="confirmPassword" class="mt-6 space-y-4">
+        <div>
+            <label for="password" class="label">{{ __('Password') }}</label>
+            <input wire:model="password" id="password" type="password" name="password" required autofocus autocomplete="current-password"
+                   placeholder="••••••••"
+                   class="input">
+            <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+        </div>
+
+        <button type="submit" class="btn-primary w-full">
+            {{ __('Confirm') }}
+        </button>
+    </form>
+</div>
