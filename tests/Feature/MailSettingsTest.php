@@ -79,3 +79,13 @@ it('rejects the placeholder test email', function () {
 
     Mail::assertNothingSent();
 });
+
+it('renders absolute logo url in email header template', function () {
+    seedRoles();
+    Setting::set('logo_path', 'branding/logo.png');
+
+    $html = view('vendor.mail.html.header', ['url' => 'https://speedingshopper.com'])->render();
+
+    expect($html)->toContain('src="http')
+        ->and($html)->toContain('/storage/branding/logo.png');
+});
