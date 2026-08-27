@@ -64,13 +64,13 @@ class SettingsIndex extends Component
             'whatsapp_api_token' => Setting::get('whatsapp_api_token', ''),
             'theme_color' => Setting::get('theme_color', '#059669'),
             'mail_enabled' => Setting::get('mail_enabled', '0'),
-            'mail_host' => Setting::get('mail_host', ''),
-            'mail_port' => Setting::get('mail_port', '587'),
-            'mail_username' => Setting::get('mail_username', ''),
-            'mail_password' => Setting::get('mail_password', ''),
-            'mail_encryption' => Setting::get('mail_encryption', 'tls'),
-            'mail_from_address' => Setting::get('mail_from_address', ''),
-            'mail_from_name' => Setting::get('mail_from_name', ''),
+            'mail_host' => Setting::get('mail_host', env('MAIL_HOST', '')),
+            'mail_port' => Setting::get('mail_port', env('MAIL_PORT', '587')),
+            'mail_username' => Setting::get('mail_username', env('MAIL_USERNAME', '')),
+            'mail_password' => Setting::get('mail_password', env('MAIL_PASSWORD', '')),
+            'mail_encryption' => Setting::get('mail_encryption', env('MAIL_ENCRYPTION', 'tls')),
+            'mail_from_address' => Setting::get('mail_from_address', env('MAIL_FROM_ADDRESS', '')),
+            'mail_from_name' => Setting::get('mail_from_name', env('MAIL_FROM_NAME', '')),
         ];
     }
 
