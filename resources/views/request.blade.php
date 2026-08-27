@@ -8,7 +8,7 @@
 
         <div class="relative mx-auto max-w-6xl px-4 sm:px-6">
             <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
-                <div class="flex flex-col justify-center" data-reveal>
+                <div class="order-2 flex flex-col justify-center lg:order-1" data-reveal>
                     <span class="section-eyebrow">{{ __('Chat with the assistant') }}</span>
                     <h1 class="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight text-gray-900 sm:text-5xl">
                         {{ __('Send us your purchase request') }}
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-start lg:sticky lg:top-24" data-reveal style="--reveal-delay: 120ms">
+                <div class="order-1 flex items-start lg:order-2 lg:sticky lg:top-24" data-reveal style="--reveal-delay: 120ms">
                     <div class="w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_-20px_rgba(16,185,129,0.35)] ring-1 ring-black/5">
                         <div class="relative flex items-center justify-between overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-600 to-teal-600 px-5 py-4 text-white">
                             <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.18)_0%,transparent_55%)]"></div>
