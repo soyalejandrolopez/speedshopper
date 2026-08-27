@@ -59,6 +59,8 @@ class MailConfigServiceProvider extends ServiceProvider
                     'name' => Setting::get('mail_from_name', Setting::get('company_name', config('app.name'))),
                 ],
             ]);
+
+            app()->forgetInstance('mailer');
         } catch (\Throwable) {
             // Settings table may not be available yet (fresh install / migrations).
         }

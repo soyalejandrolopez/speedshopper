@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateSettingsRequest;
 use App\Mail\TestMail;
 use App\Models\Setting;
 use App\Providers\MailConfigServiceProvider;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
@@ -118,6 +119,7 @@ class SettingsIndex extends Component
         }
 
         $this->applyMailConfigFromForm();
+        app()->forgetInstance('mailer');
 
         try {
             Mail::to($this->testEmail)->send(new TestMail);
@@ -125,7 +127,7 @@ class SettingsIndex extends Component
             $this->mailTestStatus = 'sent';
             $this->mailTestMessage = __('Test email sent successfully').' ('.$this->testEmail.')';
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('SMTP test failed: '.$e->getMessage());
+            Log::error('SMTP test failed: '.$e->getMessage());
 
             $this->mailTestStatus = 'error';
             $this->mailTestMessage = __('Test email could not be sent').': '.$e->getMessage();
