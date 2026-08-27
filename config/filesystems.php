@@ -42,7 +42,8 @@ return [
             'driver' => 'local',
             // Carpeta real dentro de public/ para no depender de symlinks (necesario en cPanel/Bluehost).
             'root' => public_path('storage'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // URL relativa: las imágenes se sirven siempre del mismo origen/protocolo (evita mixed content y bloqueos de CSP).
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
