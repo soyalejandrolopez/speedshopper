@@ -43,9 +43,8 @@ fi
 
 # 5) Artisan (solo si existe .env)
 if [ -f .env ]; then
-    echo "==> Artisan (migrate + caché)"
-    php artisan config:clear || true
-    php artisan view:clear || true
+    echo "==> Artisan (limpiar caché + migrar + recaché)"
+    php artisan optimize:clear || true
     php artisan migrate --force || true
     php artisan config:cache || true
     php artisan route:cache || true
