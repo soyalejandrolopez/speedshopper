@@ -21,12 +21,15 @@ find storage -type f -exec chmod 664 {} + || true
 echo "==> Carpetas públicas"
 mkdir -p storage/app/public/packages storage/app/public/branding
 
-# 3) Enlace storage (solo si es un symlink, para no borrar carpetas reales)
-echo "==> Storage link"
+# 3) Carpeta pública de uploads (real, sin symlinks — evita el 403 en cPanel/Bluehost)
+echo "==> Carpeta pública de uploads"
 if [ -L public/storage ]; then
     rm -f public/storage
 fi
-php artisan storage:link || true
+mkdir -p public/storage/packages public/storage/branding
+chmod -R 775 public/storage
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
 
 # 4) Dependencias
 echo "==> Composer"
