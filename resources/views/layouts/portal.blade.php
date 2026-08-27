@@ -1,3 +1,4 @@
+<x-hamster-ascii />
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -126,8 +127,16 @@
                     </div>
                 </header>
 
-                <main class="flex-1 p-4 pb-24 sm:p-6 md:pb-6 print:p-0">
-                    {{ $slot }}
+                <main class="flex-1 p-4 pb-24 sm:p-6 md:pb-6 print:p-0 flex flex-col">
+                    <div class="flex-1">
+                        {{ $slot }}
+                    </div>
+                    <div class="mt-8 text-center text-xs text-gray-400 print:hidden">
+                        &copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.
+                        <div class="mt-1">
+                            Powered by <a href="https://www.hamstersoftware.com" target="_blank" class="hover:text-emerald-600 transition-colors">Hamster Software</a>
+                        </div>
+                    </div>
                 </main>
             </div>
 

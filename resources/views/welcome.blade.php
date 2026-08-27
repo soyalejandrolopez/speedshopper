@@ -1,4 +1,4 @@
-<x-public-layout title="{{ __('Personal Shopper in Baytown, TX') }}">
+<x-public-layout>
     @php
         $organization = [
             '@context' => 'https://schema.org',

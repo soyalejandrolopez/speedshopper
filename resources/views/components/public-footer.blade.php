@@ -57,5 +57,8 @@
     </div>
     <div class="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
         © {{ date('Y') }} {{ \App\Models\Setting::get('company_name', config('app.name')) }} — {{ __('Personal Shopper in Baytown, TX') }}
+        <div class="mt-1">
+            Powered by <a href="https://www.hamstersoftware.com" target="_blank" class="hover:text-emerald-600 transition-colors">Hamster Software</a>
+        </div>
     </div>
 </footer>

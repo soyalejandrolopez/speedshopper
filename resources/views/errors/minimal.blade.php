@@ -1,3 +1,4 @@
+<x-hamster-ascii />
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -60,6 +61,9 @@
         <!-- Footer text -->
         <div class="mt-8 text-center text-xs text-gray-400">
             &copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.
+            <div class="mt-1">
+                Powered by <a href="https://www.hamstersoftware.com" target="_blank" class="hover:text-emerald-600 transition-colors">Hamster Software</a>
+            </div>
         </div>
     </div>
 </body>
