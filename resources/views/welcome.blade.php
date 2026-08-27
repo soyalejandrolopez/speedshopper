@@ -27,8 +27,8 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
-        <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-24">
-            <div class="flex flex-col items-center" data-reveal>
+        <div class="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-24">
+            <div class="glass-dark rounded-3xl p-8 sm:p-14 text-center flex flex-col items-center shadow-2xl" data-reveal>
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
                         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
@@ -176,14 +176,14 @@
         </div>
     </section>
 
-    <section class="bg-gray-50 py-20" id="fees">
+    <section class="bg-gradient-to-b from-white to-emerald-50/50 py-20" id="fees">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
             <div class="text-center" data-reveal>
                 <span class="section-eyebrow">{{ __('Fees and Pricing') }}</span>
                 <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Transparent pricing, no surprises') }}</h2>
             </div>
 
-            <div class="mx-auto mt-12 max-w-3xl overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl shadow-gray-200/50" data-reveal>
+            <div class="mx-auto mt-12 max-w-3xl glass-panel relative z-10" data-reveal>
                 @php
                     $shopperFee = (float) \App\Models\Setting::get('shopper_fee', '10');
                     $shopperPct = (bool) \App\Models\Setting::get('shopper_fee_is_percent', '0');

@@ -23,15 +23,18 @@
 
         <div class="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 py-12">
             <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-                <div class="absolute -start-32 -top-24 h-96 w-96 rounded-full bg-emerald-200/50 blur-3xl"></div>
-                <div class="absolute -bottom-32 -end-32 h-96 w-96 rounded-full bg-teal-200/50 blur-3xl"></div>
-                <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,150,105,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(5,150,105,0.04)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50"></div>
+                <div class="absolute -start-32 -top-24 h-[30rem] w-[30rem] animate-float-slow rounded-full bg-emerald-300/30 blur-[100px]"></div>
+                <div class="absolute -bottom-32 -end-32 h-[30rem] w-[30rem] animate-float-slow rounded-full bg-teal-300/30 blur-[100px]" style="animation-delay: -3s"></div>
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,150,105,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(5,150,105,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,black,transparent)]"></div>
             </div>
 
-            <div class="relative w-full sm:max-w-md">
-                <div class="animate-fade-up overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl shadow-emerald-100/60 sm:p-8">
-                    <div class="h-1 w-full rounded-t-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400"></div>
-                    {{ $slot }}
+            <div class="relative w-full sm:max-w-md z-10">
+                <div class="animate-fade-up glass-panel p-6 sm:p-10">
+                    <div class="absolute top-0 inset-x-0 h-1.5 w-full bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-400 opacity-90"></div>
+                    <div class="relative z-10">
+                        {{ $slot }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -63,11 +63,11 @@ body {
 
 @layer components {
     .card {
-        @apply rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200;
+        @apply rounded-2xl border border-gray-100 bg-white/95 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm transition-all duration-300;
     }
 
     .card-hover:hover {
-        @apply -translate-y-0.5 border-emerald-200 shadow-lg shadow-emerald-100;
+        @apply -translate-y-1 shadow-[0_20px_40px_rgb(0,0,0,0.08)] border-emerald-100;
     }
 
     .btn,
@@ -75,31 +75,28 @@ body {
     .btn-emerald,
     .btn-danger,
     .btn-ghost {
-        @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.98];
+        @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
     }
 
-    .btn-primary {
-        @apply bg-emerald-600 text-white shadow-md shadow-emerald-200 hover:bg-emerald-700 hover:shadow-lg focus:ring-emerald-500;
-    }
-
+    .btn-primary,
     .btn-emerald {
-        @apply bg-emerald-600 text-white shadow-md shadow-emerald-200 hover:bg-emerald-700 hover:shadow-lg focus:ring-emerald-500;
+        @apply bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:from-emerald-400 hover:to-emerald-500 hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] focus:ring-emerald-500;
     }
 
     .btn-danger {
-        @apply bg-red-600 text-white shadow-md shadow-red-200 hover:bg-red-700 hover:shadow-lg focus:ring-red-500;
+        @apply bg-gradient-to-br from-red-500 to-red-600 text-white shadow-[0_8px_20px_rgba(239,68,68,0.3)] hover:from-red-400 hover:to-red-500 hover:shadow-[0_12px_25px_rgba(239,68,68,0.4)] focus:ring-red-500;
     }
 
     .btn-ghost {
-        @apply border border-gray-300 bg-white text-gray-700 hover:border-emerald-400 hover:bg-emerald-50/50 hover:text-emerald-700 focus:ring-emerald-400;
+        @apply border border-gray-200 bg-white/80 backdrop-blur text-gray-700 shadow-sm hover:border-emerald-300 hover:bg-emerald-50/80 hover:text-emerald-700 hover:shadow-md focus:ring-emerald-400;
     }
 
     .btn-soft {
-        @apply bg-emerald-50 text-emerald-700 hover:bg-emerald-100 focus:ring-emerald-300;
+        @apply bg-emerald-50/80 text-emerald-700 backdrop-blur hover:bg-emerald-100 focus:ring-emerald-300;
     }
 
     .input {
-        @apply block w-full rounded-lg border-gray-300 text-sm shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100;
+        @apply block w-full rounded-xl border-gray-200 bg-white/80 backdrop-blur-sm text-sm shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-50;
     }
 
     .label {
@@ -144,17 +141,21 @@ body {
     }
 
     .stat-card {
-        @apply relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200;
+        @apply relative overflow-hidden rounded-2xl border border-gray-100 bg-white/90 backdrop-blur-md p-6 shadow-[0_8px_30px_rgb(0,0,0,0.03)] transition-all duration-300;
     }
 
     .stat-card:hover {
-        @apply -translate-y-0.5 shadow-lg;
+        @apply -translate-y-1 shadow-[0_20px_40px_rgb(0,0,0,0.06)];
     }
 
     .stat-card::after {
         content: "";
-        @apply pointer-events-none absolute -end-10 -top-10 h-32 w-32 rounded-full opacity-10 blur-2xl;
+        @apply pointer-events-none absolute -end-12 -top-12 h-36 w-36 rounded-full opacity-10 blur-3xl transition-transform duration-500;
         background: currentColor;
+    }
+
+    .stat-card:hover::after {
+        @apply scale-110 opacity-20;
     }
 
     .section-eyebrow {
@@ -174,23 +175,36 @@ body {
     }
 
     .glass {
-        @apply border border-white/60 bg-white/70 backdrop-blur-md;
+        @apply border border-white/40 bg-white/40 backdrop-blur-xl shadow-xl shadow-black/5;
+    }
+
+    .glass-dark {
+        @apply border border-white/10 bg-gray-900/60 backdrop-blur-xl shadow-xl shadow-black/20;
+    }
+
+    .glass-panel {
+        @apply relative overflow-hidden rounded-3xl border border-white/50 bg-white/60 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)];
+    }
+
+    .glass-panel::before {
+        content: "";
+        @apply absolute inset-0 bg-gradient-to-br from-white/60 to-white/10 pointer-events-none rounded-3xl;
     }
 
     .sidebar-link {
-        @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150 hover:translate-x-0.5;
+        @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200;
     }
 
     .sidebar-link-active {
-        @apply bg-emerald-600 text-white shadow-sm shadow-emerald-200;
+        @apply bg-emerald-50 text-emerald-700 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.15)] bg-gradient-to-r from-emerald-50/50 to-transparent;
     }
 
     .sidebar-link-inactive {
-        @apply text-gray-600 hover:bg-emerald-50 hover:text-emerald-700;
+        @apply text-gray-600 hover:bg-gray-50 hover:text-gray-900;
     }
 
     .icon-chip {
-        @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-lg;
+        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl;
     }
 
     .nav-badge {

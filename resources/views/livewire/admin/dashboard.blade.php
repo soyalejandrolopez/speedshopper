@@ -116,7 +116,7 @@
 
     <div class="grid gap-6 mt-6 lg:grid-cols-2">
         <div class="card animate-fade-up" style="animation-delay: 360ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">{{ __('Requests by status') }}</h2>
                 <a href="{{ route('admin.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
                     {{ __('View All') }}
@@ -148,7 +148,7 @@
         </div>
 
         <div class="card animate-fade-up" style="animation-delay: 420ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">{{ __('Shipments by carrier') }}</h2>
                 <a href="{{ route('admin.shipments.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
                     {{ __('View All') }}
@@ -182,7 +182,7 @@
 
     <div class="grid gap-6 mt-6 lg:grid-cols-3">
         <div class="card animate-fade-up" style="animation-delay: 380ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Requests') }}</h2>
                 <a href="{{ route('admin.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
                     {{ __('View All') }}
@@ -194,7 +194,7 @@
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentRequests as $request)
                     <li>
-                        <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="group flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/40">
+                        <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="group flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900 group-hover:text-emerald-700">{{ $request->number }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $request->customer->name }} · {{ $request->product_name }}</p>
@@ -209,7 +209,7 @@
         </div>
 
         <div class="card animate-fade-up" style="animation-delay: 440ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Packages') }}</h2>
                 <a href="{{ route('admin.packages.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
                     {{ __('View All') }}
@@ -221,7 +221,7 @@
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentPackages as $package)
                     <li>
-                        <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/40">
+                        <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900">{{ $package->number }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $package->customer->name }} · {{ $package->store }}</p>
@@ -236,7 +236,7 @@
         </div>
 
         <div class="card animate-fade-up" style="animation-delay: 500ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
                 <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Payments') }}</h2>
                 <a href="{{ route('admin.payments.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
                     {{ __('View All') }}
@@ -248,7 +248,7 @@
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentPayments as $payment)
                     <li>
-                        <a href="{{ route('admin.payments.index') }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/40">
+                        <a href="{{ route('admin.payments.index') }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900">{{ $payment->customer->name }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $payment->number }}</p>

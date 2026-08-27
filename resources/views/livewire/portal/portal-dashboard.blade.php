@@ -60,7 +60,7 @@
 
     <div class="grid gap-6 lg:grid-cols-2">
         <div class="card animate-fade-up" style="animation-delay: 140ms">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-3">
+            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-3">
                 <h3 class="text-sm font-semibold text-gray-900">{{ __('Your orders') }}</h3>
                 <a href="{{ route('portal.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-900">{{ __('View All') }}
                     <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -70,7 +70,7 @@
             </div>
             <ul class="divide-y divide-gray-100">
                 @forelse ($requests as $request)
-                    <li class="group flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-emerald-50/40">
+                    <li class="group flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                         <div class="min-w-0">
                             <p class="flex items-center gap-2 text-sm font-semibold text-gray-900">
                                 <span class="font-mono text-xs text-gray-400">{{ $request->number }}</span>
@@ -94,7 +94,7 @@
 
         <div class="space-y-6">
             <div class="card animate-fade-up" style="animation-delay: 200ms">
-                <div class="flex items-center justify-between border-b border-gray-200 px-5 py-3">
+                <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-3">
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Your boxes') }}</h3>
                     <a href="{{ route('portal.shipments.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-900">{{ __('View All') }}
                         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -104,7 +104,7 @@
                 </div>
                 <ul class="divide-y divide-gray-100">
                     @forelse ($shipments as $shipment)
-                        <li class="flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-emerald-50/40">
+                        <li class="flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="flex items-center gap-2 text-sm font-semibold text-gray-900">
                                     <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
@@ -140,7 +140,7 @@
 
             @if ($packages->isNotEmpty())
                 <div class="card animate-fade-up" style="animation-delay: 260ms">
-                    <div class="flex items-center justify-between border-b border-gray-200 px-5 py-3">
+                    <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-3">
                         <h3 class="text-sm font-semibold text-gray-900">{{ __('Recent packages') }}</h3>
                         <a href="{{ route('portal.packages.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-900">{{ __('View All') }}
                             <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -150,7 +150,7 @@
                     </div>
                     <ul class="divide-y divide-gray-100">
                         @foreach ($packages as $package)
-                            <li class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/40">
+                            <li class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                                 <div class="flex min-w-0 items-center gap-3">
                                     @if ($package->photo_path)
                                         <img src="{{ asset('storage/' . $package->photo_path) }}" alt="{{ __('Photo of package') }}"

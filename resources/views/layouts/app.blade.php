@@ -18,8 +18,8 @@
     </head>
     <body class="font-sans antialiased bg-gray-50">
         <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
-            <aside class="fixed inset-y-0 start-0 z-40 w-64 print:hidden border-e border-gray-200 bg-white transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
-                <div class="flex h-16 items-center justify-between border-b border-gray-100 px-4">
+            <aside class="fixed inset-y-0 start-0 z-40 w-64 print:hidden border-e border-white/40 bg-white/80 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
+                <div class="flex h-16 items-center justify-between px-4">
                     <a href="{{ route('dashboard') }}" class="group flex items-center gap-2.5 font-bold text-gray-900" wire:navigate>
                         <x-brand-logo size="md" class="transition-transform duration-300 group-hover:scale-105" />
                         <span class="text-sm">{{ config('app.name') }}</span>
@@ -120,7 +120,7 @@
             </aside>
 
             <div class="flex flex-1 flex-col sm:ms-64 print:ms-0 print:flex-none">
-                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white/85 px-4 backdrop-blur-lg sm:px-6 print:hidden">
+                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/40 bg-white/60 px-4 backdrop-blur-2xl shadow-sm sm:px-6 print:hidden">
                     <div class="flex items-center gap-3">
                         <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 sm:hidden">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
