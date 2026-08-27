@@ -114,6 +114,8 @@ class SettingsIndex extends Component
 
             session()->flash('success', __('Test email sent successfully.'));
         } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('SMTP test failed: '.$e->getMessage());
+
             session()->flash('error', __('Test email could not be sent') . ': '.$e->getMessage());
         }
     }
