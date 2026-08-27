@@ -4,7 +4,7 @@
 <tr>
 <td class="content-cell" align="center">
 {{ Illuminate\Mail\Markdown::parse($slot) }}
-<p>🛍️ Personal Shopper in Baytown, TX</p>
+<p>{{ \App\Models\Setting::get('company_name', config('app.name')) }} — {{ __('Personal Shopper in Baytown, TX') }}</p>
 </td>
 </tr>
 </table>

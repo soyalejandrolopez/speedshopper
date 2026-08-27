@@ -80,7 +80,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #eef2ff;
+    background-color: #ecfdf5;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -103,7 +103,7 @@ img {
 }
 
 .header a {
-    color: #312e81;
+    color: #047857;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -239,11 +239,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #4f46e5;
-    border-bottom: 8px solid #4f46e5;
-    border-left: 18px solid #4f46e5;
-    border-right: 18px solid #4f46e5;
-    border-top: 8px solid #4f46e5;
+    background-color: #059669;
+    border-bottom: 8px solid #059669;
+    border-left: 18px solid #059669;
+    border-right: 18px solid #059669;
+    border-top: 8px solid #059669;
 }
 
 .button-green,
@@ -267,7 +267,7 @@ img {
 /* Panels */
 
 .panel {
-    border-left: #4f46e5 solid 4px;
+    border-left: #059669 solid 4px;
     margin: 21px 0;
 }
 
