@@ -43,3 +43,6 @@ Homestead.yaml
 Thumbs.db
 /database/*.sqlite
 /database/*.sqlite-journal
+boost.json
+.mcp.json
+opencode.json
