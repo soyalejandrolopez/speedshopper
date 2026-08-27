@@ -27,6 +27,10 @@ class SettingsIndex extends Component
 
     public string $testEmail = '';
 
+    public ?string $mailTestStatus = null;
+
+    public string $mailTestMessage = '';
+
     protected function rules(): array
     {
         return array_merge(
@@ -107,16 +111,24 @@ class SettingsIndex extends Component
             'testEmail' => ['required', 'email', 'max:255'],
         ]);
 
+        if (in_array(strtolower($this->testEmail), ['you@example.com', 'test@example.com'], true)) {
+            $this->addError('testEmail', __('Please enter a real email address to receive the test email.'));
+
+            return;
+        }
+
         $this->applyMailConfigFromForm();
 
         try {
             Mail::to($this->testEmail)->send(new TestMail);
 
-            session()->flash('success', __('Test email sent successfully.'));
+            $this->mailTestStatus = 'sent';
+            $this->mailTestMessage = __('Test email sent successfully').' ('.$this->testEmail.')';
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('SMTP test failed: '.$e->getMessage());
 
-            session()->flash('error', __('Test email could not be sent') . ': '.$e->getMessage());
+            $this->mailTestStatus = 'error';
+            $this->mailTestMessage = __('Test email could not be sent').': '.$e->getMessage();
         }
     }
 

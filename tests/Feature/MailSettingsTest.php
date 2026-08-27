@@ -67,3 +67,15 @@ it('validates the test email address', function () {
 
     Mail::assertNothingSent();
 });
+
+it('rejects the placeholder test email', function () {
+    $this->actingAs(createAdmin());
+    Mail::fake();
+
+    Livewire::test(SettingsIndex::class)
+        ->set('testEmail', 'you@example.com')
+        ->call('sendTestEmail')
+        ->assertHasErrors('testEmail');
+
+    Mail::assertNothingSent();
+});
