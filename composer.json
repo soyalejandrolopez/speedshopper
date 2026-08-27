@@ -14,6 +14,7 @@
         "livewire/livewire": "^3.6.4",
         "livewire/volt": "^1.11",
         "phpoffice/phpspreadsheet": "^5.9",
+        "renatomarinho/laravel-page-speed": "^4.4",
         "spatie/laravel-permission": "^8.3"
     },
     "require-dev": {

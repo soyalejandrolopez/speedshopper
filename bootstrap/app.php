@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
             SetLocale::class,
+            \VinkiusLabs\LaravelPageSpeed\Middleware\CollapseWhitespace::class,
+            \VinkiusLabs\LaravelPageSpeed\Middleware\RemoveComments::class,
         ]);
         $middleware->append(SecurityHeaders::class);
     })
