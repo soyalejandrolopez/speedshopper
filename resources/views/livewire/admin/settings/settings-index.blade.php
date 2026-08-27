@@ -193,9 +193,9 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Mail / SMTP') }}</h3>
                     <p class="mt-0.5 text-xs text-gray-500">{{ __('Configure your email server. It applies to all emails: verification, password reset and status notifications.') }}</p>
                 </div>
-                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold {{ config('mail.default') === 'smtp' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
-                    <span class="h-1.5 w-1.5 rounded-full {{ config('mail.default') === 'smtp' ? 'bg-emerald-500' : 'bg-gray-400' }}"></span>
-                    {{ config('mail.default') === 'smtp' ? __('SMTP configured') : __('Mailer') . ': ' . config('mail.default') }}
+                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold {{ $settings['mail_enabled'] === '1' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                    <span class="h-1.5 w-1.5 rounded-full {{ $settings['mail_enabled'] === '1' ? 'bg-emerald-500' : 'bg-gray-400' }}"></span>
+                    {{ $settings['mail_enabled'] === '1' ? __('SMTP configured') : __('Mailer') . ': ' . config('mail.default') }}
                 </span>
             </div>
             <div class="space-y-4 p-5">
