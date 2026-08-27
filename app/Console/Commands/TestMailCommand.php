@@ -22,14 +22,19 @@ class TestMailCommand extends Command
         $email = $this->argument('email') ?: 'test@example.com';
 
         if ($this->option('host') || $this->option('user')) {
+            $user = $this->option('user') ?: config('mail.mailers.smtp.username');
+
             config([
                 'mail.default' => 'smtp',
                 'mail.mailers.smtp.host' => $this->option('host') ?: config('mail.mailers.smtp.host'),
                 'mail.mailers.smtp.port' => (int) ($this->option('port') ?: config('mail.mailers.smtp.port')),
-                'mail.mailers.smtp.username' => $this->option('user') ?: config('mail.mailers.smtp.username'),
+                'mail.mailers.smtp.username' => $user,
                 'mail.mailers.smtp.password' => $this->option('pass') ?: config('mail.mailers.smtp.password'),
                 'mail.mailers.smtp.encryption' => $this->option('encryption') ?: config('mail.mailers.smtp.encryption'),
                 'mail.mailers.smtp.timeout' => 15,
+                // El remitente debe ser la cuenta autenticada para evitar el bloqueo 550 blacklist.
+                'mail.from.address' => $user,
+                'mail.from.name' => \App\Models\Setting::get('company_name', config('app.name')),
             ]);
         }
 
