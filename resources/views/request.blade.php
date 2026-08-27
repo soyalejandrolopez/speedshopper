@@ -101,9 +101,8 @@
                             </a>
                         </div>
 
-                        <div x-data="{ scrollBody() { this.$refs.body.scrollTo({ top: this.$refs.body.scrollHeight, behavior: 'smooth' }) } }"
-                             x-init="scrollBody(); new MutationObserver(() => scrollBody()).observe(this.$refs.body, { childList: true, subtree: true })"
-                             x-ref="body"
+                        <div x-data="{ scrollBody(el) { el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }) } }"
+                             x-init="scrollBody($el); new MutationObserver(() => scrollBody($el)).observe($el, { childList: true, subtree: true })"
                              class="max-h-[70vh] space-y-5 overflow-y-auto bg-gray-50/70 p-5 sm:p-6">
                             <div class="text-center">
                                 <span class="inline-block rounded-full border border-gray-100 bg-white px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 shadow-sm">
