@@ -6,14 +6,13 @@ use App\Models\Customer;
 use App\Models\PurchaseRequest;
 use Livewire\Livewire;
 
-it('renders the request page with header, footer and the chatbot', function () {
+it('renders the request page with header, footer and the request form', function () {
     seedRoles();
 
     $this->get(route('request'))
         ->assertOk()
         ->assertSee(__('Send us your purchase request'))
-        ->assertSee(__('Chat with the assistant'))
-        ->assertSeeVolt('chat-request-form');
+        ->assertSeeLivewire(PublicRequestForm::class);
 });
 
 it('guides the visitor step by step and creates the customer and request at the end', function () {

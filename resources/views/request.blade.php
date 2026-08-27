@@ -9,7 +9,7 @@
         <div class="relative mx-auto max-w-6xl px-4 sm:px-6">
             <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
                 <div class="order-2 flex flex-col justify-center lg:order-1" data-reveal>
-                    <span class="section-eyebrow">{{ __('Chat with the assistant') }}</span>
+                    <span class="section-eyebrow">{{ __('Quick Quote') }}</span>
                     <h1 class="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight text-gray-900 sm:text-5xl">
                         {{ __('Send us your purchase request') }}
                     </h1>
@@ -73,68 +73,8 @@
                 </div>
 
                 <div class="order-1 flex items-start lg:order-2 lg:sticky lg:top-24" data-reveal style="--reveal-delay: 120ms">
-                    <div class="w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_-20px_rgba(16,185,129,0.35)] ring-1 ring-black/5">
-                        <div class="relative flex items-center justify-between overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-600 to-teal-600 px-5 py-4 text-white">
-                            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.18)_0%,transparent_55%)]"></div>
-                            <div class="pointer-events-none absolute -bottom-10 -end-6 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
-                            <div class="pointer-events-none absolute -top-8 -start-8 h-24 w-24 rounded-full bg-white/10 blur-xl"></div>
-
-                            <div class="relative flex items-center gap-3">
-                                <span class="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/20 ring-2 ring-white/40 backdrop-blur">
-                                    <svg class="h-5.5 w-5.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                                    </svg>
-                                    <span class="absolute -bottom-0.5 -end-0.5 h-3 w-3 rounded-full border-2 border-emerald-600 bg-emerald-300"></span>
-                                </span>
-                                <div>
-                                    <p class="text-sm font-bold">{{ \App\Models\Setting::get('company_name', config('app.name')) }} {{ __('Assistant') }}</p>
-                                    <p class="flex items-center gap-1.5 text-xs text-emerald-100">
-                                        <span class="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-300"></span>
-                                        {{ __('Online') }}
-                                    </p>
-                                </div>
-                            </div>
-                            <a href="{{ route('home') }}" class="relative rounded-lg p-1.5 text-emerald-100 transition-colors hover:bg-white/10 hover:text-white" title="{{ __('Close') }}">
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div x-data="{ scrollBody(el) { el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }) } }"
-                             x-init="scrollBody($el); new MutationObserver(() => scrollBody($el)).observe($el, { childList: true, subtree: true })"
-                             class="max-h-[70vh] space-y-5 overflow-y-auto bg-gray-50/70 p-5 sm:p-6">
-                            <div class="text-center">
-                                <span class="inline-block rounded-full border border-gray-100 bg-white px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 shadow-sm">
-                                    {{ __('Today') }}
-                                </span>
-                            </div>
-
-                            <div class="flex items-start gap-2.5">
-                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white ring-2 ring-white shadow-sm">
-                                    <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                                    </svg>
-                                </span>
-                                <div class="max-w-[85%]">
-                                    <div class="rounded-2xl rounded-tl-sm border border-gray-100 bg-white px-4 py-3 text-sm leading-relaxed text-gray-700 shadow-sm">
-                                        {{ __('Hi! I am the SpeedShopper assistant. Let me ask you a few questions to send you your quote.') }}
-                                    </div>
-                                    <p class="mt-1 ps-1 text-[10px] text-gray-400">{{ __('now') }}</p>
-                                </div>
-                            </div>
-
-                            <livewire:chat-request-form />
-                        </div>
-
-                        <div class="flex items-center gap-2 border-t border-gray-100 bg-white px-5 py-3">
-                            <span class="relative flex h-2.5 w-2.5">
-                                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
-                            </span>
-                            <p class="text-xs font-semibold text-gray-600">{{ __('Assistant online') }}</p>
-                            <p class="ms-auto text-xs text-gray-400">{{ __('We reply in less than 1 hour') }}</p>
-                        </div>
+                    <div class="w-full">
+                        <livewire:public-request-form />
                     </div>
                 </div>
             </div>
