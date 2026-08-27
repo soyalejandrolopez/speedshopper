@@ -23,7 +23,7 @@ class TestMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            text: __('This is a test email sent from the settings. If you are reading this, your SMTP configuration is working.'),
+            view: 'emails.test',
         );
     }
 }
