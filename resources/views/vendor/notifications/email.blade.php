@@ -41,7 +41,7 @@
 {{ $salutation }}
 @else
 @lang('Regards,')<br>
-{{ config('app.name') }}
+**{{ \App\Models\Setting::get('company_name', config('app.name')) }}**
 @endif
 
 {{-- Subcopy --}}
