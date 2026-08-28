@@ -115,16 +115,15 @@
     <section id="how-it-works" class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div class="text-center" data-reveal>
             <span class="section-eyebrow">{{ __('How it works') }}</span>
-            <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('In 4 simple steps your products arrive at your door') }}</h2>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Fácil, rápido y confiable. Nosotros nos encargamos del proceso por ti.') }}</h2>
         </div>
 
-        <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-14 grid gap-6 sm:grid-cols-3">
             @php
                 $steps = [
-                    ['title' => __('Send your links'), 'text' => __('Share the product links or photos with us'), 'icon' => 'M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244', 'color' => 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white'],
-                    ['title' => __('We find discounts'), 'text' => __('We look for the best deals and promotions for you'), 'icon' => 'M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48zM12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z', 'color' => 'bg-amber-100 text-amber-600 group-hover:bg-amber-500 group-hover:text-white'],
-                    ['title' => __('We buy and receive'), 'text' => __('We purchase your items and receive them in Baytown'), 'icon' => 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', 'color' => 'bg-teal-100 text-teal-600 group-hover:bg-teal-600 group-hover:text-white'],
-                    ['title' => __('We consolidate and ship'), 'text' => __('We pack your packages in one box and ship internationally'), 'icon' => 'M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12', 'color' => 'bg-sky-100 text-sky-600 group-hover:bg-sky-600 group-hover:text-white'],
+                    ['title' => __('Envía tu pedido'), 'text' => __('Compártenos el link, foto o nombre del producto que deseas. También podemos ayudarte a encontrar ofertas y mejores precios.'), 'icon' => 'M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244', 'color' => 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white'],
+                    ['title' => __('Compramos o recibimos tu paquete'), 'text' => __('Hacemos la compra por ti, o recibimos en Baytown, Texas, los paquetes que compres online en tus tiendas favoritas.'), 'icon' => 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', 'color' => 'bg-teal-100 text-teal-600 group-hover:bg-teal-600 group-hover:text-white'],
+                    ['title' => __('Empacamos y enviamos'), 'text' => __('Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.'), 'icon' => 'M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12', 'color' => 'bg-sky-100 text-sky-600 group-hover:bg-sky-600 group-hover:text-white'],
                 ];
             @endphp
 
