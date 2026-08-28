@@ -45,12 +45,12 @@ class ClientRegistrationForm extends Component
     public function serviceOptions(): array
     {
         return [
-            'personal_shopper' => __('Personal Shopper – Compras en Tiendas'),
-            'online_shopping' => __('Compras Online'),
-            'package_reception' => __('Recepción de Paquetes'),
-            'consolidation' => __('Consolidación de Paquetes'),
-            'packing' => __('Servicio de Embalaje'),
-            'delivery_to_courier' => __('Entrega a Compañía de Envío'),
+            'personal_shopper' => __('In-store shopping'),
+            'online_shopping' => __('Online shopping'),
+            'package_reception' => __('Package reception'),
+            'consolidation' => __('Package consolidation'),
+            'packing' => __('Packing service'),
+            'delivery_to_courier' => __('Delivery to shipping company'),
         ];
     }
 

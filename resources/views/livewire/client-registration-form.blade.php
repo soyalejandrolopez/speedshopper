@@ -30,25 +30,25 @@
         <form wire:submit="submit" class="space-y-5">
             @if ($this->step === 1)
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Información Personal') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Personal Information') }}</h3>
                     <div class="mt-3 grid gap-3 sm:grid-cols-2">
                         <div class="sm:col-span-2">
-                            <label class="label" for="name">{{ __('Nombre y Apellido') }} *</label>
+                            <label class="label" for="name">{{ __('Full name') }} *</label>
                             <input id="name" type="text" wire:model="form.name" class="input" placeholder="María González">
                             @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="whatsapp">{{ __('Número de WhatsApp') }} *</label>
+                            <label class="label" for="whatsapp">{{ __('WhatsApp number') }} *</label>
                             <input id="whatsapp" type="text" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
                             @error('form.whatsapp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="email">{{ __('Correo Electrónico') }} *</label>
+                            <label class="label" for="email">{{ __('Email address') }} *</label>
                             <input id="email" type="email" wire:model="form.email" class="input" placeholder="you@example.com">
                             @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="country">{{ __('País de Destino') }} *</label>
+                            <label class="label" for="country">{{ __('Destination country') }} *</label>
                             <select id="country" wire:model="form.country" class="input">
                                 <option value="">—</option>
                                 @foreach ($this->countries() as $code => $name)
@@ -58,19 +58,19 @@
                             @error('form.country') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="city">{{ __('Ciudad / Estado / Provincia') }}</label>
+                            <label class="label" for="city">{{ __('City / State / Province') }}</label>
                             <input id="city" type="text" wire:model="form.city" class="input">
                         </div>
                         <div class="sm:col-span-2">
-                            <label class="label" for="address">{{ __('Dirección de Entrega') }}</label>
+                            <label class="label" for="address">{{ __('Delivery address') }}</label>
                             <textarea id="address" rows="2" wire:model="form.address" class="input"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('¿Qué servicio necesitas?') }} *</h3>
-                    <p class="mt-1 text-xs text-gray-500">{{ __('Selecciona una o varias opciones.') }}</p>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('What service do you need?') }} *</h3>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Select one or more options.') }}</p>
                     <div class="mt-3 grid gap-2 sm:grid-cols-2">
                         @foreach ($this->serviceOptions() as $key => $label)
                             <label class="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 hover:bg-emerald-50/40">
@@ -86,37 +86,37 @@
 
             @if ($this->step === 2)
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Información de tu Solicitud') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Request Information') }}</h3>
                     <div class="mt-3 space-y-3">
                         <div>
-                            <label class="label" for="products">{{ __('¿Qué productos deseas comprar o enviar?') }} *</label>
+                            <label class="label" for="products">{{ __('What products do you want to buy or send?') }} *</label>
                             <textarea id="products" rows="3" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
                             @error('form.products') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="preferred_stores">{{ __('Tienda(s) de preferencia') }}</label>
+                            <label class="label" for="preferred_stores">{{ __('Preferred store(s)') }}</label>
                             <input id="preferred_stores" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
                         </div>
                         <div>
-                            <label class="label" for="budget">{{ __('Presupuesto aproximado') }}</label>
+                            <label class="label" for="budget">{{ __('Approximate budget') }}</label>
                             <input id="budget" type="number" step="0.01" min="0" wire:model="form.budget" class="input" placeholder="0.00">
                         </div>
 
                         <div>
-                            <span class="label">{{ __('¿Tienes links de los productos?') }}</span>
+                            <span class="label">{{ __('Do you have product links?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.has_links" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Sí') }}</label>
+                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.has_links" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.has_links" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                             @if ($this->form['has_links'] === 'yes')
-                                <textarea rows="2" wire:model="form.product_links" class="input mt-2" placeholder="{{ __('Coloca los links aquí') }}"></textarea>
+                                <textarea rows="2" wire:model="form.product_links" class="input mt-2" placeholder="{{ __('Paste the links here') }}"></textarea>
                             @endif
                         </div>
 
                         <div>
-                            <span class="label">{{ __('¿Deseas que busquemos ofertas o mejores precios por ti?') }}</span>
+                            <span class="label">{{ __('Would you like us to look for deals or better prices?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.find_deals" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Sí') }}</label>
+                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.find_deals" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.find_deals" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                         </div>
@@ -124,21 +124,21 @@
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Para Compras Online o Recepción de Paquetes') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('For Online Shopping or Package Reception') }}</h3>
                     <div class="mt-3 space-y-3">
                         <div>
-                            <span class="label">{{ __('¿Ya realizaste la compra?') }}</span>
+                            <span class="label">{{ __('Did you already make the purchase?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Sí') }}</label>
+                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                         </div>
                         @if ($this->form['already_purchased'] === 'yes')
                             <div class="grid gap-3 sm:grid-cols-2">
-                                <div><label class="label" for="store_name">{{ __('Nombre de la tienda') }}</label><input id="store_name" type="text" wire:model="form.store_name" class="input"></div>
-                                <div><label class="label" for="order_number">{{ __('Número de Orden') }}</label><input id="order_number" type="text" wire:model="form.order_number" class="input"></div>
-                                <div><label class="label" for="tracking_number">{{ __('Número de Tracking') }}</label><input id="tracking_number" type="text" wire:model="form.tracking_number" class="input"></div>
-                                <div><label class="label" for="approx_packages">{{ __('Cantidad aproximada de paquetes') }}</label><input id="approx_packages" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
+                                <div><label class="label" for="store_name">{{ __('Store name') }}</label><input id="store_name" type="text" wire:model="form.store_name" class="input"></div>
+                                <div><label class="label" for="order_number">{{ __('Order number') }}</label><input id="order_number" type="text" wire:model="form.order_number" class="input"></div>
+                                <div><label class="label" for="tracking_number">{{ __('Tracking number') }}</label><input id="tracking_number" type="text" wire:model="form.tracking_number" class="input"></div>
+                                <div><label class="label" for="approx_packages">{{ __('Approximate number of packages') }}</label><input id="approx_packages" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
                             </div>
                         @endif
                     </div>
@@ -147,22 +147,22 @@
 
             @if ($this->step === 3)
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Preferencias de Envío') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Shipping Preferences') }}</h3>
                     <div class="mt-3 space-y-3">
                         <div>
-                            <span class="label">{{ __('¿Tienes una compañía de envío de preferencia?') }}</span>
+                            <span class="label">{{ __('Do you have a preferred shipping company?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.courier" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Sí') }}</label>
+                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.courier" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.courier" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                         </div>
                         @if ($this->form['courier'] === 'yes')
-                            <div><label class="label" for="courier_name">{{ __('Nombre de la compañía') }}</label><input id="courier_name" type="text" wire:model="form.courier_name" class="input"></div>
+                            <div><label class="label" for="courier_name">{{ __('Company name') }}</label><input id="courier_name" type="text" wire:model="form.courier_name" class="input"></div>
                         @endif
                         <div>
-                            <span class="label">{{ __('¿Necesitas que te ayudemos a coordinar el envío?') }}</span>
+                            <span class="label">{{ __('Do you need help coordinating the shipment?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.need_shipping_coordination" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Sí') }}</label>
+                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.need_shipping_coordination" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.need_shipping_coordination" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                         </div>
@@ -170,26 +170,26 @@
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Comentarios o Instrucciones Especiales') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Comments or Special Instructions') }}</h3>
                     <textarea rows="3" wire:model="form.comments" class="input mt-3"></textarea>
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Confirmación') }}</h3>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Confirmation') }}</h3>
                     <div class="mt-3 space-y-2">
                         <label class="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700">
                             <input type="checkbox" wire:model="form.confirm_correct" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            {{ __('Confirmo que la información proporcionada es correcta.') }}
+                            {{ __('I confirm that the information provided is correct.') }}
                         </label>
                         @error('form.confirm_correct') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                         <label class="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700">
                             <input type="checkbox" wire:model="form.accept_costs" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            {{ __('Entiendo que los costos de productos, impuestos, shipping, embalaje, almacenamiento, envío internacional y otros cargos aplicables pueden ser adicionales a los fees de servicio.') }}
+                            {{ __('I understand that product costs, taxes, shipping, packing, storage, international shipping and other applicable charges may be additional to the service fees.') }}
                         </label>
                         @error('form.accept_costs') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                         <label class="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700">
                             <input type="checkbox" wire:model="form.accept_contact" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            {{ __('Acepto recibir comunicación relacionada con mi compra, paquetes y envíos mediante WhatsApp, email o teléfono.') }}
+                            {{ __('I agree to receive communication related to my purchase, packages and shipments via WhatsApp, email or phone.') }}
                         </label>
                         @error('form.accept_contact') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
@@ -220,7 +220,7 @@
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                         </svg>
-                        {{ __('Enviar Solicitud') }}
+                        {{ __('Submit Request') }}
                     </button>
                 @endif
             </div>
