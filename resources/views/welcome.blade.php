@@ -22,7 +22,7 @@
     <section class="gradient-hero relative overflow-hidden">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
-                 class="h-full w-full object-cover object-bottom" fetchpriority="high">
+                 class="h-full w-full object-cover object-bottom" width="1920" height="1080" decoding="async" fetchpriority="high">
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
@@ -490,7 +490,7 @@
         <div class="relative overflow-hidden rounded-3xl px-6 py-16 text-center shadow-2xl sm:px-12">
             <!-- Background Image & Gradient Overlays -->
             <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-                <img src="{{ asset('images/hero-bg.jpg') }}" alt="" class="h-full w-full object-cover object-center">
+                <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('Personal shopper and international package shipping') }}" class="h-full w-full object-cover object-center" width="1920" height="1080" decoding="async" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/85 to-teal-950/90"></div>
                 <div class="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
                 <div class="absolute -start-20 -top-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>

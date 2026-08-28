@@ -146,7 +146,7 @@
                                 <input id="photo-{{ $this->getId() }}" name="photo" type="file" accept="image/*" wire:model="photo" class="block w-full text-sm text-gray-500 file:me-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100">
                                 @error('photo') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 @if ($photo)
-                                    <img src="{{ $photo->temporaryUrl() }}" class="mt-2 h-24 w-24 rounded-lg object-cover">
+                                    <img src="{{ $photo->temporaryUrl() }}" alt="{{ __('Preview') }}" class="mt-2 h-24 w-24 rounded-lg object-cover">
                                 @endif
                             </div>
                             <div class="sm:col-span-2">

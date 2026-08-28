@@ -45,7 +45,7 @@
                 <a href="{{ route('locale.switch', 'en') }}" class="{{ app()->getLocale() === 'en' ? 'font-semibold text-emerald-700' : 'text-gray-400 hover:text-gray-600' }}">EN</a>
             </div>
 
-            <button @click="open = ! open" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100">
+            <button @click="open = ! open" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" aria-label="{{ __('Toggle navigation') }}">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
         </div>
