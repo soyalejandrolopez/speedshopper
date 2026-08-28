@@ -1,7 +1,8 @@
+@props(['logoCid' => null])
 <x-mail::layout>
 {{-- Header --}}
 <x-slot:header>
-<x-mail::header :url="config('app.url')">
+<x-mail::header :url="config('app.url')" :logoCid="$logoCid">
 {{ config('app.name') }}
 </x-mail::header>
 </x-slot:header>

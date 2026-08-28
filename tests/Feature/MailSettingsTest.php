@@ -94,6 +94,15 @@ it('embeds the logo as a data uri in the email header when the file exists', fun
         ->and($html)->not->toContain('/storage/branding/logo.png');
 });
 
+it('uses the provided logo cid in the email header', function () {
+    $html = view('vendor.mail.html.header', [
+        'url' => 'https://speedingshopper.com',
+        'logoCid' => 'cid:abc123@example',
+    ])->render();
+
+    expect($html)->toContain('src="cid:abc123@example"');
+});
+
 it('renders an absolute logo url in the email header when the logo file is missing', function () {
     seedRoles();
     Storage::fake('public');

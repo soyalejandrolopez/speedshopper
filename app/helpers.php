@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Setting;
+use Illuminate\Mail\Message;
+use Illuminate\Mail\TextMessage;
 use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('money')) {
@@ -34,6 +36,31 @@ if (! function_exists('brand_logo_data_uri')) {
         $mime = $disk->mimeType($path) ?: 'image/png';
 
         return 'data:'.$mime.';base64,'.base64_encode($disk->get($path));
+    }
+}
+
+if (! function_exists('mail_logo_cid')) {
+    /**
+     * Embed the brand logo as an inline (CID) attachment in the given mail message.
+     *
+     * @param  Message|TextMessage|null  $message
+     */
+    function mail_logo_cid(mixed $message): ?string
+    {
+        $path = Setting::get('logo_path');
+        $disk = Storage::disk('public');
+
+        if (! $message || ! $path || ! $disk->exists($path)) {
+            return null;
+        }
+
+        try {
+            $cid = $message->embed($disk->path($path));
+        } catch (Throwable) {
+            return null;
+        }
+
+        return $cid ?: null;
     }
 }
 

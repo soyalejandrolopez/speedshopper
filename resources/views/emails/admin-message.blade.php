@@ -1,4 +1,5 @@
-<x-mail::message>
+@php($mailLogoCid = mail_logo_cid($message))
+<x-mail::message :logoCid="$mailLogoCid">
 # {{ \App\Models\Setting::get('company_name', config('app.name')) }}
 
 <x-mail::panel>
