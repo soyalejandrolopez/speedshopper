@@ -233,9 +233,9 @@
                         </span>
                         <h3 class="text-xl font-bold text-gray-900">{{ __('Entrega a la compañía de envío') }}</h3>
                     </div>
-                    <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
-                    <div class="mt-4 inline-block rounded-lg bg-gray-100 px-3 py-2 border border-gray-200 shadow-sm">
-                        <p class="text-sm font-medium text-gray-700">{{ __('Precio') }} <span class="font-bold text-gray-900">$20</span></p>
+                    <p class="mt-4 text-sm text-gray-600">{{ __('Enviamos tu caja preparada a la compañía de envío seleccionada.') }}</p>
+                    <div class="mt-4 rounded-lg bg-gray-50 p-3">
+                        <p class="text-emerald-600 font-semibold">{{ __('Precio: $20') }}</p>
                     </div>
                 </div>
                 
