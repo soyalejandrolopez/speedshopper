@@ -86,20 +86,29 @@
                         </div>
                     </div>
 
-                    <!-- Países a los que enviamos -->
-                    <div class="card p-6">
-                        <h3 class="flex items-center gap-2 font-bold text-gray-900 text-sm">
-                            <i class="fa-solid fa-plane-departure text-emerald-600"></i>
-                            {{ __('Países a los que enviamos') }}
-                        </h3>
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Realizamos envíos puerta a puerta a los siguientes países:') }}</p>
-                        <div class="mt-3 flex flex-wrap gap-1.5">
-                            @foreach (countries_served_list() as $code)
-                                <span class="rounded-lg border border-emerald-100 bg-emerald-50/80 px-2.5 py-1 text-xs font-semibold text-emerald-800 shadow-sm">
-                                    <i class="fa-solid fa-circle-check text-[10px] text-emerald-500 me-1"></i>
-                                    {{ country_name($code) }}
-                                </span>
-                            @endforeach
+                    <!-- Redes Sociales / Instagram Card -->
+                    @php
+                        $instagramUrl = \App\Models\Setting::get('instagram_url', 'https://www.instagram.com/speedingshopper');
+                    @endphp
+                    <div class="card overflow-hidden border-pink-100 bg-gradient-to-br from-pink-50/50 via-purple-50/30 to-white p-6 shadow-md transition-all hover:shadow-lg">
+                        <div class="flex items-start gap-4">
+                            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white shadow-md shadow-pink-500/20">
+                                <i class="fa-brands fa-instagram text-2xl"></i>
+                            </span>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-900">{{ __('Síguenos en Instagram') }}</h3>
+                                <p class="mt-1 text-sm text-gray-600">{{ __('Descubre compras recientes, ofertas en vivo, tips de tiendas en USA y novedades.') }}</p>
+                                <div class="mt-4">
+                                    <a href="{{ $instagramUrl }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-500/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-pink-500/30">
+                                        <i class="fa-brands fa-instagram text-base"></i>
+                                        <span>@speedingshopper</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

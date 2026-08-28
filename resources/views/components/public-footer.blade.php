@@ -6,11 +6,15 @@
                 <span>{{ \App\Models\Setting::get('company_name', config('app.name')) }}</span>
             </a>
             <p class="mt-3 max-w-xs text-sm leading-relaxed text-gray-500">{{ __('We buy, receive and ship your US purchases to your door in Latin America.') }}</p>
-            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-gray-500">
+            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-gray-500">
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-base text-emerald-500"></i>
                     Zelle · PayPal
                 </span>
+                <a href="{{ \App\Models\Setting::get('instagram_url', 'https://www.instagram.com/speedingshopper') }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-gray-600 transition-colors hover:text-pink-600" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram text-base text-pink-600"></i>
+                    <span>@speedingshopper</span>
+                </a>
             </div>
         </div>
 
