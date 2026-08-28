@@ -114,19 +114,12 @@
 
     <x-modal maxWidth="max-w-2xl">
         <form wire:submit="save">
-                        <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-                            <h3 class="text-base font-semibold text-gray-900">{{ $editingId ? __('Edit Package') : __('New Package') }}</h3>
-                            <button type="button" wire:click="closeForm" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100">
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+                        <x-modal-header :title="$editingId ? __('Edit Package') : __('New Package')" />
 
-                        <div class="grid gap-4 p-5 sm:grid-cols-2">
+                        <x-modal-body class="grid gap-5 sm:grid-cols-2">
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="customer_id-{{ $this->getId() }}">{{ __('Customer') }} *</label>
-                                <select id="customer_id-{{ $this->getId() }}" name="customer_id" wire:model.live="form.customer_id" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="customer_id-{{ $this->getId() }}" name="customer_id" wire:model.live="form.customer_id" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     @foreach ($customers as $c)
                                         <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->number }})</option>
@@ -136,7 +129,7 @@
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="purchase_request_id-{{ $this->getId() }}">{{ __('Request') }}</label>
-                                <select id="purchase_request_id-{{ $this->getId() }}" name="purchase_request_id" wire:model="form.purchase_request_id" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="purchase_request_id-{{ $this->getId() }}" name="purchase_request_id" wire:model="form.purchase_request_id" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     @php $reqs = $form['customer_id'] ? \App\Models\PurchaseRequest::where('customer_id', $form['customer_id'])->latest()->get() : collect(); @endphp
                                     @foreach ($reqs as $req)
@@ -146,23 +139,23 @@
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="store-{{ $this->getId() }}">{{ __('Store') }}</label>
-                                <input id="store-{{ $this->getId() }}" name="store" type="text" wire:model="form.store" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <input id="store-{{ $this->getId() }}" name="store" type="text" wire:model="form.store" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="original_tracking-{{ $this->getId() }}">{{ __('Original Tracking') }}</label>
-                                <input id="original_tracking-{{ $this->getId() }}" name="original_tracking" type="text" wire:model="form.original_tracking" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <input id="original_tracking-{{ $this->getId() }}" name="original_tracking" type="text" wire:model="form.original_tracking" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="received_at-{{ $this->getId() }}">{{ __('Received At') }}</label>
-                                <input id="received_at-{{ $this->getId() }}" name="received_at" type="date" wire:model="form.received_at" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <input id="received_at-{{ $this->getId() }}" name="received_at" type="date" wire:model="form.received_at" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="weight_lb-{{ $this->getId() }}">{{ __('Weight (lb)') }}</label>
-                                <input id="weight_lb-{{ $this->getId() }}" name="weight_lb" type="number" step="0.01" min="0" wire:model="form.weight_lb" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <input id="weight_lb-{{ $this->getId() }}" name="weight_lb" type="number" step="0.01" min="0" wire:model="form.weight_lb" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="location-{{ $this->getId() }}">{{ __('Location') }}</label>
-                                <input id="location-{{ $this->getId() }}" name="location" type="text" wire:model="form.location" placeholder="Estante A-1" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <input id="location-{{ $this->getId() }}" name="location" type="text" wire:model="form.location" placeholder="Estante A-1" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="photo-{{ $this->getId() }}">{{ __('Photo') }}</label>
@@ -174,20 +167,20 @@
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
-                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
+                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
                             </div>
-                        </div>
+                        </x-modal-body>
 
-                        <div class="flex justify-end gap-2 border-t border-gray-200 px-5 py-4">
+                        <x-modal-footer>
                             <button type="button" wire:click="closeForm"
-                                    class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    class="rounded-xl border border-gray-200/80 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-200/50">
                                 {{ __('Cancel') }}
                             </button>
                             <button type="submit"
-                                    class="rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+                                    class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
                                 {{ __('Save') }}
                             </button>
-                        </div>
+                        </x-modal-footer>
         </form>
     </x-modal>
 </div>
