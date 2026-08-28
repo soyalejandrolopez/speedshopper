@@ -237,6 +237,9 @@
                             </div>
                             <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
                             <p class="mt-2 text-2xl font-bold text-emerald-600">20 USD</p>
+                            <div class="mt-4 overflow-hidden rounded-xl border border-gray-100">
+                                <img src="{{ asset('images/entrega-envio.jpg') }}" alt="{{ __('Entrega de caja a compañía de envío') }}" class="w-full object-cover h-32 sm:h-40" loading="lazy">
+                            </div>
                         </div>
                         
                         <div>
