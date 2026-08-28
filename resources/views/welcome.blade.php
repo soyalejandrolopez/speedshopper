@@ -145,36 +145,128 @@
     <section class="bg-gradient-to-b from-white to-emerald-50/50 py-20" id="fees">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
             <div class="text-center" data-reveal>
-                <span class="section-eyebrow">{{ __('Fees and Pricing') }}</span>
-                <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Transparent pricing, no surprises') }}</h2>
+                <span class="section-eyebrow">{{ __('Costos y Fees') }}</span>
+                <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Trabajamos con tarifas claras para que conozcas el costo de nuestro servicio antes de procesar tu compra o envío.') }}</h2>
+            </div>
+            
+            <div class="mt-16 grid gap-8 lg:grid-cols-2">
+                <div class="card p-8" data-reveal>
+                    <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" /></svg>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Compras Personalizadas en Tiendas') }}</h3>
+                    </div>
+                    <div class="mt-6 space-y-5">
+                        <div class="rounded-xl bg-gray-50 p-4 transition-colors hover:bg-emerald-50">
+                            <div class="flex items-center justify-between font-semibold text-gray-900">
+                                <span>{{ __('Compras de $100 a $699') }}</span>
+                                <span class="text-emerald-600">{{ __('Fee: 20%') }}</span>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('Incluye hasta 2 tiendas y 2 horas de servicio.') }}</p>
+                        </div>
+                        <div class="rounded-xl bg-gray-50 p-4 transition-colors hover:bg-emerald-50">
+                            <div class="flex items-center justify-between font-semibold text-gray-900">
+                                <span>{{ __('Compras de $700 a $1,499') }}</span>
+                                <span class="text-emerald-600">{{ __('Fee: 15%') }}</span>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('Incluye hasta 3 tiendas y 3 horas de servicio.') }}</p>
+                        </div>
+                        <div class="rounded-xl bg-gray-50 p-4 transition-colors hover:bg-emerald-50">
+                            <div class="flex items-center justify-between font-semibold text-gray-900">
+                                <span>{{ __('Compras de $1,500 o más') }}</span>
+                                <span class="text-emerald-600">{{ __('Fee: 15%') }}</span>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('Incluye hasta 4 tiendas y 4 horas de servicio.') }}</p>
+                        </div>
+                        <p class="text-sm font-medium text-gray-700">{{ __('Tienda adicional:') }} <span class="font-normal text-gray-500">{{ __('$20 por cada tienda adicional.') }}</span></p>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="card p-8" data-reveal style="--reveal-delay: 100ms">
+                        <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-600">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+                            </span>
+                            <h3 class="text-xl font-bold text-gray-900">{{ __('Compras Online') }}</h3>
+                        </div>
+                        <div class="mt-6 space-y-3 text-sm text-gray-600">
+                            <p>{{ __('Si realizamos tus compras por internet por ti:') }}</p>
+                            <p class="font-semibold text-emerald-700">{{ __('Fee de servicio: 15% del total de la compra online.') }}</p>
+                            <p class="text-gray-500">{{ __('Este fee corresponde al servicio de procesamiento, coordinación y seguimiento de tu compra.') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card p-8" data-reveal style="--reveal-delay: 200ms">
+                        <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
+                            </span>
+                            <h3 class="text-xl font-bold text-gray-900">{{ __('Servicio de Embalaje') }}</h3>
+                        </div>
+                        <div class="mt-6">
+                            <p class="mb-4 text-sm text-gray-500">{{ __('El costo del embalaje dependerá del tamaño de la caja utilizada:') }}</p>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
+                                    <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Small') }}</div>
+                                    <div class="mt-1 text-lg font-bold text-gray-900">$15</div>
+                                </div>
+                                <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
+                                    <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Mediana') }}</div>
+                                    <div class="mt-1 text-lg font-bold text-gray-900">$20</div>
+                                </div>
+                                <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
+                                    <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Large') }}</div>
+                                    <div class="mt-1 text-lg font-bold text-gray-900">$25</div>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-sm text-gray-500">{{ __('El servicio incluye la preparación y organización de tus productos para su envío.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-8 lg:col-span-2" data-reveal>
+                    <div class="grid gap-8 sm:grid-cols-2">
+                        <div>
+                            <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
+                                </span>
+                                <h3 class="text-xl font-bold text-gray-900">{{ __('Entrega a Envío') }}</h3>
+                            </div>
+                            <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
+                            <p class="mt-2 text-2xl font-bold text-emerald-600">20 USD</p>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </span>
+                                <h3 class="text-xl font-bold text-gray-900">{{ __('Almacenamiento') }}</h3>
+                            </div>
+                            <div class="mt-4 space-y-3 text-sm text-gray-600">
+                                <p>{{ __('Tus compras y paquetes pueden permanecer en nuestras instalaciones hasta 30 días sin cargo adicional.') }}</p>
+                                <div class="rounded-lg bg-gray-50 p-3">
+                                    <p class="font-medium text-gray-900">{{ __('Después de 30 días:') }}</p>
+                                    <p class="mt-1 text-emerald-600 font-semibold">{{ __('Cargo de almacenamiento: $15 por mes.') }}</p>
+                                </div>
+                                <p class="text-xs text-gray-500">{{ __('Este cargo aplica tanto a cajas terminadas como a órdenes o paquetes recibidos que permanezcan más de un mes.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="mx-auto mt-12 max-w-3xl glass-panel relative z-10" data-reveal>
-                @php
-                    $shopperFee = (float) \App\Models\Setting::get('shopper_fee', '10');
-                    $shopperPct = (bool) \App\Models\Setting::get('shopper_fee_is_percent', '0');
-                    $receivingFee = (float) \App\Models\Setting::get('receiving_fee', '2.50');
-                    $packingFee = (float) \App\Models\Setting::get('packing_fee', '5.00');
-                @endphp
-                <table class="w-full text-start text-sm">
-                    <tbody class="divide-y divide-gray-100">
-                        @php $rows = [
-                            [__('Shopper Fee (per order)'), $shopperPct ? $shopperFee . '%' : money($shopperFee)],
-                            [__('Receiving Fee (per package)'), money($receivingFee)],
-                            [__('Packing Fee (per package)'), money($packingFee)],
-                        ]; @endphp
-                        @foreach ($rows as $row)
-                            <tr class="transition-colors hover:bg-emerald-50/40">
-                                <td class="px-6 py-4 font-medium text-gray-900">{{ $row[0] }}</td>
-                                <td class="px-6 py-4 text-end font-semibold text-emerald-700">{{ $row[1] }}</td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td class="px-6 py-4 font-medium text-gray-900">{{ __('International Shipping') }}</td>
-                            <td class="px-6 py-4 text-end text-sm text-gray-500">{{ __('Calculated per box based on weight and destination') }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="mx-auto mt-12 max-w-3xl rounded-2xl bg-amber-50 p-6 text-center shadow-inner border border-amber-100" data-reveal>
+                <h3 class="flex items-center justify-center gap-2 font-bold text-amber-800">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    {{ __('Importante') }}
+                </h3>
+                <p class="mt-3 text-sm text-amber-700">{{ __('Los costos de los productos, impuestos, shipping de las tiendas, envío internacional y cualquier cargo de aduana o importación no están incluidos en nuestros fees de servicio.') }}</p>
+                <p class="mt-2 text-sm text-amber-700">{{ __('Cualquier cargo adicional será informado al cliente antes de continuar con el servicio.') }}</p>
+                <p class="mt-4 font-semibold text-amber-900">{{ __('Tarifas claras. Compras fáciles. Servicio personalizado.') }}</p>
             </div>
         </div>
     </section>
@@ -211,63 +303,9 @@
                 @endforeach
             </div>
         </div>
-    </section>
-
     <section class="bg-gradient-to-b from-white to-emerald-50/60 py-20">
-        <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2">
-            <div data-reveal>
-                <span class="section-eyebrow">{{ __('How your costs are calculated') }}</span>
-                <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('See an example quote') }}</h2>
-                <p class="mt-3 max-w-lg text-gray-500">{{ __('This is how we quote every purchase. You always know exactly what you pay before we buy anything.') }}</p>
-
-                @php
-                    $product = 69.99;
-                    $tax = round($product * 0.0825, 2);
-                    $usShipping = 0.00;
-                    $shopper = $shopperPct ? round($product * $shopperFee / 100, 2) : $shopperFee;
-                    $receiving = $receivingFee;
-                    $packing = $packingFee;
-                    $intl = 68.00;
-                    $total = round($product + $tax + $usShipping + $shopper + $receiving + $packing + $intl, 2);
-                    $exampleRows = [
-                        [__('Product'), money($product)],
-                        [__('Sales tax (8.25%)'), money($tax)],
-                        [__('US shipping'), $usShipping ? money($usShipping) : 'Gratis'],
-                        [__('Shopper fee'), $shopperPct ? $shopperFee . '%' : money($shopper)],
-                        [__('Receiving fee'), money($receiving)],
-                        [__('Packing fee'), money($packing)],
-                        [__('International shipping'), money($intl)],
-                    ];
-                @endphp
-
-                <div class="mt-6 max-w-md overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-lg shadow-emerald-100/60">
-                    <div class="flex items-center justify-between border-b border-gray-100 bg-emerald-50/60 px-5 py-3">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">Nike Air Max 270</p>
-                            <p class="text-xs text-gray-500">{{ __('Example purchase · Baytown, TX → Guatemala') }}</p>
-                        </div>
-                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="divide-y divide-gray-50">
-                        @foreach ($exampleRows as $row)
-                            <div class="flex items-center justify-between px-5 py-2.5 text-sm">
-                                <span class="text-gray-600">{{ $row[0] }}</span>
-                                <span class="font-medium text-gray-900">{{ $row[1] }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="flex items-center justify-between bg-emerald-600 px-5 py-3 text-sm font-bold text-white">
-                        <span>{{ __('Total') }}</span>
-                        <span>{{ money($total) }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col justify-center gap-6" data-reveal style="--reveal-delay: 120ms">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6">
+            <div class="grid gap-6 sm:grid-cols-2" data-reveal style="--reveal-delay: 120ms">
                 <div class="card p-6">
                     <div class="flex items-start gap-4">
                         <span class="icon-chip shrink-0 bg-emerald-50 text-emerald-600">
