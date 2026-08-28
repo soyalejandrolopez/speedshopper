@@ -29,6 +29,9 @@ Route::get('/', fn () => view('welcome'))->name('home');
 Route::view('/solicitar', 'request')->name('request');
 Route::view('/contacto', 'contact')->name('contact');
 Route::view('/contact', 'contact');
+Route::view('/productos-prohibidos', 'prohibited-items')->name('prohibited-items');
+Route::view('/prohibidos-y-restringidos', 'prohibited-items');
+Route::view('/prohibited-items', 'prohibited-items');
 
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['es', 'en'], true)) {
