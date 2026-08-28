@@ -155,21 +155,17 @@
                     </div>
                 </div>
 
-                <!-- Right Form: Public Request Form / Quick Quote (1st on mobile, 2nd on desktop) -->
+                <!-- Right Form: Client Registration Form (1st on mobile, 2nd on desktop) -->
                 <div class="order-1 lg:order-2 lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
-                    <div class="overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-xl shadow-gray-200/50">
-                        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-6 py-4 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="text-base font-bold">{{ __('Cotizador Rápido') }}</h3>
-                                    <p class="text-xs text-emerald-100">{{ __('Completa tus datos y los links o nombres de lo que buscas') }}</p>
-                                </div>
-                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
-                                    <i class="fa-solid fa-bolt text-white text-sm"></i>
-                                </span>
-                            </div>
+                    <div class="w-full rounded-3xl border border-gray-200 bg-white p-6 shadow-xl shadow-emerald-950/5 ring-1 ring-black/5 sm:p-8">
+                        <div class="border-b border-gray-100 pb-4 mb-6">
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                <i class="fa-solid fa-clipboard-list text-emerald-600"></i>
+                                {{ __('Client Registration') }}
+                            </h2>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('Complete the following information to get started. This helps us identify your request and offer you the right service.') }}</p>
                         </div>
-                        <livewire:public-request-form />
+                        <livewire:client-registration-form />
                     </div>
                 </div>
 
