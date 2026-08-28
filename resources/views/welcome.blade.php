@@ -226,37 +226,33 @@
                     </div>
                 </div>
                 
-                <div class="card p-8 lg:col-span-2" data-reveal>
-                    <div class="grid gap-8 sm:grid-cols-2">
-                        <div>
-                            <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
-                                </span>
-                                <h3 class="text-xl font-bold text-gray-900">{{ __('Entrega a la compañía de envío') }}</h3>
-                            </div>
-                            <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
-                            <div class="mt-4 inline-block rounded-lg bg-gray-100 px-3 py-2 border border-gray-200 shadow-sm">
-                                <p class="text-sm font-medium text-gray-700">{{ __('Precio') }} <span class="font-bold text-gray-900">$20</span></p>
-                            </div>
+                <div class="card p-8" data-reveal>
+                    <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Entrega a la compañía de envío') }}</h3>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
+                    <div class="mt-4 inline-block rounded-lg bg-gray-100 px-3 py-2 border border-gray-200 shadow-sm">
+                        <p class="text-sm font-medium text-gray-700">{{ __('Precio') }} <span class="font-bold text-gray-900">$20</span></p>
+                    </div>
+                </div>
+                
+                <div class="card p-8" data-reveal style="--reveal-delay: 100ms">
+                    <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Almacenamiento') }}</h3>
+                    </div>
+                    <div class="mt-4 space-y-3 text-sm text-gray-600">
+                        <p>{{ __('Tus compras y paquetes pueden permanecer en nuestras instalaciones hasta 30 días sin cargo adicional.') }}</p>
+                        <div class="rounded-lg bg-gray-50 p-3">
+                            <p class="font-medium text-gray-900">{{ __('Después de 30 días:') }}</p>
+                            <p class="mt-1 text-emerald-600 font-semibold">{{ __('Cargo de almacenamiento: $15 por mes.') }}</p>
                         </div>
-                        
-                        <div>
-                            <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                </span>
-                                <h3 class="text-xl font-bold text-gray-900">{{ __('Almacenamiento') }}</h3>
-                            </div>
-                            <div class="mt-4 space-y-3 text-sm text-gray-600">
-                                <p>{{ __('Tus compras y paquetes pueden permanecer en nuestras instalaciones hasta 30 días sin cargo adicional.') }}</p>
-                                <div class="rounded-lg bg-gray-50 p-3">
-                                    <p class="font-medium text-gray-900">{{ __('Después de 30 días:') }}</p>
-                                    <p class="mt-1 text-emerald-600 font-semibold">{{ __('Cargo de almacenamiento: $15 por mes.') }}</p>
-                                </div>
-                                <p class="text-xs text-gray-500">{{ __('Este cargo aplica tanto a cajas terminadas como a órdenes o paquetes recibidos que permanezcan más de un mes.') }}</p>
-                            </div>
-                        </div>
+                        <p class="text-xs text-gray-500">{{ __('Este cargo aplica tanto a cajas terminadas como a órdenes o paquetes recibidos que permanezcan más de un mes.') }}</p>
                     </div>
                 </div>
             </div>
