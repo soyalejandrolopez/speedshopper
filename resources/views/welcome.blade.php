@@ -69,12 +69,7 @@
                         </svg>
                         PayPal
                     </span>
-                    <span class="inline-flex items-center gap-1.5">
-<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {{ __('Card') }}
-                    </span>
+
                     <span class="inline-flex items-center gap-1.5">
 <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -83,31 +78,7 @@
                     </span>
                 </div>
 
-                <div class="mt-12 grid max-w-md grid-cols-3 gap-4 border-t border-white/20 pt-6 text-center">
-                    @php
-                        $fee = (float) \App\Models\Setting::get('shopper_fee', '10');
-                        $pct = (bool) \App\Models\Setting::get('shopper_fee_is_percent', '0');
-                        $countries = count(array_filter(array_map('trim', explode(',', \App\Models\Setting::get('countries_served', 'MX,GT')))));
-                    @endphp
-                    <div>
-                        <p class="text-2xl font-bold text-white sm:text-3xl">
-                            <span data-count="{{ $pct ? $fee : $fee }}" data-prefix="{{ $pct ? '' : '$' }}">{{ $pct ? $fee : money($fee) }}</span>{{ $pct ? '%' : '' }}
-                        </p>
-                        <p class="mt-1 text-xs text-gray-300">{{ __('Shopper Fee (per order)') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-white sm:text-3xl">
-                            <span data-count="{{ (float) \App\Models\Setting::get('receiving_fee', '2.50') }}" data-prefix="$">$0.00</span>
-                        </p>
-                        <p class="mt-1 text-xs text-gray-300">{{ __('Receiving Fee (per package)') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-white sm:text-3xl">
-                            <span data-count="{{ $countries }}">{{ $countries }}</span>+
-                        </p>
-                        <p class="mt-1 text-xs text-gray-300">{{ __('Countries We Ship To') }}</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </section>
