@@ -21,7 +21,7 @@
             </div>
             <a href="{{ route('request') }}" class="btn-primary px-4 py-2" wire:navigate>
                 <i class="fa-solid fa-plus text-base"></i>
-                {{ __('Request a Purchase') }}
+                {{ __('New Order') }}
             </a>
             @auth
                 <a href="{{ auth()->user()->isAdmin() ? route('dashboard') : route('portal.dashboard') }}"
@@ -55,7 +55,7 @@
         <div class="flex flex-col gap-3 text-sm font-medium text-gray-600">
             <a href="{{ route('request') }}" class="btn-primary px-4 py-2.5 text-center" @click="open = false" wire:navigate>
                 <i class="fa-solid fa-plus text-base"></i>
-                {{ __('Request a Purchase') }}
+                {{ __('New Order') }}
             </a>
             <a href="{{ route('home') }}#how-it-works" @click="open = false">{{ __('How it works') }}</a>
             <a href="{{ route('home') }}#fees" @click="open = false">{{ __('Fees and Pricing') }}</a>

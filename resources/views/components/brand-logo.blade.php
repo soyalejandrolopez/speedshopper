@@ -13,7 +13,7 @@
 @endphp
 
 @if ($logo = brand_logo_url())
-    <img src="{{ $logo }}" alt="{{ $name }}"
+    <img src="{{ $logo }}" alt="{{ $name }}" width="36" height="36"
          class="{{ $box }} w-auto rounded-lg object-contain {{ $class }}">
 @else
     <span class="flex {{ $box }} items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-200 {{ $class }}">

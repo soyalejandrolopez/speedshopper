@@ -21,14 +21,18 @@
     <script type="application/ld+json">{!! json_encode($organization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <section class="gradient-hero relative overflow-hidden">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-            <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
-                 class="h-full w-full object-cover object-bottom" width="1920" height="1080" decoding="async" fetchpriority="high">
+            <picture>
+                <source media="(max-width: 640px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp">
+                <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp">
+                <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
+                     class="h-full w-full object-cover object-bottom" width="1920" height="1080" decoding="async" fetchpriority="high">
+            </picture>
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
         <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-4 pt-64 pb-8 text-center sm:px-6">
-            <div class="flex flex-col items-center" data-reveal>
+            <div class="flex flex-col items-center">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
                         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
@@ -54,20 +58,16 @@
                     @endguest
                 </div>
 
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-medium text-gray-300" data-reveal>
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-medium text-gray-300">
                     <span class="inline-flex items-center gap-1.5">
-<i class="fa-solid fa-circle-check text-xs text-white"></i>
+                        <i class="fa-solid fa-circle-check text-xs text-white"></i>
                         Zelle
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-<i class="fa-solid fa-circle-check text-xs text-white"></i>
+                        <i class="fa-solid fa-circle-check text-xs text-white"></i>
                         PayPal
                     </span>
-
-
                 </div>
-
-
             </div>
         </div>
     </section>
@@ -464,7 +464,11 @@
         <div class="relative overflow-hidden rounded-3xl px-6 py-16 text-center shadow-2xl sm:px-12">
             <!-- Background Image & Gradient Overlays -->
             <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-                <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('Personal shopper and international package shipping') }}" class="h-full w-full object-cover object-center" width="1920" height="1080" decoding="async" loading="lazy">
+                <picture>
+                    <source media="(max-width: 640px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp">
+                    <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('Personal shopper and international package shipping') }}" class="h-full w-full object-cover object-center" width="1920" height="1080" decoding="async" loading="lazy">
+                </picture>
                 <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/85 to-teal-950/90"></div>
                 <div class="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
                 <div class="absolute -start-20 -top-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>

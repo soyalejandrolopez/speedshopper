@@ -24,7 +24,7 @@
                 <a href="{{ route('home') }}" class="transition-colors hover:text-emerald-700">{{ __('Home') }}</a>
                 <a href="{{ route('home') }}#how-it-works" class="transition-colors hover:text-emerald-700">{{ __('How it works') }}</a>
                 <a href="{{ route('home') }}#fees" class="transition-colors hover:text-emerald-700">{{ __('Fees and Pricing') }}</a>
-                <a href="{{ route('request') }}" class="transition-colors hover:text-emerald-700" wire:navigate>{{ __('Request a Purchase') }}</a>
+                <a href="{{ route('request') }}" class="transition-colors hover:text-emerald-700" wire:navigate>{{ __('New Order') }}</a>
             </div>
         </div>
 

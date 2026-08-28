@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
             SetLocale::class,
+            MinifyHtml::class,
         ]);
         $middleware->append(SecurityHeaders::class);
     })
