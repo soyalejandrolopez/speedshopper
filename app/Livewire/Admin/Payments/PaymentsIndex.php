@@ -93,8 +93,9 @@ class PaymentsIndex extends Component
     {
         $data = $this->validatedData();
 
-        // Campos opcionales: vacío → null (evita error de cast a enum / morphTo).
+        // Campos opcionales: vacío → null/0 (evita error de cast a enum, morphTo o NOT NULL).
         $data['payment_method'] = $data['payment_method'] ?: null;
+        $data['amount_paid'] = $data['amount_paid'] ?: 0;
         if (empty($data['billable_type'])) {
             $data['billable_type'] = null;
             $data['billable_id'] = null;

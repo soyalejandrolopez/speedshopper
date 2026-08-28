@@ -39,6 +39,22 @@ it('admin can create a payment without selecting a method', function () {
         ->and((float) $payment->amount_paid)->toBe(80.0);
 });
 
+it('saves a payment even when amount paid is empty', function () {
+    $this->actingAs(createAdmin());
+    $customer = Customer::factory()->create();
+
+    Livewire::test(PaymentsIndex::class)
+        ->call('openCreate')
+        ->set('form.customer_id', $customer->id)
+        ->set('form.invoice_total', 500)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect(Payment::count())->toBe(1)
+        ->and((float) Payment::first()->amount_paid)->toBe(0.0)
+        ->and((float) Payment::first()->invoice_total)->toBe(500.0);
+});
+
 it('admin can create a payment with a method and related request', function () {
     $this->actingAs(createAdmin());
     $customer = Customer::factory()->create();
