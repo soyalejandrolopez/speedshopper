@@ -19,6 +19,10 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
         $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.bunny.net; font-src 'self' data: https://fonts.bunny.net; img-src 'self' data: blob: https:; connect-src 'self'");
+        if (function_exists('header_remove')) {
+            header_remove('X-Powered-By');
+            header_remove('Server');
+        }
         $response->headers->remove('X-Powered-By');
 
         if ($request->isSecure()) {

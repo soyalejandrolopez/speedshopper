@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ? $title.' — ' : '' }}{{ \App\Models\Setting::get('company_name', config('app.name')) }}</title>
+        <title>{{ $title ? $title.' — ' : '' }}{{ \App\Models\Setting::get('company_name', config('app.name')) }}{{ $title ? '' : ' - ' . __('Compras en USA y Envíos a Latinoamérica') }}</title>
 
         <x-brand-favicon />
 

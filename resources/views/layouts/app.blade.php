@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ isset($title) ? $title . ' — ' : '' }}{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ isset($title) ? $title . ' — ' : '' }}{{ \App\Models\Setting::get('company_name', config('app.name')) }}{{ isset($title) ? '' : ' - ' . __('Admin') }}</title>
 
         <x-brand-favicon />
 
