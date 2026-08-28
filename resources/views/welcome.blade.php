@@ -27,7 +27,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
-        <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-4 pt-48 pb-16 text-center sm:px-6">
+        <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-4 pt-64 pb-8 text-center sm:px-6">
             <div class="flex flex-col items-center" data-reveal>
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
