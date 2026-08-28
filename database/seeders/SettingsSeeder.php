@@ -12,7 +12,7 @@ class SettingsSeeder extends Seeder
         $defaults = [
             'company_name' => 'SpeedShopper',
             'warehouse_address' => '123 Main St, Baytown, TX 77521, USA',
-            'whatsapp_phone' => '+12815551234',
+            'whatsapp_phone' => '+13462333199',
             'countries_served' => 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX',
             'shopper_fee' => '10.00',
             'shopper_fee_is_percent' => '0',

@@ -544,9 +544,13 @@
                         <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-700">
                             {{ __('Link, size, color, brand... anything we should know.') }}
                         </div>
-                        <a href="{{ route('request') }}" class="btn-primary w-full justify-center">
-                            <i class="fa-solid fa-comments text-base"></i>
-                            {{ __('Open chat and send your request') }}
+                        @php
+                            $waPhone = preg_replace('/\D+/', '', \App\Models\Setting::get('whatsapp_phone', '13462333199'));
+                            $waMsg = urlencode(__('¡Hola! Quiero solicitar una cotización para un producto.'));
+                        @endphp
+                        <a href="https://wa.me/{{ $waPhone }}?text={{ $waMsg }}" target="_blank" rel="noopener noreferrer" class="btn-primary w-full justify-center">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            {{ __('Abrir chat y enviar tu solicitud') }}
                         </a>
                     </div>
                 </div>
