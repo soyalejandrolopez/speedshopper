@@ -541,8 +541,10 @@
                             {{ __('Link, size, color, brand... anything we should know.') }}
                         </div>
                         @php
-                            $waPhone = preg_replace('/\D+/', '', \App\Models\Setting::get('whatsapp_phone', '13462333199'));
-                            $waMsg = urlencode(__('¡Hola! Quiero solicitar una cotización para un producto.'));
+                            $rawWa = \App\Models\Setting::get('whatsapp_phone');
+                            $cleanWa = $rawWa ? preg_replace('/\D+/', '', $rawWa) : '';
+                            $waPhone = !empty($cleanWa) ? $cleanWa : '13462333199';
+                            $waMsg = urlencode('¡Hola! Quiero solicitar una cotización para un producto.');
                         @endphp
                         <a href="https://wa.me/{{ $waPhone }}?text={{ $waMsg }}" target="_blank" rel="noopener noreferrer" class="btn-primary w-full justify-center">
                             <i class="fa-brands fa-whatsapp text-lg"></i>

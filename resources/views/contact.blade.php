@@ -22,8 +22,10 @@
                 <div class="space-y-6 lg:col-span-5" data-reveal>
                     <!-- WhatsApp Card -->
                     @php
-                        $rawPhone = preg_replace('/\D+/', '', \App\Models\Setting::get('whatsapp_phone', ''));
-                        $displayPhone = \App\Models\Setting::get('whatsapp_phone', '+1 (281) 555-1234');
+                        $dbPhone = \App\Models\Setting::get('whatsapp_phone');
+                        $cleanPhone = $dbPhone ? preg_replace('/\D+/', '', $dbPhone) : '';
+                        $rawPhone = !empty($cleanPhone) ? $cleanPhone : '13462333199';
+                        $displayPhone = !empty($dbPhone) ? $dbPhone : '+1 (346) 233-3199';
                     @endphp
                     <div class="card overflow-hidden border-emerald-200/80 bg-gradient-to-br from-emerald-50/80 via-white to-white p-6 shadow-md transition-all hover:shadow-lg">
                         <div class="flex items-start gap-4">
