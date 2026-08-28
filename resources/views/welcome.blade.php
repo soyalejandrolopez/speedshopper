@@ -37,7 +37,7 @@
                     {{ __('Personal Shopper in Baytown, TX') }}
                 </span>
 
-                <h1 class="mt-6 text-2xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-3xl lg:text-4xl">
+                <h1 class="mt-6 text-3xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl">
                     {{ __('We buy, receive and ship') }}
                     <span class="text-white">{{ __('your products to Latin America') }}</span>
                 </h1>
