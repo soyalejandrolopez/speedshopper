@@ -145,8 +145,8 @@
     <section class="bg-gradient-to-b from-white to-emerald-50/50 py-20" id="fees">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
             <div class="text-center" data-reveal>
-                <span class="section-eyebrow">{{ __('Costos y Fees') }}</span>
-                <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Trabajamos con tarifas claras para que conozcas el costo de nuestro servicio antes de procesar tu compra o envío.') }}</h2>
+                <h2 class="mt-3 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">{{ __('Costos y Fees') }}</h2>
+                <p class="mt-4 text-xl font-medium text-emerald-600 sm:text-2xl">{{ __('Tarifas claras. Compras fáciles. Servicio personalizado.') }}</p>
             </div>
             
             <div class="mt-16 grid gap-8 lg:grid-cols-2">
@@ -264,7 +264,6 @@
                 </h3>
                 <p class="mt-4 text-base text-amber-700">{{ __('Los costos de los productos, impuestos, shipping de las tiendas, envío internacional y cualquier cargo de aduana o importación no están incluidos en nuestros fees de servicio.') }}</p>
                 <p class="mt-2 text-base text-amber-700">{{ __('Cualquier cargo adicional será informado al cliente antes de continuar con el servicio.') }}</p>
-                <p class="mt-5 text-lg font-bold text-amber-900">{{ __('Tarifas claras. Compras fáciles. Servicio personalizado.') }}</p>
             </div>
         </div>
     </section>
