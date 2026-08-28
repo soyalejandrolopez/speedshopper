@@ -20,14 +20,14 @@
     @endphp
     <script type="application/ld+json">{!! json_encode($organization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <section class="gradient-hero relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-0 bg-gray-900" aria-hidden="true">
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
-                 class="h-full w-full object-contain object-center" fetchpriority="high">
+                 class="h-full w-full object-cover object-top" fetchpriority="high">
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
-        <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-24">
+        <div class="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:py-32">
             <div class="flex flex-col items-center" data-reveal>
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
