@@ -60,7 +60,6 @@
                                 <span>{{ __('Destination country') }} *</span>
                             </label>
                             <select id="country" wire:model="form.country" class="input">
-                                <option value="">—</option>
                                 @foreach ($this->countries() as $code => $name)
                                     <option value="{{ $code }}">{{ $name }}</option>
                                 @endforeach

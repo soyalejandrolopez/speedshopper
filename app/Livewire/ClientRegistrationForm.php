@@ -17,7 +17,7 @@ class ClientRegistrationForm extends Component
         'name' => '',
         'whatsapp' => '',
         'email' => '',
-        'country' => '',
+        'country' => 'VE',
         'city' => '',
         'address' => '',
         'services' => [],

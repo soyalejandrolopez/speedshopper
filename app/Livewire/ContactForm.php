@@ -15,7 +15,7 @@ class ContactForm extends Component
         'name' => '',
         'email' => '',
         'whatsapp' => '',
-        'country' => '',
+        'country' => 'VE',
         'subject' => 'general',
         'message' => '',
     ];
