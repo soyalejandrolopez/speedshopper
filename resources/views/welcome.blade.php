@@ -257,14 +257,14 @@
                 </div>
             </div>
 
-            <div class="mx-auto mt-12 max-w-3xl rounded-2xl bg-amber-50 p-6 text-center shadow-inner border border-amber-100" data-reveal>
-                <h3 class="flex items-center justify-center gap-2 font-bold text-amber-800">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <div class="mx-auto mt-12 max-w-3xl rounded-2xl bg-amber-50 p-8 sm:p-10 text-center shadow-inner border border-amber-100" data-reveal>
+                <h3 class="flex items-center justify-center gap-2 text-xl font-bold text-amber-800">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                     {{ __('Importante') }}
                 </h3>
-                <p class="mt-3 text-sm text-amber-700">{{ __('Los costos de los productos, impuestos, shipping de las tiendas, envío internacional y cualquier cargo de aduana o importación no están incluidos en nuestros fees de servicio.') }}</p>
-                <p class="mt-2 text-sm text-amber-700">{{ __('Cualquier cargo adicional será informado al cliente antes de continuar con el servicio.') }}</p>
-                <p class="mt-4 font-semibold text-amber-900">{{ __('Tarifas claras. Compras fáciles. Servicio personalizado.') }}</p>
+                <p class="mt-4 text-base text-amber-700">{{ __('Los costos de los productos, impuestos, shipping de las tiendas, envío internacional y cualquier cargo de aduana o importación no están incluidos en nuestros fees de servicio.') }}</p>
+                <p class="mt-2 text-base text-amber-700">{{ __('Cualquier cargo adicional será informado al cliente antes de continuar con el servicio.') }}</p>
+                <p class="mt-5 text-lg font-bold text-amber-900">{{ __('Tarifas claras. Compras fáciles. Servicio personalizado.') }}</p>
             </div>
         </div>
     </section>
