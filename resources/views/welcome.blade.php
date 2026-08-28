@@ -77,8 +77,8 @@
         <div class="rounded-3xl border border-emerald-100/80 bg-white p-6 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-950/10">
             <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
                 
-                <!-- Left Details & Value Props -->
-                <div class="lg:col-span-5 flex flex-col justify-between" data-reveal>
+                <!-- Left Details & Value Props (2nd on mobile, 1st on desktop) -->
+                <div class="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-between" data-reveal>
                     <div>
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 uppercase tracking-wide">
                             <i class="fa-solid fa-bolt text-xs text-emerald-600"></i>
@@ -155,8 +155,8 @@
                     </div>
                 </div>
 
-                <!-- Right Form: Public Request Form / Quick Quote -->
-                <div class="lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
+                <!-- Right Form: Public Request Form / Quick Quote (1st on mobile, 2nd on desktop) -->
+                <div class="order-1 lg:order-2 lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
                     <div class="overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-xl shadow-gray-200/50">
                         <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-6 py-4 text-white">
                             <div class="flex items-center justify-between">
