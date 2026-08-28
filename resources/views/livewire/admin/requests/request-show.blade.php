@@ -62,7 +62,7 @@
                     </div>
                     <div class="flex justify-between gap-2 sm:col-span-2">
                         <dt class="text-gray-500">{{ __('Description') }}</dt>
-                        <dd class="text-end font-medium text-gray-900">{{ $purchaseRequest->description ?? '—' }}</dd>
+                        <dd class="text-start font-medium whitespace-pre-line text-gray-900">{{ $purchaseRequest->description ?? '—' }}</dd>
                     </div>
                     @if ($purchaseRequest->notes)
                         <div class="rounded-lg bg-gray-50 p-3 text-xs text-gray-600 sm:col-span-2">{{ $purchaseRequest->notes }}</div>
