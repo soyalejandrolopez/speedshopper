@@ -27,7 +27,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
-        <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-4 py-20 text-center sm:px-6">
+        <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-end px-4 pb-16 pt-32 text-center sm:px-6 sm:pb-24">
             <div class="flex flex-col items-center" data-reveal>
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
@@ -56,22 +56,22 @@
                     @endguest
                 </div>
 
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-gray-200" data-reveal>
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-medium text-gray-300" data-reveal>
                     <span class="inline-flex items-center gap-1.5">
-<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+<svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Zelle
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+<svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         PayPal
                     </span>
 
                     <span class="inline-flex items-center gap-1.5">
-<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+<svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ __('Bank transfer') }}
