@@ -120,7 +120,7 @@
                                 <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
-                                <span class="text-sm font-semibold text-emerald-700">{{ __('Respuesta rápida por chat · Sin pago por adelantado') }}</span>
+                                <span class="text-sm font-semibold text-emerald-700">{{ __('Respuesta rápida por chat · Pago por adelantado') }}</span>
                             </div>
                         </div>
 
@@ -150,7 +150,7 @@
                         </div>
                         <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
                             <p class="text-2xl font-black text-emerald-600 tracking-tight">100%</p>
-                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Sin pago por adelantado') }}</p>
+                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Pago por adelantado') }}</p>
                         </div>
                     </div>
                 </div>
