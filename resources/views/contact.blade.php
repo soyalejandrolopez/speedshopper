@@ -82,10 +82,6 @@
                             <div>
                                 <h3 class="font-bold text-gray-900">{{ __('Bodega y Recepción en USA') }}</h3>
                                 <p class="mt-1 text-sm font-medium text-gray-800">{{ \App\Models\Setting::get('warehouse_address', 'Baytown, TX 77521, USA') }}</p>
-                                <p class="mt-1 text-xs text-gray-500">
-                                    <i class="fa-solid fa-clock text-xs text-gray-400"></i>
-                                    {{ __('Horario de recepción: Lunes a Viernes 9:00 AM - 6:00 PM (CST)') }}
-                                </p>
                             </div>
                         </div>
                     </div>
