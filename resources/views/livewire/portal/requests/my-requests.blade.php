@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <x-modal maxWidth="max-w-2xl">
+    <x-modal maxWidth="max-w-3xl">
         <form wire:submit="save">
                         <x-modal-header :title="__('New Purchase Request')" />
 

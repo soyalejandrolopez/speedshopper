@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <x-modal maxWidth="max-w-xl">
+    <x-modal maxWidth="max-w-2xl">
                     <form wire:submit="save">
                         <x-modal-header :title="$editingId ? __('Edit Payment') : __('New Payment')" />
 
