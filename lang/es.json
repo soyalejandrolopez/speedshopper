@@ -329,7 +329,6 @@
     "Reports": "Reportes",
     "Request": "Solicitar",
     "Request Details": "Detalle de solicitud",
-    "Request a Purchase": "Nueva Orden",
     "Request sent successfully": "Solicitud enviada correctamente",
     "Requests by status": "Solicitudes por estado",
     "Resend Verification Email": "Reenviar email de verificación",
@@ -544,5 +543,6 @@
     "Compramos o recibimos tu paquete": "Compramos o recibimos tu paquete",
     "Hacemos la compra por ti, o recibimos en Baytown, Texas, los paquetes que compres online en tus tiendas favoritas.": "Hacemos la compra por ti, o recibimos en Baytown, Texas, los paquetes que compres online en tus tiendas favoritas.",
     "Empacamos y enviamos": "Empacamos y enviamos",
-    "Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.": "Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío."
+    "Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.": "Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.",
+    "New Order": "Nueva Orden"
 }
