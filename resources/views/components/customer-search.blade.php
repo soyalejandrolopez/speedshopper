@@ -8,7 +8,7 @@
     open: false,
     search: @entangle($searchModel),
     pick(id, name) {
-        $wire.set('{{ $model }}', id);
+        $wire.selectCustomer(id, name);
         this.search = name;
         this.open = false;
     }
@@ -17,7 +17,7 @@
            x-model="search"
            @focus="open = true"
            @input="open = true"
-           @blur="setTimeout(() => open = false, 150)"
+           @blur="setTimeout(() => open = false, 200)"
            placeholder="{{ __('Search customer by name or number...') }}"
            autocomplete="off"
            class="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">

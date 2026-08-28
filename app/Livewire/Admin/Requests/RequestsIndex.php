@@ -83,6 +83,12 @@ class RequestsIndex extends Component
         $this->showForm = true;
     }
 
+    public function selectCustomer(?int $customerId, string $name): void
+    {
+        $this->form["customer_id"] = $customerId;
+        $this->form["customer_search"] = $name;
+    }
+
     public function closeForm(): void
     {
         $this->showForm = false;

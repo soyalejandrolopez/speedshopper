@@ -6,6 +6,17 @@ use App\Models\Customer;
 use App\Models\Payment;
 use Livewire\Livewire;
 
+it('selects a customer through the search suggestions', function () {
+    $this->actingAs(createAdmin());
+    $customer = Customer::factory()->create();
+
+    Livewire::test(PaymentsIndex::class)
+        ->call('openCreate')
+        ->call('selectCustomer', $customer->id, $customer->name)
+        ->assertSet('form.customer_id', $customer->id)
+        ->assertSet('form.customer_search', $customer->name);
+});
+
 it('admin can create a payment without selecting a method', function () {
     $this->actingAs(createAdmin());
     $customer = Customer::factory()->create();
