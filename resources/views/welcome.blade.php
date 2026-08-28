@@ -238,7 +238,7 @@
                             <p class="mt-4 text-sm text-gray-600">{{ __('Podemos llevar tu caja preparada a la compañía de envío seleccionada.') }}</p>
                             <p class="mt-2 text-2xl font-bold text-emerald-600">20 USD</p>
                             <div class="mt-4">
-                                <img src="{{ asset('images/entrega-envio.jpg') }}" alt="{{ __('Entrega de caja a compañía de envío') }}" class="w-full max-w-[200px] rounded-xl border border-gray-200 shadow-sm" loading="lazy">
+                                <img src="{{ asset('images/entrega-envio.jpg') }}" alt="{{ __('Entrega de caja a compañía de envío') }}" class="w-[100px] rounded-xl border border-gray-200 shadow-sm" loading="lazy">
                             </div>
                         </div>
                         
