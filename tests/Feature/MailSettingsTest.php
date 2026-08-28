@@ -5,6 +5,7 @@ use App\Mail\TestMail;
 use App\Models\Setting;
 use App\Providers\MailConfigServiceProvider;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 it('applies the smtp configuration when enabled', function () {
@@ -81,12 +82,25 @@ it('rejects the placeholder test email', function () {
     Mail::assertNothingSent();
 });
 
-it('renders absolute logo url in email header template', function () {
+it('embeds the logo as a data uri in the email header when the file exists', function () {
     seedRoles();
+    Storage::fake('public');
+    Storage::disk('public')->put('branding/logo.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='));
     Setting::set('logo_path', 'branding/logo.png');
 
     $html = view('vendor.mail.html.header', ['url' => 'https://speedingshopper.com'])->render();
 
+    expect($html)->toContain('src="data:image/png;base64,')
+        ->and($html)->not->toContain('/storage/branding/logo.png');
+});
+
+it('renders an absolute logo url in the email header when the logo file is missing', function () {
+    seedRoles();
+    Storage::fake('public');
+    Setting::set('logo_path', 'branding/missing-logo.png');
+
+    $html = view('vendor.mail.html.header', ['url' => 'https://speedingshopper.com'])->render();
+
     expect($html)->toContain('src="http')
-        ->and($html)->toContain('/storage/branding/logo.png');
+        ->and($html)->toContain('/storage/branding/missing-logo.png');
 });

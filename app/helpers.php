@@ -21,6 +21,22 @@ if (! function_exists('brand_logo_url')) {
     }
 }
 
+if (! function_exists('brand_logo_data_uri')) {
+    function brand_logo_data_uri(): ?string
+    {
+        $path = Setting::get('logo_path');
+        $disk = Storage::disk('public');
+
+        if (! $path || ! $disk->exists($path)) {
+            return null;
+        }
+
+        $mime = $disk->mimeType($path) ?: 'image/png';
+
+        return 'data:'.$mime.';base64,'.base64_encode($disk->get($path));
+    }
+}
+
 if (! function_exists('brand_favicon_url')) {
     function brand_favicon_url(): ?string
     {

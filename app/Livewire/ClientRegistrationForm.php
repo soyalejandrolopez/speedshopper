@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Customer;
-use App\Models\Setting;
 use App\Services\AdminNotifier;
 use Livewire\Component;
 
