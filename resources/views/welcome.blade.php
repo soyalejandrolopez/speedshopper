@@ -20,9 +20,9 @@
     @endphp
     <script type="application/ld+json">{!! json_encode($organization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <section class="gradient-hero relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="pointer-events-none absolute inset-0 bg-gray-900" aria-hidden="true">
             <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
-                 class="h-full w-full object-cover object-center" fetchpriority="high">
+                 class="h-full w-full object-contain object-center" fetchpriority="high">
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
