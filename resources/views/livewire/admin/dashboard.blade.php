@@ -197,7 +197,7 @@
                         <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="group flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900 group-hover:text-emerald-700">{{ $request->number }}</p>
-                                <p class="truncate text-xs text-gray-500">{{ $request->customer->name }} · {{ $request->product_name }}</p>
+                                <p class="truncate text-xs text-gray-500">{{ $request->customer?->name ?? __('Unknown') }} · {{ $request->product_name }}</p>
                             </div>
                             <x-status-badge :status="$request->status" />
                         </a>
@@ -224,7 +224,7 @@
                         <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900">{{ $package->number }}</p>
-                                <p class="truncate text-xs text-gray-500">{{ $package->customer->name }} · {{ $package->store }}</p>
+                                <p class="truncate text-xs text-gray-500">{{ $package->customer?->name ?? __('Unknown') }} · {{ $package->store }}</p>
                             </div>
                             <span class="shrink-0 text-xs font-medium text-gray-500">{{ $package->weight_lb ? $package->weight_lb . ' lb' : '—' }}</span>
                         </a>
@@ -250,7 +250,7 @@
                     <li>
                         <a href="{{ route('admin.payments.index') }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
-                                <p class="truncate text-sm font-medium text-gray-900">{{ $payment->customer->name }}</p>
+                                <p class="truncate text-sm font-medium text-gray-900">{{ $payment->customer?->name ?? __('Unknown') }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $payment->number }}</p>
                             </div>
                             <span class="shrink-0 text-xs font-medium {{ $payment->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">
