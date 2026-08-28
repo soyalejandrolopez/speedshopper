@@ -35,21 +35,21 @@
                 @if ($period === 'monthly')
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-600">{{ __('Month') }}</label>
-                        <input type="month" wire:model.live="month" class="rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <input type="month" wire:model.live="month" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 @elseif ($period === 'yearly')
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-600">{{ __('Year') }}</label>
-                        <input type="number" min="2000" max="2100" wire:model.live="year" class="w-28 rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <input type="number" min="2000" max="2100" wire:model.live="year" class="w-28 rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 @else
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-600">{{ __('From') }}</label>
-                        <input type="date" wire:model.live="from" class="rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <input type="date" wire:model.live="from" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-600">{{ __('To') }}</label>
-                        <input type="date" wire:model.live="to" class="rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <input type="date" wire:model.live="to" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 @endif
             </div>

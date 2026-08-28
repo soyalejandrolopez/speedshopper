@@ -29,6 +29,7 @@ class ShipmentsIndex extends Component
 
     public array $form = [
         'customer_id' => null,
+        'customer_search' => '',
         'package_ids' => [],
         'carrier' => '',
         'destination_country' => '',
@@ -76,6 +77,7 @@ class ShipmentsIndex extends Component
             'customer_id', 'carrier', 'destination_country', 'final_weight_lb', 'dimensions',
             'international_tracking', 'shipping_cost', 'notes',
         ]);
+        $this->form['customer_search'] = $shipment->customer?->name ?? '';
         $this->form['package_ids'] = $shipment->packages->pluck('id')->all();
         $this->form['shipped_at'] = $shipment->shipped_at?->toDateString();
         $this->form['delivered_at'] = $shipment->delivered_at?->toDateString();

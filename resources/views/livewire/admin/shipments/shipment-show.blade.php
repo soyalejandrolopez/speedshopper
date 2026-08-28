@@ -100,15 +100,15 @@
                     </tbody>
                 </table>
                 <form wire:submit="addCost" class="flex flex-col gap-2 border-t border-gray-200 p-4 sm:flex-row sm:items-start">
-                    <select wire:model="costForm.type" class="rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <select wire:model="costForm.type" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         @foreach ($costTypes as $type)
                             <option value="{{ $type->value }}">{{ $type->label() }}</option>
                         @endforeach
                     </select>
                     <input type="text" wire:model="costForm.description" placeholder="{{ __('Description') }}"
-                           class="flex-1 rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                           class="flex-1 rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     <input type="number" step="0.01" min="0" wire:model="costForm.amount" placeholder="0.00"
-                           class="w-32 rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                           class="w-32 rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     <button type="submit" class="rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
                         {{ __('Add Cost') }}
                     </button>
@@ -142,7 +142,7 @@
                     <form wire:submit="transitionStatus" class="mt-3 space-y-3">
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Change To') }}</label>
-                            <select wire:model="newStatus" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <select wire:model="newStatus" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                                 <option value="">—</option>
                                 @foreach ($shipment->status->nextStatuses() as $next)
                                     <option value="{{ $next }}">{{ \App\Enums\ShipmentStatus::from($next)->label() }}</option>
@@ -152,7 +152,7 @@
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Transition Note') }}</label>
-                            <textarea wire:model="transitionNote" rows="2" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
+                            <textarea wire:model="transitionNote" rows="2" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
                         </div>
                         <button type="submit" class="w-full rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
                             {{ __('Update Status') }}

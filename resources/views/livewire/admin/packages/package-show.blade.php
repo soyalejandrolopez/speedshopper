@@ -107,7 +107,7 @@
                     <form wire:submit="transitionStatus" class="mt-3 space-y-3">
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Change To') }}</label>
-                            <select wire:model="newStatus" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <select wire:model="newStatus" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                                 <option value="">—</option>
                                 @foreach ($package->status->nextStatuses() as $next)
                                     <option value="{{ $next }}">{{ \App\Enums\PackageStatus::from($next)->label() }}</option>
@@ -117,7 +117,7 @@
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Transition Note') }}</label>
-                            <textarea wire:model="transitionNote" rows="2" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
+                            <textarea wire:model="transitionNote" rows="2" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
                         </div>
                         <button type="submit" class="w-full rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
                             {{ __('Update Status') }}

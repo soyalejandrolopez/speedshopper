@@ -7,7 +7,7 @@
                 wire:model.live.debounce.300ms="search" data-shortcut-search aria-label="{{ __('Search') }}"
                 type="search"
                 placeholder="{{ __('Search') }}..."
-                class="w-full rounded-lg border-gray-300 text-sm ps-9 sm:w-64 focus:border-emerald-500 focus:ring-emerald-500">
+                class="w-full rounded-lg border border-gray-300 text-sm ps-9 sm:w-64 focus:border-emerald-500 focus:ring-emerald-500">
 
             <button wire:click="openCreate" type="button"
                     class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
@@ -87,17 +87,12 @@
                         <x-modal-body class="grid gap-5 sm:grid-cols-2">
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="customer_id-{{ $this->getId() }}">{{ __('Customer') }} *</label>
-                                <select id="customer_id-{{ $this->getId() }}" name="customer_id" wire:model.live="form.customer_id" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                    <option value="">—</option>
-                                    @foreach ($customers as $c)
-                                        <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->number }})</option>
-                                    @endforeach
-                                </select>
+                                <x-customer-search :customers="$customers" />
                                 @error('form.customer_id') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="payment_method-{{ $this->getId() }}">{{ __('Payment Method') }}</label>
-                                <select id="payment_method-{{ $this->getId() }}" name="payment_method" wire:model="form.payment_method" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="payment_method-{{ $this->getId() }}" name="payment_method" wire:model="form.payment_method" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                                     <option value="">—</option>
                                     @foreach ($methods as $method)
                                         <option value="{{ $method->value }}">{{ $method->label() }}</option>
@@ -106,21 +101,21 @@
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="invoice_total-{{ $this->getId() }}">{{ __('Invoice Total') }} *</label>
-                                <input id="invoice_total-{{ $this->getId() }}" name="invoice_total" type="number" step="0.01" min="0" wire:model="form.invoice_total" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="invoice_total-{{ $this->getId() }}" name="invoice_total" type="number" step="0.01" min="0" wire:model="form.invoice_total" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.invoice_total') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="amount_paid-{{ $this->getId() }}">{{ __('Amount Paid') }}</label>
-                                <input id="amount_paid-{{ $this->getId() }}" name="amount_paid" type="number" step="0.01" min="0" wire:model="form.amount_paid" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="amount_paid-{{ $this->getId() }}" name="amount_paid" type="number" step="0.01" min="0" wire:model="form.amount_paid" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.amount_paid') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="paid_at-{{ $this->getId() }}">{{ __('Paid At') }}</label>
-                                <input id="paid_at-{{ $this->getId() }}" name="paid_at" type="date" wire:model="form.paid_at" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="paid_at-{{ $this->getId() }}" name="paid_at" type="date" wire:model="form.paid_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="billable_type-{{ $this->getId() }}">{{ __('Related to') }}</label>
-                                <select id="billable_type-{{ $this->getId() }}" name="billable_type" wire:model="form.billable_type" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <select id="billable_type-{{ $this->getId() }}" name="billable_type" wire:model="form.billable_type" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     <option value="purchase_request">{{ __('Request') }}</option>
                                     <option value="shipment">{{ __('Shipment') }}</option>
@@ -128,7 +123,7 @@
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
-                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
+                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
                             </div>
                         </x-modal-body>
 

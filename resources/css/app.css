@@ -35,6 +35,23 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* Contorno visible en todos los campos de formulario */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="date"],
+input[type="month"],
+select,
+textarea {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-gray-300);
+}
+
 ::selection {
     background-color: color-mix(in oklab, var(--color-emerald-500) 25%, transparent);
 }

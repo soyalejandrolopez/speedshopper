@@ -28,6 +28,7 @@ class PaymentsIndex extends Component
 
     public array $form = [
         'customer_id' => null,
+        'customer_search' => '',
         'billable_type' => '',
         'billable_id' => null,
         'invoice_total' => null,
@@ -68,6 +69,7 @@ class PaymentsIndex extends Component
         $this->form = $payment->only([
             'customer_id', 'invoice_total', 'amount_paid', 'notes',
         ]);
+        $this->form['customer_search'] = $payment->customer?->name ?? '';
         $this->form['billable_type'] = $payment->billable_type ? class_basename($payment->billable_type) : '';
         $this->form['billable_id'] = $payment->billable_id;
         $this->form['payment_method'] = $payment->payment_method?->value ?? '';

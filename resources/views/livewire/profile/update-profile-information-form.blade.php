@@ -77,14 +77,14 @@ new class extends Component
         <div>
             <label for="name" class="mb-1 block text-sm font-medium text-gray-700">{{ __('Name') }}</label>
             <input wire:model="name" id="name" name="name" type="text" required autofocus autocomplete="name"
-                   class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
             <x-input-error class="mt-1.5" :messages="$errors->get('name')" />
         </div>
 
         <div>
             <label for="email" class="mb-1 block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
             <input wire:model="email" id="email" name="email" type="email" required autocomplete="username"
-                   class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
             <x-input-error class="mt-1.5" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())

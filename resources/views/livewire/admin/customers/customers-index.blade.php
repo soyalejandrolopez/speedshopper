@@ -11,7 +11,7 @@
                     wire:model.live.debounce.300ms="search" data-shortcut-search aria-label="{{ __('Search') }}"
                     type="search"
                     placeholder="{{ __('Search') }}..."
-                    class="w-full rounded-lg border-gray-300 text-sm ps-9 sm:max-w-xs focus:border-emerald-500 focus:ring-emerald-500">
+                    class="w-full rounded-lg border border-gray-300 text-sm ps-9 sm:max-w-xs focus:border-emerald-500 focus:ring-emerald-500">
             </div>
 
             <button wire:click="openCreate" type="button"
@@ -101,25 +101,25 @@
                         <x-modal-body class="grid gap-5 sm:grid-cols-2">
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="name-{{ $this->getId() }}">{{ __('Name') }} *</label>
-                                <input id="name-{{ $this->getId() }}" name="name" type="text" wire:model="form.name" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="name-{{ $this->getId() }}" name="name" type="text" wire:model="form.name" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="email-{{ $this->getId() }}">{{ __('Email') }}</label>
-                                <input id="email-{{ $this->getId() }}" name="email" type="email" wire:model="form.email" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="email-{{ $this->getId() }}" name="email" type="email" wire:model="form.email" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="phone-{{ $this->getId() }}">{{ __('Phone') }}</label>
-                                <input id="phone-{{ $this->getId() }}" name="phone" type="text" wire:model="form.phone" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="phone-{{ $this->getId() }}" name="phone" type="text" wire:model="form.phone" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp-{{ $this->getId() }}">{{ __('WhatsApp') }}</label>
-                                <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" wire:model="form.whatsapp" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" wire:model="form.whatsapp" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="country-{{ $this->getId() }}">{{ __('Country') }}</label>
-                                <select id="country-{{ $this->getId() }}" name="country" wire:model="form.country" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <select id="country-{{ $this->getId() }}" name="country" wire:model="form.country" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     @foreach (['MX', 'GT', 'HN', 'SV', 'NI', 'CR', 'PA', 'CO', 'EC', 'PE', 'CL', 'AR', 'US'] as $code)
                                         <option value="{{ $code }}">{{ country_name($code) }}</option>
@@ -128,19 +128,19 @@
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="address-{{ $this->getId() }}">{{ __('Address') }}</label>
-                                <input id="address-{{ $this->getId() }}" name="address" type="text" wire:model="form.address" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="address-{{ $this->getId() }}" name="address" type="text" wire:model="form.address" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="city-{{ $this->getId() }}">{{ __('City') }}</label>
-                                <input id="city-{{ $this->getId() }}" name="city" type="text" wire:model="form.city" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="city-{{ $this->getId() }}" name="city" type="text" wire:model="form.city" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="registered_at-{{ $this->getId() }}">{{ __('Date') }}</label>
-                                <input id="registered_at-{{ $this->getId() }}" name="registered_at" type="date" wire:model="form.registered_at" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="registered_at-{{ $this->getId() }}" name="registered_at" type="date" wire:model="form.registered_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
-                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="3" class="w-full rounded-xl border-gray-200/80 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
+                                <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="3" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
                             </div>
                         </x-modal-body>
 

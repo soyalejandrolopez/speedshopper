@@ -605,5 +605,7 @@
     "Preferred courier": "Compañía envío",
     "Coordinate shipping": "Coordinar envío",
     "Comments": "Comentarios",
-    "Service request": "Solicitud de servicio"
+    "Service request": "Solicitud de servicio",
+    "Search customer by name or number...": "Buscar cliente por nombre o número...",
+    "No customers available": "No hay clientes disponibles"
 }

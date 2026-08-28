@@ -32,6 +32,7 @@ class RequestsIndex extends Component
 
     public array $form = [
         'customer_id' => null,
+        'customer_search' => '',
         'product_name' => '',
         'product_url' => '',
         'store' => '',
@@ -65,6 +66,7 @@ class RequestsIndex extends Component
         $this->form['quantity'] = 1;
         if ($this->customer) {
             $this->form['customer_id'] = $this->customer;
+            $this->form['customer_search'] = Customer::find($this->customer)?->name ?? '';
         }
         $this->showForm = true;
     }
@@ -77,6 +79,7 @@ class RequestsIndex extends Component
             'customer_id', 'product_name', 'product_url', 'store', 'description',
             'size_color', 'quantity', 'unit_price', 'discount_found', 'notes',
         ]);
+        $this->form['customer_search'] = $purchaseRequest->customer?->name ?? '';
         $this->showForm = true;
     }
 

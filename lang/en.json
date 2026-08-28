@@ -609,5 +609,7 @@
     "Preferred courier": "Preferred courier",
     "Coordinate shipping": "Coordinate shipping",
     "Comments": "Comments",
-    "Service request": "Service request"
+    "Service request": "Service request",
+    "Search customer by name or number...": "Search customer by name or number...",
+    "No customers available": "No customers available"
 }

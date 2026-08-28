@@ -9,23 +9,23 @@
             <div class="grid gap-4 p-5 sm:grid-cols-2">
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="company_name-{{ $this->getId() }}">{{ __('Company Name') }}</label>
-                    <input id="company_name-{{ $this->getId() }}" name="company_name" type="text" wire:model="settings.company_name" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="company_name-{{ $this->getId() }}" name="company_name" type="text" wire:model="settings.company_name" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="currency-{{ $this->getId() }}">{{ __('Currency') }}</label>
-                    <input id="currency-{{ $this->getId() }}" name="currency" type="text" wire:model="settings.currency" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="currency-{{ $this->getId() }}" name="currency" type="text" wire:model="settings.currency" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div class="sm:col-span-2">
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="warehouse_address-{{ $this->getId() }}">{{ __('Warehouse Address') }}</label>
-                    <input id="warehouse_address-{{ $this->getId() }}" name="warehouse_address" type="text" wire:model="settings.warehouse_address" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="warehouse_address-{{ $this->getId() }}" name="warehouse_address" type="text" wire:model="settings.warehouse_address" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp_phone-{{ $this->getId() }}">{{ __('WhatsApp Phone') }}</label>
-                    <input id="whatsapp_phone-{{ $this->getId() }}" name="whatsapp_phone" type="text" wire:model="settings.whatsapp_phone" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="whatsapp_phone-{{ $this->getId() }}" name="whatsapp_phone" type="text" wire:model="settings.whatsapp_phone" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="countries_served-{{ $this->getId() }}">{{ __('Countries Served (ISO2)') }}</label>
-                    <input id="countries_served-{{ $this->getId() }}" name="countries_served" type="text" wire:model="settings.countries_served" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="countries_served-{{ $this->getId() }}" name="countries_served" type="text" wire:model="settings.countries_served" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     <p class="mt-1 text-xs text-gray-400">{{ __('e.g.') }} MX,GT,HN,SV,NI,CR,PA,CO,EC,PE,CL,AR</p>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             <div class="grid gap-4 p-5 sm:grid-cols-2">
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="shopper_fee-{{ $this->getId() }}">{{ __('Shopper Fee') }}</label>
-                    <input id="shopper_fee-{{ $this->getId() }}" name="shopper_fee" type="number" step="0.01" min="0" wire:model="settings.shopper_fee" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="shopper_fee-{{ $this->getId() }}" name="shopper_fee" type="number" step="0.01" min="0" wire:model="settings.shopper_fee" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div class="flex items-end">
                     <label class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700" for="shopper_fee_is_percent-{{ $this->getId() }}">
@@ -49,11 +49,11 @@
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="receiving_fee-{{ $this->getId() }}">{{ __('Receiving Fee') }}</label>
-                    <input id="receiving_fee-{{ $this->getId() }}" name="receiving_fee" type="number" step="0.01" min="0" wire:model="settings.receiving_fee" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="receiving_fee-{{ $this->getId() }}" name="receiving_fee" type="number" step="0.01" min="0" wire:model="settings.receiving_fee" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="packing_fee-{{ $this->getId() }}">{{ __('Packing Fee') }}</label>
-                    <input id="packing_fee-{{ $this->getId() }}" name="packing_fee" type="number" step="0.01" min="0" wire:model="settings.packing_fee" class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input id="packing_fee-{{ $this->getId() }}" name="packing_fee" type="number" step="0.01" min="0" wire:model="settings.packing_fee" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
             </div>
         </div>
@@ -82,13 +82,13 @@
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp_api_url-{{ $this->getId() }}">{{ __('WhatsApp API URL') }}</label>
                     <input id="whatsapp_api_url-{{ $this->getId() }}" name="whatsapp_api_url" type="text" wire:model="settings.whatsapp_api_url"
-                           placeholder="https://..." class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                           placeholder="https://..." class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     <p class="mt-1 text-xs text-gray-400">{{ __('Receives a POST with phone and message. Leave empty to skip WhatsApp.') }}</p>
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp_api_token-{{ $this->getId() }}">{{ __('WhatsApp API Token') }}</label>
                     <input id="whatsapp_api_token-{{ $this->getId() }}" name="whatsapp_api_token" type="password" wire:model="settings.whatsapp_api_token"
-                           class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                           class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@
                         <input type="color" wire:model.live="settings.theme_color"
                                class="h-8 w-12 cursor-pointer rounded border border-gray-300 bg-white p-0">
                         <input type="text" wire:model.live="settings.theme_color"
-                               class="w-24 rounded-lg border-gray-300 text-sm uppercase focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-24 rounded-lg border border-gray-300 text-sm uppercase focus:border-emerald-500 focus:ring-emerald-500">
                     </label>
 
                     <div class="flex flex-wrap items-center gap-2">
@@ -212,27 +212,27 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_host-{{ $this->getId() }}">{{ __('SMTP Host') }}</label>
                         <input id="mail_host-{{ $this->getId() }}" name="mail_host" type="text" wire:model="settings.mail_host" placeholder="smtp.gmail.com"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_port-{{ $this->getId() }}">{{ __('SMTP Port') }}</label>
                         <input id="mail_port-{{ $this->getId() }}" name="mail_port" type="number" min="1" max="65535" wire:model="settings.mail_port" placeholder="587"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_username-{{ $this->getId() }}">{{ __('Username') }}</label>
                         <input id="mail_username-{{ $this->getId() }}" name="mail_username" type="text" wire:model="settings.mail_username" placeholder="no-reply@example.com"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_password-{{ $this->getId() }}">{{ __('Password') }}</label>
                         <input id="mail_password-{{ $this->getId() }}" name="mail_password" type="password" wire:model="settings.mail_password"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_encryption-{{ $this->getId() }}">{{ __('Encryption') }}</label>
                         <select id="mail_encryption-{{ $this->getId() }}" name="mail_encryption" wire:model="settings.mail_encryption"
-                                class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                             <option value="tls">TLS</option>
                             <option value="ssl">SSL</option>
                             <option value="">None</option>
@@ -241,12 +241,12 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_from_address-{{ $this->getId() }}">{{ __('From Address') }}</label>
                         <input id="mail_from_address-{{ $this->getId() }}" name="mail_from_address" type="text" wire:model="settings.mail_from_address" placeholder="no-reply@example.com"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-1 block text-sm font-medium text-gray-700" for="mail_from_name-{{ $this->getId() }}">{{ __('From Name') }}</label>
                         <input id="mail_from_name-{{ $this->getId() }}" name="mail_from_name" type="text" wire:model="settings.mail_from_name" placeholder="{{ __('Company Name') }}"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 </div>
 
@@ -254,7 +254,7 @@
                     <p class="text-xs font-medium text-gray-500">{{ __('Send a test email') }}</p>
                     <div class="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
                         <input type="email" wire:model="testEmail" placeholder="you@example.com"
-                               class="w-full rounded-lg border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500 sm:max-w-xs">
+                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500 sm:max-w-xs">
                         <button type="button" wire:click="sendTestEmail" class="btn-primary">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />

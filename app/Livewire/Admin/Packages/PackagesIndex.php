@@ -31,6 +31,7 @@ class PackagesIndex extends Component
 
     public array $form = [
         'customer_id' => null,
+        'customer_search' => '',
         'purchase_request_id' => null,
         'store' => '',
         'original_tracking' => '',
@@ -77,6 +78,7 @@ class PackagesIndex extends Component
             'customer_id', 'purchase_request_id', 'store', 'original_tracking',
             'received_at', 'weight_lb', 'location', 'notes',
         ]);
+        $this->form['customer_search'] = $package->customer?->name ?? '';
         $this->form['received_at'] = $package->received_at?->toDateString();
         $this->showForm = true;
     }
