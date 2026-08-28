@@ -3,8 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build": "rm -rf public/build && vite build",
+        "build:push": "rm -rf public/build && vite build && git add -A && git commit -m \"build: update production assets\" && git push origin main",
+        "deploy": "npm run build:push"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
