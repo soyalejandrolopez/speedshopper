@@ -210,15 +210,15 @@
                             <div class="grid grid-cols-3 gap-3">
                                 <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
                                     <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Small') }}</div>
-                                    <div class="mt-1 text-lg font-bold text-gray-900">$15</div>
+                                    <div class="mt-1 text-lg font-bold text-emerald-600">$15</div>
                                 </div>
                                 <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
                                     <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Mediana') }}</div>
-                                    <div class="mt-1 text-lg font-bold text-gray-900">$20</div>
+                                    <div class="mt-1 text-lg font-bold text-emerald-600">$20</div>
                                 </div>
                                 <div class="rounded-lg bg-gray-50 p-3 text-center transition-colors hover:bg-sky-50">
                                     <div class="text-xs font-semibold uppercase text-gray-500">{{ __('Large') }}</div>
-                                    <div class="mt-1 text-lg font-bold text-gray-900">$25</div>
+                                    <div class="mt-1 text-lg font-bold text-emerald-600">$25</div>
                                 </div>
                             </div>
                             <p class="mt-4 text-sm text-gray-500">{{ __('El servicio incluye la preparación y organización de tus productos para su envío.') }}</p>
