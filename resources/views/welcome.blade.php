@@ -367,14 +367,38 @@
             </div>
 
             @php $faqs = [
-                [__('How do I request a purchase?'), __('Just fill out the request form with the product links. We will quote you the total cost including fees and international shipping before buying anything.')],
-                [__('How much does the service cost?'), __('We charge a shopper fee per order, a receiving fee per package and a packing fee per box. International shipping is calculated per box based on weight and destination.')],
-                [__('How long does a package take to arrive?'), __('Once your box ships from Baytown, delivery to Latin America usually takes between 5 and 15 business days depending on the destination country and carrier.')],
-                [__('Can I consolidate several packages into one box?'), __('Yes! That is one of our specialties. We receive your packages in Baytown, consolidate them into one box to save on international shipping and pack everything securely.')],
-                [__('How do I pay?'), __('We accept Zelle, bank transfer, card and PayPal. You will see your balance due in your account portal.')],
-                [__('Can I track my packages?'), __('Yes. When you create your account you get a private portal where you can follow your purchases, packages and boxes step by step, from Baytown to delivery.')],
-                [__('What is your shipping address in the US?'), __('We give you a Baytown, TX address so you can buy online and have your packages delivered there. We receive them, store them and consolidate them for you.')],
-                [__('What happens if a package arrives damaged?'), __('We photograph and verify every package when it arrives in Baytown. If something arrives damaged or with issues, we let you know immediately and help you return it or claim the store.')],
+                [
+                    __('¿Cómo solicito una compra?'),
+                    __('Regístrate en nuestro portal, selecciona el servicio que necesitas y envíanos el link, foto o información del producto que deseas comprar. Revisaremos tu solicitud y te enviaremos los detalles antes de procesarla.')
+                ],
+                [
+                    __('¿Cuánto cuesta el servicio?'),
+                    __('El costo depende del tipo y monto de la compra. Las compras presenciales tienen fees desde el 15% al 20%, según el total de la compra. Las compras online tienen un fee del 15%. Los costos de embalaje, envío y otros servicios adicionales se calculan por separado.')
+                ],
+                [
+                    __('¿Cuánto tarda en llegar un paquete?'),
+                    __('El tiempo depende de la tienda, la compañía de transporte y el destino. Una vez que el paquete llegue a nuestras instalaciones, te notificaremos y podremos comenzar el proceso de preparación y envío.')
+                ],
+                [
+                    __('¿Puedo consolidar varios paquetes en una sola caja?'),
+                    __('Sí. Podemos recibir varios paquetes y consolidarlos en una sola caja para facilitar el envío y, cuando sea posible, ayudarte a reducir costos.')
+                ],
+                [
+                    __('¿Cómo puedo pagar?'),
+                    __('Te informaremos los métodos de pago disponibles al momento de confirmar tu compra o servicio. El pago deberá ser confirmado antes de procesar la compra o realizar el envío correspondiente.')
+                ],
+                [
+                    __('¿Puedo rastrear mis paquetes?'),
+                    __('Sí. Cuando el transportista proporcione un número de tracking, podrás utilizarlo para verificar el estado de tu paquete. También podrás consultar las actualizaciones disponibles a través de tu cuenta.')
+                ],
+                [
+                    __('¿Cuál es la dirección de envío en Estados Unidos?'),
+                    __('Nuestra dirección de recepción se encuentra en Baytown, Texas. La dirección completa y las instrucciones para identificar correctamente tus paquetes serán proporcionadas una vez que completes tu registro.')
+                ],
+                [
+                    __('¿Qué pasa si mi paquete llega dañado?'),
+                    __('Al recibir un paquete con daños visibles, documentaremos su condición y te notificaremos. Te recomendamos conservar toda la información de compra y tracking, ya que cualquier reclamación relacionada con daños durante el transporte puede depender de las políticas de la tienda o de la compañía de envío.')
+                ],
             ]; @endphp
 
             @foreach ($faqs as $index => $faq)
