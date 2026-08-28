@@ -84,26 +84,28 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Costs') }}</h3>
                     <span class="text-sm font-semibold text-gray-900">{{ money($purchaseRequest->total_cost) }}</span>
                 </div>
-                <table class="table-base">
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse ($purchaseRequest->costItems as $cost)
-                            <tr>
-                                <td class="px-5 py-2.5">{{ $cost->type->label() }}</td>
-                                <td class="px-5 py-2.5 text-xs text-gray-500">{{ $cost->description }}</td>
-                                <td class="px-5 py-2.5 text-end font-medium">{{ money($cost->amount) }}</td>
-                                <td class="px-5 py-2.5 text-end">
-                                    <button wire:click="removeCost({{ $cost->id }})"
-                                            wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
-                                            class="text-gray-400 hover:text-red-600">
-                                        <i class="fa-solid fa-xmark text-base"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr><td><li><x-empty-state :message="__('No records found.')" icon="inbox" /></li></td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="table-base">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($purchaseRequest->costItems as $cost)
+                                <tr>
+                                    <td class="px-5 py-2.5">{{ $cost->type->label() }}</td>
+                                    <td class="px-5 py-2.5 text-xs text-gray-500">{{ $cost->description }}</td>
+                                    <td class="px-5 py-2.5 text-end font-medium">{{ money($cost->amount) }}</td>
+                                    <td class="px-5 py-2.5 text-end">
+                                        <button wire:click="removeCost({{ $cost->id }})"
+                                                wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
+                                                class="text-gray-400 hover:text-red-600">
+                                            <i class="fa-solid fa-xmark text-base"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td><li><x-empty-state :message="__('No records found.')" icon="inbox" /></li></td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
                 <form wire:submit="addCost" class="flex flex-col gap-2 border-t border-gray-200 p-4 sm:flex-row sm:items-start">
                     <select wire:model="costForm.type" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         @foreach ($costTypes as $type)

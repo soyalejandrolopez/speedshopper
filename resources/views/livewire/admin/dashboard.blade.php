@@ -118,7 +118,7 @@
                 <i class="fa-solid fa-chevron-right text-sm"></i>
             </a>
         </div>
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left text-sm text-gray-600">
                 <thead class="bg-gray-50/50 text-[11px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100">
                     <tr>
@@ -221,6 +221,56 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($recentInquiries as $inquiry)
+                <li class="px-4 py-3.5 {{ $inquiry->isUnread() ? 'bg-emerald-50/20' : '' }}">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <p class="truncate text-sm font-bold text-gray-900">{{ $inquiry->name }}</p>
+                                @if ($inquiry->status === 'unread')
+                                    <span class="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">{{ __('Nuevo') }}</span>
+                                @elseif ($inquiry->status === 'contacted')
+                                    <span class="shrink-0 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-800">{{ __('Atendido') }}</span>
+                                @else
+                                    <span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600">{{ __('Leído') }}</span>
+                                @endif
+                            </div>
+                            <p class="mt-0.5 truncate text-xs text-gray-500">{{ $inquiry->email }}</p>
+                        </div>
+                        <span class="shrink-0 text-xs text-gray-400">{{ $inquiry->created_at->diffForHumans() }}</span>
+                    </div>
+                    <p class="mt-1.5 line-clamp-2 text-xs text-gray-600">{{ $inquiry->message }}</p>
+                    <div class="mt-2 flex items-center gap-1.5">
+                        @if ($inquiry->isUnread())
+                            <button type="button" wire:click="markInquiryRead({{ $inquiry->id }})"
+                                    class="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700">
+                                <i class="fa-solid fa-check text-sm"></i>
+                                {{ __('Marcar leído') }}
+                            </button>
+                        @endif
+                        @if ($inquiry->phone)
+                            @php $phoneRaw = preg_replace('/\D+/', '', $inquiry->phone); @endphp
+                            <a href="https://wa.me/{{ $phoneRaw }}?text={{ urlencode('Hola '.$inquiry->name.', te contactamos desde '.config('app.name').':') }}"
+                               target="_blank"
+                               class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-emerald-600 hover:bg-emerald-50">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                        @endif
+                        <button type="button" wire:confirm="{{ __('¿Eliminar mensaje?') }}"
+                                wire:click="deleteInquiry({{ $inquiry->id }})"
+                                class="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No hay mensajes de contacto recientes.')" icon="inbox" />
+                </li>
+            @endforelse
+        </ul>
     </div>
 
     <div class="grid gap-6 mt-6 lg:grid-cols-2">

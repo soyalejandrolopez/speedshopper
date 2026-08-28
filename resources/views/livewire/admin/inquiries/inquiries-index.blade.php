@@ -32,7 +32,7 @@
 
     <!-- Inquiries Table -->
     <div class="card overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left text-sm text-gray-600">
                 <thead class="bg-gray-50/80 text-xs font-bold uppercase tracking-wider text-gray-500 border-b border-gray-100">
                     <tr>
@@ -143,6 +143,64 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($inquiries as $inquiry)
+                <li class="px-4 py-4 {{ $inquiry->isUnread() ? 'bg-emerald-50/20' : '' }}">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm">
+                                {{ strtoupper(substr($inquiry->name, 0, 1)) }}
+                            </span>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-bold text-gray-900">{{ $inquiry->name }}</p>
+                                <p class="truncate text-xs text-gray-500">{{ $inquiry->email }}</p>
+                            </div>
+                        </div>
+                        @if ($inquiry->status === 'unread')
+                            <span class="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">{{ __('Nuevo') }}</span>
+                        @elseif ($inquiry->status === 'contacted')
+                            <span class="shrink-0 rounded-full bg-blue-100 px-2.5 py-0.5 text-[11px] font-semibold text-blue-800">{{ __('Atendido') }}</span>
+                        @else
+                            <span class="shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600">{{ __('Leído') }}</span>
+                        @endif
+                    </div>
+                    <p class="mt-2 line-clamp-2 text-xs text-gray-600">
+                        <span class="font-semibold text-gray-800 capitalize">{{ str_replace('_', ' ', $inquiry->subject ?: 'Consulta') }}:</span>
+                        {{ $inquiry->message }}
+                    </p>
+                    <div class="mt-2 flex items-center gap-1.5 text-xs">
+                        <span class="text-gray-400">{{ $inquiry->created_at->diffForHumans() }}</span>
+                        @if ($inquiry->country)
+                            <span class="rounded bg-gray-100 px-1.5 py-0.5 font-medium text-gray-600">{{ country_name($inquiry->country) }}</span>
+                        @endif
+                        <span class="ms-auto flex items-center gap-1">
+                            <button type="button" wire:click="openInquiry({{ $inquiry->id }})"
+                                    class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-emerald-600 hover:bg-emerald-50">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </button>
+                            @if ($inquiry->phone)
+                                @php $phoneClean = preg_replace('/\D+/', '', $inquiry->phone); @endphp
+                                <a href="https://wa.me/{{ $phoneClean }}?text={{ urlencode('Hola '.$inquiry->name.', te escribimos de '.config('app.name').' respecto a tu mensaje:') }}"
+                                   target="_blank"
+                                   class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-emerald-600 hover:bg-emerald-50">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </a>
+                            @endif
+                            <button type="button" wire:confirm="{{ __('¿Seguro que deseas eliminar este mensaje?') }}"
+                                    wire:click="delete({{ $inquiry->id }})"
+                                    class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600">
+                                <i class="fa-solid fa-trash text-sm"></i>
+                            </button>
+                        </span>
+                    </div>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No hay mensajes de contacto registrados.')" icon="inbox" />
+                </li>
+            @endforelse
+        </ul>
 
         @if ($inquiries->hasPages())
             <div class="border-t border-gray-100 p-4">

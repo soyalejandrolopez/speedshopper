@@ -32,16 +32,16 @@
                     <span data-count="{{ $balanceDue }}" data-prefix="$">{{ money($balanceDue) }}</span>
                 </p>
             </div>
-            <div class="flex flex-wrap gap-6">
-                <div class="border-s border-gray-100 ps-4">
+            <div class="grid w-full grid-cols-3 gap-3 sm:w-auto sm:flex sm:flex-wrap sm:gap-6">
+                <div class="rounded-xl bg-gray-50/80 p-3 sm:border-s sm:border-gray-100 sm:bg-transparent sm:ps-4 sm:p-0">
                     <p class="text-xs font-medium text-gray-500">{{ __('Open Requests') }}</p>
                     <p class="mt-0.5 text-xl font-bold text-gray-900"><span data-count="{{ $openRequestsCount }}">{{ $openRequestsCount }}</span></p>
                 </div>
-                <div class="border-s border-gray-100 ps-4">
+                <div class="rounded-xl bg-gray-50/80 p-3 sm:border-s sm:border-gray-100 sm:bg-transparent sm:ps-4 sm:p-0">
                     <p class="text-xs font-medium text-gray-500">{{ __('Packages') }}</p>
                     <p class="mt-0.5 text-xl font-bold text-gray-900"><span data-count="{{ $totalPackages }}">{{ $totalPackages }}</span></p>
                 </div>
-                <div class="border-s border-gray-100 ps-4">
+                <div class="rounded-xl bg-gray-50/80 p-3 sm:border-s sm:border-gray-100 sm:bg-transparent sm:ps-4 sm:p-0">
                     <p class="text-xs font-medium text-gray-500">{{ __('In Transit') }}</p>
                     <p class="mt-0.5 text-xl font-bold text-gray-900"><span data-count="{{ $inTransitCount }}">{{ $inTransitCount }}</span></p>
                 </div>

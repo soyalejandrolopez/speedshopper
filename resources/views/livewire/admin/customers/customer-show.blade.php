@@ -67,58 +67,64 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Purchase Requests') }}</h3>
                     <a href="{{ route('admin.requests.index', ['customer' => $customer->id]) }}" wire:navigate class="text-xs font-medium text-emerald-600">{{ __('View All') }}</a>
                 </div>
-                <table class="table-base">
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse ($requests as $request)
-                            <tr>
-                                <td class="px-5 py-2.5 font-mono text-xs">{{ $request->number }}</td>
-                                <td class="px-5 py-2.5">{{ $request->product_name }}</td>
-                                <td class="px-5 py-2.5"><x-status-badge :status="$request->status" /></td>
-                            </tr>
-                        @empty
-                            <x-empty-state :message="__('No records found.')" icon="inbox" />
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="table-base">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($requests as $request)
+                                <tr>
+                                    <td class="px-5 py-2.5 font-mono text-xs">{{ $request->number }}</td>
+                                    <td class="px-5 py-2.5">{{ $request->product_name }}</td>
+                                    <td class="px-5 py-2.5"><x-status-badge :status="$request->status" /></td>
+                                </tr>
+                            @empty
+                                <x-empty-state :message="__('No records found.')" icon="inbox" />
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="rounded-xl border border-gray-200 bg-white">
                 <div class="border-b border-gray-200 px-5 py-3">
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Packages') }}</h3>
                 </div>
-                <table class="table-base">
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse ($packages as $package)
-                            <tr>
-                                <td class="px-5 py-2.5 font-mono text-xs">{{ $package->number }}</td>
-                                <td class="px-5 py-2.5">{{ $package->store ?? '—' }}</td>
-                                <td class="px-5 py-2.5"><x-status-badge :status="$package->status" /></td>
-                            </tr>
-                        @empty
-                            <x-empty-state :message="__('No records found.')" icon="inbox" />
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="table-base">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($packages as $package)
+                                <tr>
+                                    <td class="px-5 py-2.5 font-mono text-xs">{{ $package->number }}</td>
+                                    <td class="px-5 py-2.5">{{ $package->store ?? '—' }}</td>
+                                    <td class="px-5 py-2.5"><x-status-badge :status="$package->status" /></td>
+                                </tr>
+                            @empty
+                                <x-empty-state :message="__('No records found.')" icon="inbox" />
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="rounded-xl border border-gray-200 bg-white">
                 <div class="border-b border-gray-200 px-5 py-3">
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Payments') }}</h3>
                 </div>
-                <table class="table-base">
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse ($payments as $payment)
-                            <tr>
-                                <td class="px-5 py-2.5 font-mono text-xs">{{ $payment->number }}</td>
-                                <td class="px-5 py-2.5">{{ $payment->paid_at?->format('Y-m-d') ?? '—' }}</td>
-                                <td class="px-5 py-2.5 text-end">{{ money($payment->invoice_total) }}</td>
-                                <td class="px-5 py-2.5 text-end font-medium {{ $payment->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">{{ money($payment->balance_due) }}</td>
-                            </tr>
-                        @empty
-                            <x-empty-state :message="__('No records found.')" icon="inbox" />
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="table-base">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($payments as $payment)
+                                <tr>
+                                    <td class="px-5 py-2.5 font-mono text-xs">{{ $payment->number }}</td>
+                                    <td class="px-5 py-2.5">{{ $payment->paid_at?->format('Y-m-d') ?? '—' }}</td>
+                                    <td class="px-5 py-2.5 text-end">{{ money($payment->invoice_total) }}</td>
+                                    <td class="px-5 py-2.5 text-end font-medium {{ $payment->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">{{ money($payment->balance_due) }}</td>
+                                </tr>
+                            @empty
+                                <x-empty-state :message="__('No records found.')" icon="inbox" />
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

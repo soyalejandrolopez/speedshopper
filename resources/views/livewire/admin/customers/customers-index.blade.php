@@ -21,7 +21,7 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="table-base">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                     <tr>
@@ -79,6 +79,46 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($customers as $customer)
+                <li>
+                    <a href="{{ route('admin.customers.show', $customer) }}" wire:navigate class="block px-4 py-4 transition-colors hover:bg-emerald-50/40">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-gray-900">{{ $customer->name }}</p>
+                                <p class="mt-0.5 truncate text-xs text-gray-500">
+                                    <span class="font-mono text-gray-400">{{ $customer->number }}</span>
+                                    @if ($customer->email)
+                                        · {{ $customer->email }}
+                                    @endif
+                                </p>
+                            </div>
+                            <span class="shrink-0 text-xs {{ $customer->balance_due > 0 ? 'font-semibold text-amber-600' : 'font-medium text-emerald-600' }}">
+                                {{ money($customer->balance_due) }}
+                            </span>
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                            @if ($customer->whatsapp)
+                                <span class="inline-flex items-center gap-1">
+                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                    {{ $customer->whatsapp }}
+                                </span>
+                            @endif
+                            <span>{{ country_name($customer->country) }}</span>
+                            <span class="ms-auto inline-flex items-center gap-1 text-emerald-600">
+                                {{ __('Show') }}
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </span>
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No records found.')" icon="users" />
+                </li>
+            @endforelse
+        </ul>
 
         <div class="border-t border-gray-200 p-4">
             {{ $customers->links() }}

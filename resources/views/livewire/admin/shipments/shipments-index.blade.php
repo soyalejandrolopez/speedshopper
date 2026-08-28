@@ -30,7 +30,7 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="table-base">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                     <tr>
@@ -86,6 +86,36 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($shipments as $shipment)
+                <li>
+                    <a href="{{ route('admin.shipments.show', $shipment) }}" wire:navigate class="block px-4 py-4 transition-colors hover:bg-emerald-50/40">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-gray-900">
+                                    <span class="font-mono text-xs">{{ $shipment->number }}</span>
+                                    <span class="ms-2">{{ $shipment->carrier ?? __('Shipment') }}</span>
+                                </p>
+                                <p class="mt-0.5 truncate text-xs text-gray-500">{{ $shipment->customer?->name ?? __('Unknown') }} · {{ country_name($shipment->destination_country) }}</p>
+                            </div>
+                            <x-status-badge :status="$shipment->status" />
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                            <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700">{{ $shipment->packages_count }} {{ __('packages') }}</span>
+                            @if ($shipment->international_tracking)
+                                <span class="font-mono text-gray-400">{{ $shipment->international_tracking }}</span>
+                            @endif
+                            <span class="ms-auto font-semibold text-gray-900">{{ $shipment->shipping_cost !== null ? money($shipment->shipping_cost) : '—' }}</span>
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No records found.')" icon="ship" />
+                </li>
+            @endforelse
+        </ul>
 
         <div class="border-t border-gray-200 p-4">
             {{ $shipments->links() }}

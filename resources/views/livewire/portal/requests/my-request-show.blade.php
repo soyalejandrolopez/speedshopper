@@ -52,19 +52,21 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Costs') }}</h3>
                     <span class="text-sm font-semibold text-gray-900">{{ money($purchaseRequest->total_cost) }}</span>
                 </div>
-                <table class="w-full text-start text-sm text-gray-700">
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse ($purchaseRequest->costItems as $cost)
-                            <tr>
-                                <td class="px-5 py-2.5">{{ $cost->type->label() }}</td>
-                                <td class="px-5 py-2.5 text-xs text-gray-500">{{ $cost->description }}</td>
-                                <td class="px-5 py-2.5 text-end font-medium">{{ money($cost->amount) }}</td>
-                            </tr>
-                        @empty
-                            <tr><td><li><x-empty-state :message="__('No records found.')" icon="inbox" /></li></td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-start text-sm text-gray-700">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($purchaseRequest->costItems as $cost)
+                                <tr>
+                                    <td class="px-5 py-2.5">{{ $cost->type->label() }}</td>
+                                    <td class="px-5 py-2.5 text-xs text-gray-500">{{ $cost->description }}</td>
+                                    <td class="px-5 py-2.5 text-end font-medium">{{ money($cost->amount) }}</td>
+                                </tr>
+                            @empty
+                                <tr><td><li><x-empty-state :message="__('No records found.')" icon="inbox" /></li></td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

@@ -19,7 +19,7 @@
     </div>
 
     <div class="rounded-xl border border-gray-200 bg-white">
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="table-base">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                     <tr>
@@ -53,6 +53,28 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($payments as $payment)
+                <li class="px-4 py-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <p class="font-mono text-xs text-gray-900">{{ $payment->number }}</p>
+                        <span class="shrink-0 text-sm font-semibold {{ $payment->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">
+                            {{ $payment->balance_due > 0 ? money($payment->balance_due) . ' ' . __('due') : __('Paid') }}
+                        </span>
+                    </div>
+                    <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                        <span>{{ __('Invoiced') }}: <span class="font-medium text-gray-700">{{ money($payment->invoice_total) }}</span></span>
+                        <span>{{ __('Paid') }}: <span class="font-medium text-emerald-600">{{ money($payment->amount_paid) }}</span></span>
+                        <span class="ms-auto">{{ $payment->payment_method?->label() ?? '—' }} · {{ $payment->paid_at?->format('Y-m-d') ?? '—' }}</span>
+                    </div>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No records found.')" icon="card" />
+                </li>
+            @endforelse
+        </ul>
 
         <div class="border-t border-gray-200 p-4">
             {{ $payments->links() }}

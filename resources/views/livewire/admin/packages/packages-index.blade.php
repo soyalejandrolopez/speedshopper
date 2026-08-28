@@ -30,7 +30,7 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="table-base">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                     <tr>
@@ -95,6 +95,43 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($packages as $package)
+                <li>
+                    <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="block px-4 py-4 transition-colors hover:bg-emerald-50/40">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-gray-900">{{ $package->store ?? __('Package') }}</p>
+                                <p class="mt-0.5 truncate text-xs text-gray-500">
+                                    <span class="font-mono text-gray-400">{{ $package->number }}</span>
+                                    · {{ $package->customer?->name ?? __('Unknown') }}
+                                </p>
+                            </div>
+                            <x-status-badge :status="$package->status" />
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                            @if ($package->original_tracking)
+                                <button type="button" data-copy="{{ $package->original_tracking }}"
+                                        data-title="{{ __('Original Tracking') }}" data-copied="{{ __('Copied') }}"
+                                        class="group/track inline-flex items-center gap-1 font-mono text-emerald-700">
+                                    <i class="fa-solid fa-copy text-xs opacity-60"></i>
+                                    {{ $package->original_tracking }}
+                                </button>
+                            @endif
+                            <span>{{ $package->received_at?->format('Y-m-d') ?? '—' }}</span>
+                            @if ($package->weight_lb)
+                                <span class="ms-auto font-semibold text-gray-900">{{ $package->weight_lb }} lb</span>
+                            @endif
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No records found.')" icon="box" />
+                </li>
+            @endforelse
+        </ul>
 
         <div class="border-t border-gray-200 p-4">
             {{ $packages->links() }}

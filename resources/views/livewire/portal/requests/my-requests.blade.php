@@ -11,7 +11,7 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="table-base">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                     <tr>
@@ -47,6 +47,32 @@
                 </tbody>
             </table>
         </div>
+
+        <ul class="divide-y divide-gray-100 md:hidden">
+            @forelse ($requests as $request)
+                <li>
+                    <a href="{{ route('portal.requests.show', $request) }}" wire:navigate class="block px-4 py-4 transition-colors hover:bg-emerald-50/40">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-gray-900">{{ $request->product_name }}</p>
+                                <p class="mt-0.5 font-mono text-xs text-gray-400">{{ $request->number }}</p>
+                            </div>
+                            <x-status-badge :status="$request->status" />
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                            @if ($request->store)
+                                <span class="inline-flex items-center gap-1"><i class="fa-solid fa-store text-xs"></i> {{ $request->store }}</span>
+                            @endif
+                            <span class="ms-auto font-semibold text-gray-900">{{ money($request->total_cost) }}</span>
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <x-empty-state :message="__('No records found.')" icon="inbox" />
+                </li>
+            @endforelse
+        </ul>
 
         <div class="border-t border-gray-200 p-4">
             {{ $requests->links() }}
