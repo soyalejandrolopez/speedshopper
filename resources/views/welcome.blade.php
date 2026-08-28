@@ -487,22 +487,30 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6" data-reveal>
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-600 to-teal-600 px-6 py-14 text-center shadow-xl shadow-emerald-200 sm:px-12">
-            <div class="pointer-events-none absolute -start-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
-            <div class="pointer-events-none absolute -bottom-24 -end-16 h-72 w-72 rounded-full bg-teal-300/20 blur-3xl"></div>
-            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)]"></div>
+        <div class="relative overflow-hidden rounded-3xl px-6 py-16 text-center shadow-2xl sm:px-12">
+            <!-- Background Image & Gradient Overlays -->
+            <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+                <img src="{{ asset('images/hero-bg.jpg') }}" alt="" class="h-full w-full object-cover object-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/85 to-teal-950/90"></div>
+                <div class="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+                <div class="absolute -start-20 -top-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl"></div>
+                <div class="absolute -bottom-24 -end-16 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl"></div>
+            </div>
 
-            <h2 class="relative text-3xl font-bold tracking-tight text-white sm:text-4xl">{{ __('Start shopping with us today') }}</h2>
-            <p class="relative mx-auto mt-3 max-w-2xl text-emerald-100">
+            <h2 class="relative text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl drop-shadow-sm">
+                {{ __('Start shopping with us today') }}
+            </h2>
+            <p class="relative mx-auto mt-4 max-w-2xl text-base text-emerald-100/90 sm:text-lg leading-relaxed">
                 {{ __('Send us your first request, get your quote and follow your package every step of the way.') }}
             </p>
-            <div class="relative mt-8 flex flex-wrap items-center justify-center gap-3">
-                <a href="{{ route('request') }}" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-emerald-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl">
+            <div class="relative mt-8 flex flex-wrap items-center justify-center gap-4">
+                <a href="{{ route('request') }}" class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-xl">
                     {{ __('Request a Purchase') }}
-                    <i class="fa-solid fa-arrow-right text-lg"></i>
+                    <i class="fa-solid fa-arrow-right text-base"></i>
                 </a>
                 @guest
-                    <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
+                    <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/20 hover:-translate-y-0.5">
+                        <i class="fa-solid fa-user-plus text-base"></i>
                         {{ __('Create Account') }}
                     </a>
                 @endguest
