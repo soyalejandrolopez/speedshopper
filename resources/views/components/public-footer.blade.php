@@ -45,8 +45,13 @@
         <div>
             <p class="text-sm font-semibold uppercase tracking-wider text-gray-900">{{ __('We ship to') }}</p>
             <div class="mt-3 flex flex-wrap gap-2">
-                @foreach (array_slice(explode(',', \App\Models\Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX')), 0, 6) as $code)
-                    <span class="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">{{ country_name(trim($code)) }}</span>
+                @php
+                    $rawCountries = \App\Models\Setting::get('countries_served');
+                    $footerCodes = $rawCountries ? explode(',', $rawCountries) : ['VE', 'CO', 'EC', 'PE', 'CL', 'CR'];
+                    $footerList = collect($footerCodes)->map(fn ($c) => strtoupper(trim($c)))->filter()->reject(fn ($c) => $c === 'VE')->prepend('VE')->take(6);
+                @endphp
+                @foreach ($footerList as $code)
+                    <span class="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">{{ country_name($code) }}</span>
                 @endforeach
             </div>
         </div>

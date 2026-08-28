@@ -52,11 +52,15 @@ class ClientRegistrationForm extends Component
     /** @return array<string, string> */
     public function countries(): array
     {
-        $codes = explode(',', Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX'));
+        $raw = Setting::get('countries_served');
+        $codes = $raw ? explode(',', $raw) : ['VE', 'CO', 'EC', 'PE', 'CL', 'CR', 'PA', 'DO', 'SV', 'HN', 'MX'];
 
         return collect($codes)
-            ->map(fn ($code) => trim($code))
+            ->map(fn ($code) => strtoupper(trim($code)))
             ->filter()
+            ->unique()
+            ->reject(fn ($code) => $code === 'VE')
+            ->prepend('VE')
             ->mapWithKeys(fn ($code) => [$code => country_name($code)])
             ->all();
     }
