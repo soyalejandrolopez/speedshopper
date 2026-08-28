@@ -40,7 +40,7 @@
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-sm font-medium text-gray-700" for="recipient-{{ $this->getId() }}">{{ __('To') }} *</label>
+                    <label class="mb-1 block text-sm font-medium text-gray-700" for="recipient-{{ $this->getId() }}">{{ __('Recipient') }} *</label>
                     <input id="recipient-{{ $this->getId() }}" name="recipient" type="email" wire:model="recipient"
                            placeholder="cliente@example.com"
                            class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
