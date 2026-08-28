@@ -119,7 +119,7 @@
                             <input id="preferred_stores" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
                         </div>
                         <div x-data="{
-                            budget: @entangle('form.budget'),
+                            budget: $wire.entangle('form.budget', true),
                             get tier() {
                                 const val = parseFloat(this.budget);
                                 if (isNaN(val) || val <= 0) return 0;
