@@ -106,7 +106,7 @@
                                             <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs"></i>
                                             <span>{{ __('Product name or description') }} *</span>
                                         </label>
-                                        <input id="product_name-{{ $index }}" type="text" wire:model="items.{{ $index }}.product_name"
+                                        <input id="product_name-{{ $index }}" name="product_name_{{ $index }}" autocomplete="off" type="text" wire:model="items.{{ $index }}.product_name"
                                                class="input text-sm" placeholder="Ej. Nike Air Max 270, Zapatos Zara...">
                                         @error("items.{$index}.product_name") <p class="helper-error">{{ $message }}</p> @enderror
                                     </div>
@@ -115,7 +115,7 @@
                                             <i class="fa-solid fa-hashtag text-emerald-600 text-xs"></i>
                                             <span>{{ __('Quantity') }}</span>
                                         </label>
-                                        <input id="quantity-{{ $index }}" type="number" min="1" max="999" wire:model="items.{{ $index }}.quantity"
+                                        <input id="quantity-{{ $index }}" name="quantity_{{ $index }}" autocomplete="off" type="number" min="1" max="999" wire:model="items.{{ $index }}.quantity"
                                                class="input text-sm text-center" placeholder="1">
                                         @error("items.{$index}.quantity") <p class="helper-error">{{ $message }}</p> @enderror
                                     </div>
@@ -126,7 +126,7 @@
                                         <i class="fa-solid fa-link text-emerald-600 text-xs"></i>
                                         <span>{{ __('Product link') }}</span>
                                     </label>
-                                    <input id="product_url-{{ $index }}" type="url" wire:model="items.{{ $index }}.product_url"
+                                    <input id="product_url-{{ $index }}" name="product_url_{{ $index }}" autocomplete="off" type="url" wire:model="items.{{ $index }}.product_url"
                                            class="input text-sm" placeholder="https://amazon.com/... o tienda">
                                     @error("items.{$index}.product_url") <p class="helper-error">{{ $message }}</p> @enderror
                                 </div>
@@ -136,7 +136,7 @@
                                         <i class="fa-solid fa-circle-info text-emerald-600 text-xs"></i>
                                         <span>{{ __('Specific details') }}</span>
                                     </label>
-                                    <input id="description-{{ $index }}" type="text" wire:model="items.{{ $index }}.description"
+                                    <input id="description-{{ $index }}" name="description_{{ $index }}" autocomplete="off" type="text" wire:model="items.{{ $index }}.description"
                                            class="input text-sm" placeholder="{{ __('Size, color, store, coupon or specific note...') }}">
                                 </div>
                             </div>

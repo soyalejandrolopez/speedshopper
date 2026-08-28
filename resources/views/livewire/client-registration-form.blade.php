@@ -35,7 +35,7 @@
                                 <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
                                 <span>{{ __('Full name') }} *</span>
                             </label>
-                            <input id="name" type="text" wire:model="form.name" class="input" placeholder="María González">
+                            <input id="name" name="name" type="text" autocomplete="name" wire:model="form.name" class="input" placeholder="María González">
                             @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -43,7 +43,7 @@
                                 <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
                                 <span>{{ __('WhatsApp number') }} *</span>
                             </label>
-                            <input id="whatsapp" type="text" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
+                            <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
                             @error('form.whatsapp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -51,7 +51,7 @@
                                 <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
                                 <span>{{ __('Email address') }} *</span>
                             </label>
-                            <input id="email" type="email" wire:model="form.email" class="input" placeholder="you@example.com">
+                            <input id="email" name="email" type="email" autocomplete="email" wire:model="form.email" class="input" placeholder="you@example.com">
                             @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -59,7 +59,7 @@
                                 <i class="fa-solid fa-location-dot text-emerald-600 text-xs"></i>
                                 <span>{{ __('Destination country') }} *</span>
                             </label>
-                            <select id="country" wire:model="form.country" class="input">
+                            <select id="country" name="country" autocomplete="country-name" wire:model="form.country" class="input">
                                 @foreach ($this->countries() as $code => $name)
                                     <option value="{{ $code }}">{{ $name }}</option>
                                 @endforeach
@@ -71,14 +71,14 @@
                                 <i class="fa-solid fa-city text-emerald-600 text-xs"></i>
                                 <span>{{ __('City / State / Province') }}</span>
                             </label>
-                            <input id="city" type="text" wire:model="form.city" class="input">
+                            <input id="city" name="city" type="text" autocomplete="address-level2" wire:model="form.city" class="input">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="label flex items-center gap-1.5" for="address">
                                 <i class="fa-solid fa-map-pin text-emerald-600 text-xs"></i>
                                 <span>{{ __('Delivery address') }}</span>
                             </label>
-                            <textarea id="address" rows="2" wire:model="form.address" class="input"></textarea>
+                            <textarea id="address" name="address" autocomplete="street-address" rows="2" wire:model="form.address" class="input"></textarea>
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                                 <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs"></i>
                                 <span>{{ __('What products do you want to buy or send?') }} *</span>
                             </label>
-                            <textarea id="products" rows="3" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
+                            <textarea id="products" name="products" autocomplete="off" rows="3" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
                             @error('form.products') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -116,7 +116,7 @@
                                 <i class="fa-solid fa-store text-emerald-600 text-xs"></i>
                                 <span>{{ __('Preferred store(s)') }}</span>
                             </label>
-                            <input id="preferred_stores" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
+                            <input id="preferred_stores" name="preferred_stores" autocomplete="off" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
                         </div>
                         <div x-data="{
                             budget: $wire.entangle('form.budget', true),
@@ -153,9 +153,9 @@
                             </div>
                             <div class="flex">
                                 <span class="inline-flex items-center px-3.5 text-sm font-bold text-gray-500 bg-gray-100 border border-e-0 border-gray-300 rounded-s-lg">$</span>
-                                <input id="budget" type="number" step="0.01" min="0" wire:model.live="form.budget" x-model="budget" class="input rounded-none rounded-e-lg" placeholder="0.00">
+                                <input id="budget" name="budget" autocomplete="off" type="number" step="0.01" min="0" wire:model.live="form.budget" x-model="budget" class="input rounded-none rounded-e-lg" placeholder="0.00">
                             </div>
-                            @error('form.budget') <p class="helper-error">{{ $message }}</p> @enderror
+                            @error('form.budget') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
 
                             <!-- Guía de Fees por Presupuesto -->
                             <div class="mt-2 rounded-xl border border-gray-200 bg-gray-50/90 p-3 text-xs shadow-sm">
@@ -219,7 +219,7 @@
                                 <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.has_links" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
                             </div>
                             @if ($this->form['has_links'] === 'yes')
-                                <textarea rows="2" wire:model="form.product_links" class="input mt-2" placeholder="{{ __('Paste the links here') }}"></textarea>
+                                <textarea rows="2" name="product_links" autocomplete="off" wire:model="form.product_links" class="input mt-2" placeholder="{{ __('Paste the links here') }}"></textarea>
                             @endif
                         </div>
 
@@ -245,10 +245,10 @@
                         </div>
                         @if ($this->form['already_purchased'] === 'yes')
                             <div class="grid gap-3 sm:grid-cols-2">
-                                <div><label class="label" for="store_name">{{ __('Store name') }}</label><input id="store_name" type="text" wire:model="form.store_name" class="input"></div>
-                                <div><label class="label" for="order_number">{{ __('Order number') }}</label><input id="order_number" type="text" wire:model="form.order_number" class="input"></div>
-                                <div><label class="label" for="tracking_number">{{ __('Tracking number') }}</label><input id="tracking_number" type="text" wire:model="form.tracking_number" class="input"></div>
-                                <div><label class="label" for="approx_packages">{{ __('Approximate number of packages') }}</label><input id="approx_packages" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
+                                <div><label class="label" for="store_name">{{ __('Store name') }}</label><input id="store_name" name="store_name" autocomplete="off" type="text" wire:model="form.store_name" class="input"></div>
+                                <div><label class="label" for="order_number">{{ __('Order number') }}</label><input id="order_number" name="order_number" autocomplete="off" type="text" wire:model="form.order_number" class="input"></div>
+                                <div><label class="label" for="tracking_number">{{ __('Tracking number') }}</label><input id="tracking_number" name="tracking_number" autocomplete="off" type="text" wire:model="form.tracking_number" class="input"></div>
+                                <div><label class="label" for="approx_packages">{{ __('Approximate number of packages') }}</label><input id="approx_packages" name="approx_packages" autocomplete="off" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
                             </div>
                         @endif
                     </div>
@@ -267,7 +267,7 @@
                             </div>
                         </div>
                         @if ($this->form['courier'] === 'yes')
-                            <div><label class="label" for="courier_name">{{ __('Company name') }}</label><input id="courier_name" type="text" wire:model="form.courier_name" class="input"></div>
+                            <div><label class="label" for="courier_name">{{ __('Company name') }}</label><input id="courier_name" name="courier_name" autocomplete="off" type="text" wire:model="form.courier_name" class="input"></div>
                         @endif
                         <div>
                             <span class="label">{{ __('Do you need help coordinating the shipment?') }}</span>

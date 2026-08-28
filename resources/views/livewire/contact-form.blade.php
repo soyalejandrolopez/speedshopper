@@ -31,7 +31,7 @@
                         <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
                         <span>{{ __('Nombre completo') }} *</span>
                     </label>
-                    <input id="contact-name" type="text" wire:model="form.name" class="input" placeholder="Tu nombre">
+                    <input id="contact-name" name="name" type="text" autocomplete="name" wire:model="form.name" class="input" placeholder="Tu nombre">
                     @error('form.name') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
 
@@ -40,7 +40,7 @@
                         <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
                         <span>{{ __('Correo electrónico') }} *</span>
                     </label>
-                    <input id="contact-email" type="email" wire:model="form.email" class="input" placeholder="tu@email.com">
+                    <input id="contact-email" name="email" type="email" autocomplete="email" wire:model="form.email" class="input" placeholder="tu@email.com">
                     @error('form.email') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
                         <span>{{ __('Teléfono o WhatsApp') }}</span>
                     </label>
-                    <input id="contact-whatsapp" type="text" wire:model="form.whatsapp" class="input" placeholder="+58 412 000 0000">
+                    <input id="contact-whatsapp" name="whatsapp" type="tel" autocomplete="tel" wire:model="form.whatsapp" class="input" placeholder="+58 412 000 0000">
                     @error('form.whatsapp') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
 
@@ -60,7 +60,7 @@
                         <i class="fa-solid fa-location-dot text-emerald-600 text-xs"></i>
                         <span>{{ __('País de destino') }}</span>
                     </label>
-                    <select id="contact-country" wire:model="form.country" class="input">
+                    <select id="contact-country" name="country" autocomplete="country-name" wire:model="form.country" class="input">
                         <option value="">{{ __('Selecciona un país') }}</option>
                         @foreach ($this->countries() as $code => $name)
                             <option value="{{ $code }}">{{ $name }}</option>
@@ -75,7 +75,7 @@
                     <i class="fa-solid fa-tag text-emerald-600 text-xs"></i>
                     <span>{{ __('Motivo de contacto') }} *</span>
                 </label>
-                <select id="contact-subject" wire:model="form.subject" class="input">
+                <select id="contact-subject" name="subject" autocomplete="off" wire:model="form.subject" class="input">
                     @foreach ($this->subjects() as $key => $label)
                         <option value="{{ $key }}">{{ $label }}</option>
                     @endforeach
@@ -88,7 +88,7 @@
                     <i class="fa-solid fa-comment-dots text-emerald-600 text-xs"></i>
                     <span>{{ __('Mensaje o detalles de tu consulta') }} *</span>
                 </label>
-                <textarea id="contact-message" rows="4" wire:model="form.message" class="input"
+                <textarea id="contact-message" name="message" autocomplete="off" rows="4" wire:model="form.message" class="input"
                           placeholder="{{ __('¿En qué podemos ayudarte? Cuéntanos qué tiendas te interesan, productos que deseas comprar o dudas sobre nuestros servicios.') }}"></textarea>
                 @error('form.message') <p class="helper-error">{{ $message }}</p> @enderror
             </div>
