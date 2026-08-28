@@ -7,12 +7,12 @@
     <div class="grid gap-6 sm:grid-cols-2">
         <div>
             <p class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('Bill To') }}</p>
-            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $shipment->customer->name }}</p>
-            <p class="text-sm text-gray-500">{{ $shipment->customer->email ?? '' }}</p>
-            @if ($shipment->customer->whatsapp)
+            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $shipment->customer?->name ?? __('Unknown') }}</p>
+            <p class="text-sm text-gray-500">{{ $shipment->customer?->email ?? '' }}</p>
+            @if ($shipment->customer?->whatsapp)
                 <p class="text-sm text-gray-500">WhatsApp: {{ $shipment->customer->whatsapp }}</p>
             @endif
-            @if ($shipment->customer->country)
+            @if ($shipment->customer?->country)
                 <p class="text-sm text-gray-500">{{ country_name($shipment->customer->country) }}</p>
             @endif
         </div>

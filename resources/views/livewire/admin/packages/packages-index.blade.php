@@ -52,7 +52,7 @@
                             <td class="px-4 py-3 font-mono text-xs">
                                 <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="font-medium text-emerald-600 hover:text-emerald-800">{{ $package->number }}</a>
                             </td>
-                            <td class="px-4 py-3 text-xs">{{ $package->customer->name }}</td>
+                            <td class="px-4 py-3 text-xs">{{ $package->customer?->name ?? __('Unknown') }}</td>
                             <td class="px-4 py-3 text-xs">{{ $package->store ?? '—' }}</td>
                             <td class="px-4 py-3 font-mono text-xs">
                                 @if ($package->original_tracking)

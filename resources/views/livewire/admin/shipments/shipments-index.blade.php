@@ -52,7 +52,7 @@
                             <td class="px-4 py-3 font-mono text-xs">
                                 <a href="{{ route('admin.shipments.show', $shipment) }}" wire:navigate class="font-medium text-emerald-600 hover:text-emerald-800">{{ $shipment->number }}</a>
                             </td>
-                            <td class="px-4 py-3 text-xs">{{ $shipment->customer->name }}</td>
+                            <td class="px-4 py-3 text-xs">{{ $shipment->customer?->name ?? __('Unknown') }}</td>
                             <td class="px-4 py-3 text-xs">
                                 <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700">{{ $shipment->packages_count }}</span>
                             </td>

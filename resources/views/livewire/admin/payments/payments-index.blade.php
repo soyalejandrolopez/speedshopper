@@ -38,7 +38,7 @@
                             <td class="px-4 py-3 font-mono text-xs">
                                 <a href="{{ route('admin.payments.show', $payment) }}" wire:navigate class="font-medium text-emerald-600 hover:text-emerald-800">{{ $payment->number }}</a>
                             </td>
-                            <td class="px-4 py-3 text-xs">{{ $payment->customer->name }}</td>
+                            <td class="px-4 py-3 text-xs">{{ $payment->customer?->name ?? __('Unknown') }}</td>
                             <td class="px-4 py-3 text-xs">{{ money($payment->invoice_total) }}</td>
                             <td class="px-4 py-3 text-xs text-emerald-600">{{ money($payment->amount_paid) }}</td>
                             <td class="px-4 py-3 text-xs {{ $payment->balance_due > 0 ? 'font-medium text-amber-600' : 'text-emerald-600' }}">

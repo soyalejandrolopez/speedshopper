@@ -36,7 +36,7 @@
                         <dt class="text-gray-500">{{ __('Customer') }}</dt>
                         <dd class="font-medium text-gray-900">
                             <a href="{{ route('admin.customers.show', $purchaseRequest->customer) }}" wire:navigate class="text-emerald-600 hover:underline">
-                                {{ $purchaseRequest->customer->name }}
+                                {{ $purchaseRequest->customer?->name ?? __('Unknown') }}
                             </a>
                         </dd>
                     </div>
