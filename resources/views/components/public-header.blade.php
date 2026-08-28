@@ -40,11 +40,19 @@
             @endauth
         </div>
 
-        <button @click="open = ! open" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-        </button>
+        <div class="flex items-center gap-4 lg:hidden">
+            <div class="flex items-center gap-1 text-xs">
+                <a href="{{ route('locale.switch', 'es') }}" class="{{ app()->getLocale() === 'es' ? 'font-semibold text-emerald-700' : 'text-gray-400 hover:text-gray-600' }}">ES</a>
+                <span class="text-gray-300">/</span>
+                <a href="{{ route('locale.switch', 'en') }}" class="{{ app()->getLocale() === 'en' ? 'font-semibold text-emerald-700' : 'text-gray-400 hover:text-gray-600' }}">EN</a>
+            </div>
+
+            <button @click="open = ! open" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
     </nav>
 
     <div x-show="open" x-cloak class="border-t border-gray-100 bg-white px-4 py-4 lg:hidden">
@@ -58,10 +66,7 @@
             <a href="{{ route('home') }}#how-it-works" @click="open = false">{{ __('How it works') }}</a>
             <a href="{{ route('home') }}#fees" @click="open = false">{{ __('Fees and Pricing') }}</a>
             <a href="{{ route('request') }}" @click="open = false">{{ __('Contact') }}</a>
-            <div class="flex items-center gap-2 border-t border-gray-100 pt-3">
-                <a href="{{ route('locale.switch', 'es') }}" class="text-xs {{ app()->getLocale() === 'es' ? 'font-semibold text-emerald-700' : 'text-gray-400' }}">ES</a>
-                <a href="{{ route('locale.switch', 'en') }}" class="text-xs {{ app()->getLocale() === 'en' ? 'font-semibold text-emerald-700' : 'text-gray-400' }}">EN</a>
-            </div>
+
             @auth
                 <a href="{{ auth()->user()->isAdmin() ? route('dashboard') : route('portal.dashboard') }}"
                    class="btn-primary px-4 py-2 text-center">
