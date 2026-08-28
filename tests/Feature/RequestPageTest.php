@@ -63,6 +63,37 @@ it('registers a client and creates a request through the 3-step form', function 
         ->and($request->description)->toContain('Nike Air Max 270, Zapatos Zara');
 });
 
+it('creates a package in Operations when the client already purchased', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Carlos López')
+        ->set('form.whatsapp', '+50255550124')
+        ->set('form.email', 'carlos@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.services', ['package_reception'])
+        ->call('next')
+        ->set('form.products', 'Zapatos')
+        ->set('form.already_purchased', 'yes')
+        ->set('form.store_name', 'Nike')
+        ->set('form.tracking_number', 'TRACK123')
+        ->call('next')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $customer = Customer::where('email', 'carlos@example.com')->first();
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+
+    expect($customer->packages()->count())->toBe(1);
+
+    $package = $customer->packages()->first();
+
+    expect($package->store)->toBe('Nike')
+        ->and($package->original_tracking)->toBe('TRACK123')
+        ->and($package->purchase_request_id)->toBe($request->id);
+});
+
 it('guides the visitor step by step and creates the customer and request at the end', function () {
     $component = Livewire::test(ChatRequestForm::class)
         ->assertSet('step', 1)

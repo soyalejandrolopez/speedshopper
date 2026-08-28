@@ -87,13 +87,22 @@ class ClientRegistrationForm extends Component
             ]
         );
 
-        $customer->purchaseRequests()->create([
+        $request = $customer->purchaseRequests()->create([
             'product_name' => mb_substr($this->form['products'] ?: __('Service request'), 0, 255),
             'store' => $this->form['preferred_stores'] ?: null,
             'services' => $this->form['services'],
             'description' => $this->buildDescription(),
             'status' => 'new',
         ]);
+
+        if ($this->form['already_purchased'] === 'yes') {
+            $customer->packages()->create([
+                'purchase_request_id' => $request->id,
+                'store' => $this->form['store_name'] ?: null,
+                'original_tracking' => $this->form['tracking_number'] ?: null,
+                'status' => 'received',
+            ]);
+        }
 
         $this->sent = true;
     }
