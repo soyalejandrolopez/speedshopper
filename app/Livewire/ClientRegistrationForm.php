@@ -95,13 +95,31 @@ class ClientRegistrationForm extends Component
             'status' => 'new',
         ]);
 
+        $package = null;
+
         if ($this->form['already_purchased'] === 'yes') {
-            $customer->packages()->create([
+            $package = $customer->packages()->create([
                 'purchase_request_id' => $request->id,
                 'store' => $this->form['store_name'] ?: null,
                 'original_tracking' => $this->form['tracking_number'] ?: null,
                 'status' => 'received',
             ]);
+        }
+
+        $needsShipment = in_array('delivery_to_courier', $this->form['services'], true)
+            || $this->form['courier'] === 'yes'
+            || $this->form['need_shipping_coordination'] === 'yes';
+
+        if ($needsShipment) {
+            $shipment = $customer->shipments()->create([
+                'carrier' => $this->form['courier_name'] ?: null,
+                'destination_country' => $this->form['country'] ?: null,
+                'status' => 'draft',
+            ]);
+
+            if ($package) {
+                $shipment->packages()->attach($package->id);
+            }
         }
 
         $this->sent = true;

@@ -94,6 +94,39 @@ it('creates a package in Operations when the client already purchased', function
         ->and($package->purchase_request_id)->toBe($request->id);
 });
 
+it('creates a draft shipment with shipping preferences and links the package', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Sofía Ramírez')
+        ->set('form.whatsapp', '+50255550125')
+        ->set('form.email', 'sofia@example.com')
+        ->set('form.country', 'SV')
+        ->set('form.services', ['package_reception', 'delivery_to_courier'])
+        ->call('next')
+        ->set('form.products', 'Ropa')
+        ->set('form.already_purchased', 'yes')
+        ->set('form.store_name', 'Zara')
+        ->set('form.tracking_number', 'TRACK999')
+        ->call('next')
+        ->set('form.courier', 'yes')
+        ->set('form.courier_name', 'Tracargo')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $customer = Customer::where('email', 'sofia@example.com')->first();
+    $package = $customer->packages()->first();
+    $shipment = $customer->shipments()->first();
+
+    expect($shipment)->not->toBeNull()
+        ->and($shipment->status->value)->toBe('draft')
+        ->and($shipment->carrier)->toBe('Tracargo')
+        ->and($shipment->destination_country)->toBe('SV')
+        ->and($shipment->packages()->count())->toBe(1)
+        ->and($shipment->packages()->first()->id)->toBe($package->id);
+});
+
 it('guides the visitor step by step and creates the customer and request at the end', function () {
     $component = Livewire::test(ChatRequestForm::class)
         ->assertSet('step', 1)
