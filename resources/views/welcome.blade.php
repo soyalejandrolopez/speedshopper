@@ -357,57 +357,7 @@
                 @endforeach
             </div>
         </div>
-    <section class="bg-gradient-to-b from-white to-emerald-50/60 py-20">
-        <div class="mx-auto max-w-4xl px-4 sm:px-6">
-            <div class="grid gap-6 sm:grid-cols-2" data-reveal style="--reveal-delay: 120ms">
-                <div class="card p-6">
-                    <div class="flex items-start gap-4">
-                        <span class="icon-chip shrink-0 bg-emerald-50 text-emerald-600">
-                            <i class="fa-solid fa-location-dot text-xl"></i>
-                        </span>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">{{ __('Receive your packages in Baytown') }}</h3>
-                            <p class="mt-1 text-sm text-gray-500">{{ __('When you shop online, use this address as your shipping address:') }}</p>
-                            <div class="mt-3 flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2.5">
-                                <p class="flex-1 text-sm font-medium text-gray-800">{{ \App\Models\Setting::get('warehouse_address') }}</p>
-                                <button type="button" data-copy="{{ \App\Models\Setting::get('warehouse_address') }}"
-                                        data-title="{{ __('Copy address') }}" data-copied="{{ __('Copied') }}"
-                                        class="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-emerald-300 hover:text-emerald-600">
-                                    <i class="fa-solid fa-copy text-sm"></i>
-                                    {{ __('Copy') }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="card p-6">
-                    <div class="flex items-start gap-4">
-                        <span class="icon-chip shrink-0 bg-amber-50 text-amber-600">
-                            <i class="fa-solid fa-clock text-xl"></i>
-                        </span>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">{{ __('Estimated delivery times') }}</h3>
-                            <p class="mt-1 text-sm text-gray-500">{{ __('From Baytown to your door (business days):') }}</p>
-                            <div class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
-                                @php $times = [
-                                    'MX' => '5 – 7', 'GT' => '7 – 10', 'SV' => '7 – 10', 'HN' => '7 – 10',
-                                    'NI' => '7 – 12', 'CR' => '7 – 12', 'PA' => '7 – 12', 'CO' => '7 – 12',
-                                    'EC' => '8 – 12', 'PE' => '8 – 12', 'CL' => '10 – 15', 'AR' => '10 – 15',
-                                ]; @endphp
-                                @foreach ($times as $code => $days)
-                                    <div class="flex items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-amber-50/60">
-                                        <span class="font-medium text-gray-700">{{ country_name($code) }}</span>
-                                        <span class="text-xs text-gray-500">{{ $days }} {{ __('days') }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div class="mx-auto max-w-3xl space-y-3" x-data="{ open: null }" data-reveal>
