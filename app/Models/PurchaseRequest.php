@@ -30,6 +30,7 @@ class PurchaseRequest extends Model
         'unit_price',
         'discount_found',
         'status',
+        'services',
         'notes',
     ];
 
@@ -37,6 +38,7 @@ class PurchaseRequest extends Model
     {
         return [
             'status' => RequestStatus::class,
+            'services' => 'array',
             'quantity' => 'integer',
             'unit_price' => 'decimal:2',
             'discount_found' => 'decimal:2',

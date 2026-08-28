@@ -44,14 +44,7 @@ class ClientRegistrationForm extends Component
     /** @return array<int, string> */
     public function serviceOptions(): array
     {
-        return [
-            'personal_shopper' => __('In-store shopping'),
-            'online_shopping' => __('Online shopping'),
-            'package_reception' => __('Package reception'),
-            'consolidation' => __('Package consolidation'),
-            'packing' => __('Packing service'),
-            'delivery_to_courier' => __('Delivery to shipping company'),
-        ];
+        return service_options();
     }
 
     /** @return array<string, string> */
@@ -97,6 +90,7 @@ class ClientRegistrationForm extends Component
         $customer->purchaseRequests()->create([
             'product_name' => mb_substr($this->form['products'] ?: __('Service request'), 0, 255),
             'store' => $this->form['preferred_stores'] ?: null,
+            'services' => $this->form['services'],
             'description' => $this->buildDescription(),
             'status' => 'new',
         ]);

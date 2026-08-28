@@ -31,6 +31,21 @@
                     <x-status-badge :status="$purchaseRequest->status" />
                 </div>
 
+                @if (! empty($purchaseRequest->services))
+                    <div class="mt-4 flex flex-wrap items-center gap-2">
+                        @foreach (service_options() as $key => $label)
+                            @if (in_array($key, $purchaseRequest->services, true))
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    {{ $label }}
+                                </span>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
                 <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                     <div class="flex justify-between gap-2">
                         <dt class="text-gray-500">{{ __('Customer') }}</dt>

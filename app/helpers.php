@@ -118,3 +118,20 @@ if (! function_exists('country_name')) {
         return $names[$iso2] ?? $iso2;
     }
 }
+
+if (! function_exists('service_options')) {
+    /**
+     * @return array<string, string>
+     */
+    function service_options(): array
+    {
+        return [
+            'personal_shopper' => __('In-store shopping'),
+            'online_shopping' => __('Online shopping'),
+            'package_reception' => __('Package reception'),
+            'consolidation' => __('Package consolidation'),
+            'packing' => __('Packing service'),
+            'delivery_to_courier' => __('Delivery to shipping company'),
+        ];
+    }
+}

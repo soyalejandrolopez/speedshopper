@@ -57,6 +57,8 @@ it('registers a client and creates a request through the 3-step form', function 
 
     expect($request)->not->toBeNull()
         ->and($request->status->value)->toBe('new')
+        ->and($request->services)->toContain('online_shopping')
+        ->and($request->services)->toContain('consolidation')
         ->and($request->description)->toContain('Compras Online')
         ->and($request->description)->toContain('Nike Air Max 270, Zapatos Zara');
 });
