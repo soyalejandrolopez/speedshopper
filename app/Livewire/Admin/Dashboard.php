@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Enums\RequestStatus;
 use App\Enums\ShipmentStatus;
+use App\Models\ContactInquiry;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
@@ -17,6 +18,24 @@ use Livewire\Component;
 #[Title('Dashboard')]
 class Dashboard extends Component
 {
+    public ?int $viewingInquiryId = null;
+
+    public function markInquiryRead(int $id): void
+    {
+        $inquiry = ContactInquiry::find($id);
+        if ($inquiry) {
+            $inquiry->markAsRead();
+        }
+    }
+
+    public function deleteInquiry(int $id): void
+    {
+        $inquiry = ContactInquiry::find($id);
+        if ($inquiry) {
+            $inquiry->delete();
+        }
+    }
+
     public function render()
     {
         $requestsByStatus = PurchaseRequest::query()
@@ -44,6 +63,8 @@ class Dashboard extends Component
             'shipmentsInTransit' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
             'readyShipments' => Shipment::where('status', ShipmentStatus::Ready->value)->count(),
             'totalBalanceDue' => (float) Payment::sum('invoice_total') - (float) Payment::sum('amount_paid'),
+            'unreadInquiriesCount' => ContactInquiry::unread()->count(),
+            'recentInquiries' => ContactInquiry::latest()->limit(6)->get(),
             'recentRequests' => PurchaseRequest::with('customer')->latest()->limit(5)->get(),
             'recentPackages' => Package::with('customer')->latest()->limit(5)->get(),
             'recentPayments' => Payment::with('customer')->latest()->limit(5)->get(),

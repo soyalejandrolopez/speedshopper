@@ -25,10 +25,12 @@ class MinifyHtml
             $placeholders = [];
             $html = preg_replace_callback('/<!--(.*?)-->/s', function ($matches) use (&$placeholders) {
                 if (str_contains($matches[0], '██')) {
-                    $id = '<!--_ASCII_ART_' . count($placeholders) . '_-->';
-                    $placeholders[$id] = "\n" . $matches[0] . "\n";
+                    $id = '<!--_ASCII_ART_'.count($placeholders).'_-->';
+                    $placeholders[$id] = "\n".$matches[0]."\n";
+
                     return $id;
                 }
+
                 return ''; // Eliminar otros comentarios
             }, $html);
 
@@ -39,13 +41,13 @@ class MinifyHtml
                 "/\r/" => '',
                 "/\n/" => '',
                 "/\t/" => ' ',
-                "/ +/" => ' ',
+                '/ +/' => ' ',
             ];
 
             $html = preg_replace(array_keys($replace), array_values($replace), $html);
 
             // Restaurar el arte ASCII intacto
-            if (!empty($placeholders)) {
+            if (! empty($placeholders)) {
                 $html = str_replace(array_keys($placeholders), array_values($placeholders), $html);
             }
 

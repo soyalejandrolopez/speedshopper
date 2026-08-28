@@ -13,7 +13,7 @@ class SettingsSeeder extends Seeder
             'company_name' => 'SpeedShopper',
             'warehouse_address' => '123 Main St, Baytown, TX 77521, USA',
             'whatsapp_phone' => '+12815551234',
-            'countries_served' => 'MX,GT,HN,SV,NI,CR,PA,CO,EC,PE,CL,AR',
+            'countries_served' => 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX',
             'shopper_fee' => '10.00',
             'shopper_fee_is_percent' => '0',
             'receiving_fee' => '2.50',

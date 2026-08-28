@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\TestMail;
+use App\Models\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -34,7 +35,7 @@ class TestMailCommand extends Command
                 'mail.mailers.smtp.timeout' => 15,
                 // El remitente debe ser la cuenta autenticada para evitar el bloqueo 550 blacklist.
                 'mail.from.address' => $user,
-                'mail.from.name' => \App\Models\Setting::get('company_name', config('app.name')),
+                'mail.from.name' => Setting::get('company_name', config('app.name')),
             ]);
         }
 
@@ -43,7 +44,7 @@ class TestMailCommand extends Command
         $this->line('Host: '.config('mail.mailers.smtp.host').':'.config('mail.mailers.smtp.port'));
 
         try {
-            Mail::to($email)->send(new TestMail());
+            Mail::to($email)->send(new TestMail);
 
             $this->info('OK: correo enviado correctamente.');
 

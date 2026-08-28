@@ -4,6 +4,7 @@ use App\Enums\PaymentMethod;
 use App\Livewire\Admin\Payments\PaymentsIndex;
 use App\Models\Customer;
 use App\Models\Payment;
+use App\Models\PurchaseRequest;
 use Livewire\Livewire;
 
 it('selects a customer through the search suggestions', function () {
@@ -58,7 +59,7 @@ it('saves a payment even when amount paid is empty', function () {
 it('admin can create a payment with a method and related request', function () {
     $this->actingAs(createAdmin());
     $customer = Customer::factory()->create();
-    $request = \App\Models\PurchaseRequest::factory()->create(['customer_id' => $customer->id]);
+    $request = PurchaseRequest::factory()->create(['customer_id' => $customer->id]);
 
     Livewire::test(PaymentsIndex::class)
         ->call('openCreate')
@@ -74,6 +75,6 @@ it('admin can create a payment with a method and related request', function () {
     $payment = Payment::first();
 
     expect($payment->payment_method)->toBe(PaymentMethod::Zelle)
-        ->and($payment->billable_type)->toBe(\App\Models\PurchaseRequest::class)
+        ->and($payment->billable_type)->toBe(PurchaseRequest::class)
         ->and($payment->billable_id)->toBe($request->id);
 });

@@ -4,6 +4,7 @@ namespace App\Concerns;
 
 use App\Models\StatusHistory;
 use App\Models\User;
+use App\Services\StatusNotifier;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait TracksStatuses
@@ -36,6 +37,6 @@ trait TracksStatuses
             'user_id' => $user?->id,
         ]);
 
-        app(\App\Services\StatusNotifier::class)->notify($this, $from, $to);
+        app(StatusNotifier::class)->notify($this, $from, $to);
     }
 }

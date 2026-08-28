@@ -79,6 +79,14 @@
                         <span class="block text-xs text-gray-500">{{ __('Send an automatic WhatsApp message on status changes.') }}</span>
                     </span>
                 </label>
+                <div class="sm:col-span-2">
+                    <label class="mb-1 block text-sm font-medium text-gray-700" for="admin_notification_email-{{ $this->getId() }}">
+                        {{ __('Correo para Notificaciones de Administrador') }}
+                    </label>
+                    <input id="admin_notification_email-{{ $this->getId() }}" name="admin_notification_email" type="text" wire:model="settings.admin_notification_email"
+                           placeholder="admin@speedshopper.com" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <p class="mt-1 text-xs text-gray-400">{{ __('Recibirá un correo instantáneo cuando se envíe una nueva solicitud de compra o mensaje de contacto. Puedes separar varios correos por coma.') }}</p>
+                </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp_api_url-{{ $this->getId() }}">{{ __('WhatsApp API URL') }}</label>
                     <input id="whatsapp_api_url-{{ $this->getId() }}" name="whatsapp_api_url" type="text" wire:model="settings.whatsapp_api_url"
@@ -130,9 +138,7 @@
                             @if (brand_favicon_url())
                                 <img src="{{ brand_favicon_url() }}" alt="{{ __('Favicon') }}" class="h-8 w-8 object-contain">
                             @else
-                                <svg class="h-7 w-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
-                                </svg>
+                                <i class="fa-solid fa-bag-shopping text-3xl text-gray-300"></i>
                             @endif
                         </span>
                         <div class="flex-1 space-y-2">
@@ -256,9 +262,7 @@
                         <input type="email" wire:model="testEmail" placeholder="you@example.com"
                                class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500 sm:max-w-xs">
                         <button type="button" wire:click="sendTestEmail" class="btn-primary">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                            </svg>
+                            <i class="fa-solid fa-envelope text-base"></i>
                             {{ __('Send Test Email') }}
                         </button>
                     </div>
@@ -266,16 +270,12 @@
 
                     @if ($mailTestStatus === 'sent')
                         <div class="mt-2 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">
-                            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                            </svg>
+                            <i class="fa-solid fa-check text-base"></i>
                             {{ $mailTestMessage }}
                         </div>
                     @elseif ($mailTestStatus === 'error')
                         <div class="mt-2 flex items-start gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-inset ring-red-200">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                            </svg>
+                            <i class="fa-solid fa-circle-exclamation mt-0.5 text-base shrink-0"></i>
                             <span class="break-all">{{ $mailTestMessage }}</span>
                         </div>
                     @endif

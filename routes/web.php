@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\PrintController;
 use App\Livewire\Admin\Customers\CustomerShow;
 use App\Livewire\Admin\Customers\CustomersIndex;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Inquiries\InquiriesIndex;
 use App\Livewire\Admin\Packages\PackageShow;
 use App\Livewire\Admin\Packages\PackagesIndex;
+use App\Livewire\Admin\Payments\PaymentShow;
 use App\Livewire\Admin\Payments\PaymentsIndex;
+use App\Livewire\Admin\Reports\ReportsIndex;
 use App\Livewire\Admin\Requests\RequestShow;
 use App\Livewire\Admin\Requests\RequestsIndex;
 use App\Livewire\Admin\Settings\SettingsIndex;
@@ -22,6 +26,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn () => view('welcome'))->name('home');
 
 Route::view('/solicitar', 'request')->name('request');
+Route::view('/contacto', 'contact')->name('contact');
+Route::view('/contact', 'contact');
 
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['es', 'en'], true)) {
@@ -39,24 +45,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', fn () => view('profile'))->name('profile');
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
-        Route::get('/reports', \App\Livewire\Admin\Reports\ReportsIndex::class)->name('reports.index');
+        Route::get('/reports', ReportsIndex::class)->name('reports.index');
 
         Route::get('/customers', CustomersIndex::class)->name('customers.index');
         Route::get('/customers/{customer}', CustomerShow::class)->name('customers.show');
 
         Route::get('/requests', RequestsIndex::class)->name('requests.index');
         Route::get('/requests/{purchaseRequest}', RequestShow::class)->name('requests.show');
-        Route::get('/requests/{purchaseRequest}/print', [\App\Http\Controllers\PrintController::class, 'requestQuote'])->name('requests.print');
+        Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
 
         Route::get('/packages', PackagesIndex::class)->name('packages.index');
         Route::get('/packages/{package}', PackageShow::class)->name('packages.show');
 
         Route::get('/shipments', ShipmentsIndex::class)->name('shipments.index');
         Route::get('/shipments/{shipment}', ShipmentShow::class)->name('shipments.show');
-        Route::get('/shipments/{shipment}/print', [\App\Http\Controllers\PrintController::class, 'shipmentReceipt'])->name('shipments.print');
+        Route::get('/shipments/{shipment}/print', [PrintController::class, 'shipmentReceipt'])->name('shipments.print');
 
         Route::get('/payments', PaymentsIndex::class)->name('payments.index');
-        Route::get('/payments/{payment}', \App\Livewire\Admin\Payments\PaymentShow::class)->name('payments.show');
+        Route::get('/payments/{payment}', PaymentShow::class)->name('payments.show');
+
+        Route::get('/inquiries', InquiriesIndex::class)->name('inquiries.index');
 
         Route::get('/settings', SettingsIndex::class)->name('settings.index');
     });

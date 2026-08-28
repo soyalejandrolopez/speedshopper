@@ -39,6 +39,7 @@ class SettingsIndex extends Component
             [
                 'logo' => ['nullable', 'image', 'max:2048'],
                 'favicon' => ['nullable', 'file', 'max:1024', 'mimes:ico,png,svg,webp,jpeg,jpg'],
+                'settings.admin_notification_email' => ['nullable', 'string', 'max:255'],
                 'settings.mail_enabled' => ['nullable', 'string'],
                 'settings.mail_host' => ['nullable', 'string', 'max:255'],
                 'settings.mail_port' => ['nullable', 'string', 'max:5'],
@@ -64,6 +65,7 @@ class SettingsIndex extends Component
             'packing_fee' => Setting::get('packing_fee'),
             'currency' => Setting::get('currency', 'USD'),
             'notify_email' => Setting::get('notify_email', '1'),
+            'admin_notification_email' => Setting::get('admin_notification_email', ''),
             'notify_whatsapp' => Setting::get('notify_whatsapp', '0'),
             'whatsapp_api_url' => Setting::get('whatsapp_api_url', ''),
             'whatsapp_api_token' => Setting::get('whatsapp_api_token', ''),

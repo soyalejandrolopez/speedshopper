@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\MinifyHtml;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -23,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
             SetLocale::class,
-            \App\Http\Middleware\MinifyHtml::class,
+            MinifyHtml::class,
         ]);
         $middleware->append(SecurityHeaders::class);
     })

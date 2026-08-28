@@ -86,8 +86,8 @@ class ShipmentsIndex extends Component
 
     public function selectCustomer(?int $customerId, string $name): void
     {
-        $this->form["customer_id"] = $customerId;
-        $this->form["customer_search"] = $name;
+        $this->form['customer_id'] = $customerId;
+        $this->form['customer_search'] = $name;
     }
 
     public function closeForm(): void

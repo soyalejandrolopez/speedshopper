@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Admin\Reports;
 
-use App\Enums\RequestStatus;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
@@ -11,6 +10,7 @@ use App\Models\Setting;
 use App\Models\Shipment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
@@ -20,6 +20,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -159,7 +160,7 @@ class ReportsIndex extends Component
 
         $pdf = Pdf::loadView('reports.pdf', $data)->setPaper('letter');
 
-        return response()->streamDownload(fn () => print($pdf->output()), $this->fileName('report', 'pdf'), [
+        return response()->streamDownload(fn () => print ($pdf->output()), $this->fileName('report', 'pdf'), [
             'Content-Type' => 'application/pdf',
         ]);
     }
@@ -275,7 +276,7 @@ class ReportsIndex extends Component
         return $spreadsheet;
     }
 
-    protected function styleTableHeader(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet, string $range): void
+    protected function styleTableHeader(Worksheet $sheet, string $range): void
     {
         $color600 = 'FF'.str_replace('#', '', theme_color_ramp(theme_color())['600']);
 
@@ -378,14 +379,14 @@ class ReportsIndex extends Component
     protected function periodLabel(Carbon $start, Carbon $end): string
     {
         if ($start->isSameDay($end->copy()->startOfMonth()) && $end->isSameDay($end->copy()->endOfMonth())) {
-            return __('Month of') . ' ' . $start->translatedFormat('F Y');
+            return __('Month of').' '.$start->translatedFormat('F Y');
         }
 
         if ($start->isSameDay($start->copy()->startOfYear()) && $end->isSameDay($start->copy()->endOfYear())) {
-            return __('Year') . ' ' . $start->format('Y');
+            return __('Year').' '.$start->format('Y');
         }
 
-        return $start->format('Y-m-d') . ' → ' . $end->format('Y-m-d');
+        return $start->format('Y-m-d').' → '.$end->format('Y-m-d');
     }
 
     protected function fileName(string $slug, string $ext = 'csv'): string
@@ -508,7 +509,7 @@ class ReportsIndex extends Component
         ], $rows);
     }
 
-    protected function csv(string $name, array $headers, \Illuminate\Support\Collection $rows): StreamedResponse
+    protected function csv(string $name, array $headers, Collection $rows): StreamedResponse
     {
         $filename = strtolower(str_replace([' ', '/'], '-', $name)).'-'.now()->format('Y-m-d').'.csv';
 

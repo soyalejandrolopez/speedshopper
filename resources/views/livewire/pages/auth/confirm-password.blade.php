@@ -35,9 +35,7 @@ new #[Layout('layouts.guest')] class extends Component
 
 <div>
     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
+        <i class="fa-solid fa-lock text-2xl"></i>
     </div>
 
     <h1 class="mt-4 text-xl font-bold text-gray-900">{{ __('Confirm Password') }}</h1>

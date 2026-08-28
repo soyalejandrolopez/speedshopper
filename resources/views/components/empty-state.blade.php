@@ -17,9 +17,7 @@
 
 <div class="flex flex-col items-center justify-center px-6 py-14 text-center">
     <span class="empty-state flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 text-gray-300">
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $d }}" />
-        </svg>
+        <i class="fa-solid fa-box-open text-5xl"></i>
     </span>
     <p class="mt-4 text-sm font-medium text-gray-500">{{ $message }}</p>
     {{ $slot }}

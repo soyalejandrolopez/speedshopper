@@ -1,3 +1,4 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "tailwindcss";
 @source "../views";
 
@@ -34,7 +35,8 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-/* Contorno visible en todos los campos de formulario */
+/* ---------- Base Form Inputs (Flowbite Style) ---------- */
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -46,9 +48,85 @@ input[type="date"],
 input[type="month"],
 select,
 textarea {
-    border-width: 1px;
-    border-style: solid;
-    border-color: var(--color-gray-300);
+    display: block;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #111827;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #059669;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="url"]::placeholder,
+input[type="search"]::placeholder,
+input[type="tel"]::placeholder,
+textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25em 1.25em;
+    padding-right: 2.5rem;
+    appearance: none;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #059669;
+    border-radius: 0.25rem;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+input[type="radio"] {
+    border-radius: 9999px;
+}
+
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 ::selection {
@@ -75,7 +153,7 @@ textarea {
     background-color: var(--color-gray-400);
 }
 
-/* ---------- Components ---------- */
+/* ---------- Components (Flowbite Design System) ---------- */
 
 @layer components {
     .card {
@@ -111,12 +189,64 @@ textarea {
         @apply bg-emerald-50/80 text-emerald-700 backdrop-blur hover:bg-emerald-100 focus:ring-emerald-300;
     }
 
+    /* Flowbite Inputs */
     .input {
-        @apply block w-full rounded-xl border-gray-200 bg-white/80 backdrop-blur-sm text-sm shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-50;
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 transition-all duration-150 placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400;
     }
 
+    .input-sm {
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-xs text-gray-900 transition-all duration-150 placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15;
+    }
+
+    .input-lg {
+        @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-base text-gray-900 transition-all duration-150 placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15;
+    }
+
+    .input-error {
+        @apply block w-full rounded-lg border border-red-500 bg-red-50/60 p-2.5 text-sm text-red-900 placeholder-red-400 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-red-500/15;
+    }
+
+    .input-success {
+        @apply block w-full rounded-lg border border-emerald-500 bg-emerald-50/60 p-2.5 text-sm text-emerald-900 placeholder-emerald-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15;
+    }
+
+    /* Flowbite Labels */
     .label {
-        @apply mb-1.5 block text-sm font-medium text-gray-700;
+        @apply mb-2 block text-sm font-medium text-gray-900;
+    }
+
+    .label-error {
+        @apply mb-2 block text-sm font-medium text-red-700;
+    }
+
+    .label-success {
+        @apply mb-2 block text-sm font-medium text-emerald-700;
+    }
+
+    /* Flowbite Helpers */
+    .helper-text {
+        @apply mt-1.5 text-xs text-gray-500;
+    }
+
+    .helper-error {
+        @apply mt-1.5 text-xs font-medium text-red-600;
+    }
+
+    .helper-success {
+        @apply mt-1.5 text-xs font-medium text-emerald-600;
+    }
+
+    /* Flowbite Icon Positions */
+    .input-icon-wrapper {
+        @apply relative w-full;
+    }
+
+    .input-icon-start {
+        @apply pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 text-gray-400 text-sm;
+    }
+
+    .input-icon-end {
+        @apply absolute inset-y-0 end-0 flex items-center pe-3.5 text-gray-400 text-sm;
     }
 
     .table-base {

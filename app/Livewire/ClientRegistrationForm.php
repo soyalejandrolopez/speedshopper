@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Customer;
+use App\Models\Setting;
+use App\Services\AdminNotifier;
 use Livewire\Component;
 
 class ClientRegistrationForm extends Component
@@ -50,9 +52,13 @@ class ClientRegistrationForm extends Component
     /** @return array<string, string> */
     public function countries(): array
     {
-        $codes = explode(',', \App\Models\Setting::get('countries_served', 'MX,GT,HN,SV,NI,CR,PA,CO,EC,PE,CL,AR'));
+        $codes = explode(',', Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX'));
 
-        return collect($codes)->mapWithKeys(fn ($code) => [trim($code) => country_name(trim($code))])->all();
+        return collect($codes)
+            ->map(fn ($code) => trim($code))
+            ->filter()
+            ->mapWithKeys(fn ($code) => [$code => country_name($code)])
+            ->all();
     }
 
     public function next(): void
@@ -121,6 +127,8 @@ class ClientRegistrationForm extends Component
                 $shipment->packages()->attach($package->id);
             }
         }
+
+        AdminNotifier::notifyNewPurchaseRequest($request);
 
         $this->sent = true;
     }

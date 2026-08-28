@@ -1,13 +1,17 @@
 <?php
 
+use App\Livewire\ClientRegistrationForm;
+use App\Livewire\ContactForm;
 use App\Models\Customer;
-use App\Models\Package;
 use App\Models\PurchaseRequest;
-use App\Models\Shipment;
+use App\Models\Setting;
 use App\Models\User;
+use App\Notifications\NewContactInquiryNotification;
+use App\Notifications\NewPurchaseRequestNotification;
 use App\Notifications\StatusChangedNotification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
+use Livewire\Livewire;
 
 it('notifies the customer by email when a request changes status', function () {
     seedRoles();
@@ -38,7 +42,7 @@ it('does not notify when there is no customer contact', function () {
 
 it('sends a whatsapp notification when enabled and customer has whatsapp', function () {
     seedRoles();
-    \App\Models\Setting::set('notify_whatsapp', '1');
+    Setting::set('notify_whatsapp', '1');
     Notification::fake();
 
     $user = User::factory()->create(['email' => 'maria@example.com']);
@@ -55,8 +59,8 @@ it('posts the whatsapp message to the configured api', function () {
     seedRoles();
     Http::fake();
 
-    \App\Models\Setting::set('notify_whatsapp', '1');
-    \App\Models\Setting::set('whatsapp_api_url', 'https://wa-gateway.test/send');
+    Setting::set('notify_whatsapp', '1');
+    Setting::set('whatsapp_api_url', 'https://wa-gateway.test/send');
 
     $user = User::factory()->create(['email' => 'maria@example.com']);
     $user->assignRole('client');
@@ -75,8 +79,8 @@ it('does not call the whatsapp api when no phone is available', function () {
     Http::fake();
     Notification::fake();
 
-    \App\Models\Setting::set('notify_whatsapp', '1');
-    \App\Models\Setting::set('whatsapp_api_url', 'https://wa-gateway.test/send');
+    Setting::set('notify_whatsapp', '1');
+    Setting::set('whatsapp_api_url', 'https://wa-gateway.test/send');
 
     $request = PurchaseRequest::factory()->create([
         'customer_id' => Customer::factory()->create(['email' => null, 'user_id' => null])->id,
@@ -85,4 +89,43 @@ it('does not call the whatsapp api when no phone is available', function () {
     $request->transitionTo('quoted');
 
     Http::assertNothingSent();
+});
+
+it('sends an email notification to the administrator when a purchase request is submitted', function () {
+    seedRoles();
+    Notification::fake();
+    Setting::set('admin_notification_email', 'admin@speedshopper.com');
+
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Laura Castillo')
+        ->set('form.email', 'laura@example.com')
+        ->set('form.whatsapp', '+584120001122')
+        ->set('form.country', 'VE')
+        ->set('form.services', ['online_shopping'])
+        ->call('next')
+        ->set('form.products', 'Cartera Michael Kors')
+        ->set('form.budget', '250')
+        ->call('next')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    Notification::assertSentOnDemand(NewPurchaseRequestNotification::class);
+});
+
+it('sends an email notification to the administrator when a contact inquiry is submitted', function () {
+    seedRoles();
+    Notification::fake();
+    Setting::set('admin_notification_email', 'admin@speedshopper.com');
+
+    Livewire::test(ContactForm::class)
+        ->set('form.name', 'Pedro Páramo')
+        ->set('form.email', 'pedro@example.com')
+        ->set('form.message', 'Quiero saber cuánto cuesta el envío a México.')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    Notification::assertSentOnDemand(NewContactInquiryNotification::class);
 });

@@ -5,6 +5,10 @@ namespace App\Notifications;
 use App\Enums\PackageStatus;
 use App\Enums\RequestStatus;
 use App\Enums\ShipmentStatus;
+use App\Models\Package;
+use App\Models\PurchaseRequest;
+use App\Models\Setting;
+use App\Models\Shipment;
 use App\Notifications\Channels\WhatsAppChannel;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -29,9 +33,9 @@ class StatusChangedNotification extends Notification
 
         return (new MailMessage)
             ->subject($this->subject())
-            ->greeting(__('Hello') . '!')
+            ->greeting(__('Hello').'!')
             ->line($this->summaryLine())
-            ->line(__('Current status') . ': **'.$label.'**')
+            ->line(__('Current status').': **'.$label.'**')
             ->when($note = $this->transitionNote(), fn (MailMessage $m) => $m->line(__('Note').': '.$note))
             ->action(__('View in your portal'), route('portal.dashboard'))
             ->line(__('Thanks for trusting us with your orders.'));
@@ -41,9 +45,9 @@ class StatusChangedNotification extends Notification
     {
         $label = $this->newStatusLabel();
 
-        $message = '📦 *'.\App\Models\Setting::get('company_name', config('app.name'))."*\n\n";
+        $message = '📦 *'.Setting::get('company_name', config('app.name'))."*\n\n";
         $message .= $this->summaryLine()."\n";
-        $message .= __('Current status') . ': '.$label."\n";
+        $message .= __('Current status').': '.$label."\n";
 
         if ($note = $this->transitionNote()) {
             $message .= __('Note').': '.$note."\n";
@@ -67,7 +71,7 @@ class StatusChangedNotification extends Notification
     {
         $label = $this->newStatusLabel();
 
-        return __('Status updated') . ' — ' . ($this->statusable->number ?? '') . ': '.$label;
+        return __('Status updated').' — '.($this->statusable->number ?? '').': '.$label;
     }
 
     protected function summaryLine(): string
@@ -75,9 +79,9 @@ class StatusChangedNotification extends Notification
         $statusable = $this->statusable;
 
         return match (true) {
-            $statusable instanceof \App\Models\PurchaseRequest => __('Your request') . ' ' . $statusable->number . ' (' . $statusable->product_name . ')',
-            $statusable instanceof \App\Models\Package => __('Your package') . ' ' . $statusable->number . ($statusable->store ? ' (' . $statusable->store . ')' : ''),
-            $statusable instanceof \App\Models\Shipment => __('Your box') . ' ' . $statusable->number . ($statusable->carrier ? ' (' . $statusable->carrier . ')' : ''),
+            $statusable instanceof PurchaseRequest => __('Your request').' '.$statusable->number.' ('.$statusable->product_name.')',
+            $statusable instanceof Package => __('Your package').' '.$statusable->number.($statusable->store ? ' ('.$statusable->store.')' : ''),
+            $statusable instanceof Shipment => __('Your box').' '.$statusable->number.($statusable->carrier ? ' ('.$statusable->carrier.')' : ''),
             default => $statusable->number ?? __('Your order'),
         };
     }
@@ -85,9 +89,9 @@ class StatusChangedNotification extends Notification
     protected function newStatusLabel(): string
     {
         return match (true) {
-            $this->statusable instanceof \App\Models\PurchaseRequest => RequestStatus::from($this->to)->label(),
-            $this->statusable instanceof \App\Models\Package => PackageStatus::from($this->to)->label(),
-            $this->statusable instanceof \App\Models\Shipment => ShipmentStatus::from($this->to)->label(),
+            $this->statusable instanceof PurchaseRequest => RequestStatus::from($this->to)->label(),
+            $this->statusable instanceof Package => PackageStatus::from($this->to)->label(),
+            $this->statusable instanceof Shipment => ShipmentStatus::from($this->to)->label(),
             default => $this->to,
         };
     }

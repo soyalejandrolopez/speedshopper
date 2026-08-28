@@ -3,6 +3,7 @@
 use App\Livewire\Admin\Settings\SettingsIndex;
 use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 it('lets an admin upload a logo from settings', function () {
@@ -14,20 +15,20 @@ it('lets an admin upload a logo from settings', function () {
         ->assertHasNoErrors();
 
     expect(Setting::get('logo_path'))->not->toBeEmpty()
-        ->and(\Illuminate\Support\Facades\Storage::disk('public')->exists(Setting::get('logo_path')))->toBeTrue();
+        ->and(Storage::disk('public')->exists(Setting::get('logo_path')))->toBeTrue();
 });
 
 it('lets an admin remove the logo', function () {
     $this->actingAs(createAdmin());
 
     Setting::set('logo_path', 'branding/logo.png');
-    \Illuminate\Support\Facades\Storage::disk('public')->put('branding/logo.png', 'fake');
+    Storage::disk('public')->put('branding/logo.png', 'fake');
 
     Livewire::test(SettingsIndex::class)
         ->call('removeLogo');
 
     expect(Setting::get('logo_path'))->toBe('')
-        ->and(\Illuminate\Support\Facades\Storage::disk('public')->exists('branding/logo.png'))->toBeFalse();
+        ->and(Storage::disk('public')->exists('branding/logo.png'))->toBeFalse();
 });
 
 it('renders the settings page with the branding section', function () {

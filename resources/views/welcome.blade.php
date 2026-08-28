@@ -45,9 +45,7 @@
                 <div class="mt-8 flex flex-wrap justify-center gap-3">
                     <a href="{{ route('request') }}" class="btn-primary px-6 py-3 text-base">
                         {{ __('New Order') }}
-                        <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
+                        <i class="fa-solid fa-arrow-right text-lg"></i>
                     </a>
                     @guest
                         <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
@@ -58,15 +56,11 @@
 
                 <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-medium text-gray-300" data-reveal>
                     <span class="inline-flex items-center gap-1.5">
-<svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+<i class="fa-solid fa-circle-check text-xs text-white"></i>
                         Zelle
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-<svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+<i class="fa-solid fa-circle-check text-xs text-white"></i>
                         PayPal
                     </span>
 
@@ -87,9 +81,9 @@
         <div class="mt-14 grid gap-6 sm:grid-cols-3">
             @php
                 $steps = [
-                    ['title' => __('Envía tu pedido'), 'text' => __('Compártenos el link, foto o nombre del producto que deseas. También podemos ayudarte a encontrar ofertas y mejores precios.'), 'icon' => 'M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244', 'color' => 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white'],
-                    ['title' => __('Compramos o recibimos tu paquete'), 'text' => __('Hacemos la compra por ti, o recibimos en Baytown, Texas, los paquetes que compres online en tus tiendas favoritas.'), 'icon' => 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', 'color' => 'bg-teal-100 text-teal-600 group-hover:bg-teal-600 group-hover:text-white'],
-                    ['title' => __('Empacamos y enviamos'), 'text' => __('Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.'), 'icon' => 'M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12', 'color' => 'bg-sky-100 text-sky-600 group-hover:bg-sky-600 group-hover:text-white'],
+                    ['title' => __('Envía tu pedido'), 'text' => __('Compártenos el link, foto o nombre del producto que deseas. También podemos ayudarte a encontrar ofertas y mejores precios.'), 'icon' => 'fa-solid fa-link', 'color' => 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white'],
+                    ['title' => __('Compramos o recibimos tu paquete'), 'text' => __('Hacemos la compra por ti, o recibimos en Baytown, Texas, los paquetes que compres online en tus tiendas favoritas.'), 'icon' => 'fa-solid fa-box', 'color' => 'bg-teal-100 text-teal-600 group-hover:bg-teal-600 group-hover:text-white'],
+                    ['title' => __('Empacamos y enviamos'), 'text' => __('Organizamos, empacamos y enviamos tus productos a Latinoamérica de forma segura, con seguimiento de tu envío.'), 'icon' => 'fa-solid fa-truck-fast', 'color' => 'bg-sky-100 text-sky-600 group-hover:bg-sky-600 group-hover:text-white'],
                 ];
             @endphp
 
@@ -97,9 +91,7 @@
                 <div class="card card-hover group relative p-6 pt-10 text-center" data-reveal style="--reveal-delay: {{ $index * 100 }}ms">
                     <span class="absolute top-4 end-4 flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-400">{{ $index + 1 }}</span>
                     <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 {{ $step['color'] }} group-hover:scale-110 group-hover:rotate-3">
-                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $step['icon'] }}" />
-                        </svg>
+                        <i class="{{ $step['icon'] }} text-3xl"></i>
                     </div>
                     <h3 class="mt-5 font-semibold text-gray-900">{{ $step['title'] }}</h3>
                     <p class="mt-2 text-sm leading-relaxed text-gray-500">{{ $step['text'] }}</p>
@@ -119,7 +111,7 @@
                 <div class="card p-8" data-reveal>
                     <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" /></svg>
+                            <i class="fa-solid fa-bag-shopping text-xl"></i>
                         </span>
                         <h3 class="text-xl font-bold text-gray-900">{{ __('Compras Personalizadas en Tiendas') }}</h3>
                     </div>
@@ -153,7 +145,7 @@
                     <div class="card p-8" data-reveal style="--reveal-delay: 100ms">
                         <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-600">
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+                                <i class="fa-solid fa-globe text-xl"></i>
                             </span>
                             <h3 class="text-xl font-bold text-gray-900">{{ __('Compras Online') }}</h3>
                         </div>
@@ -167,7 +159,7 @@
                     <div class="card p-8" data-reveal style="--reveal-delay: 200ms">
                         <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
+                                <i class="fa-solid fa-box text-xl"></i>
                             </span>
                             <h3 class="text-xl font-bold text-gray-900">{{ __('Servicio de Embalaje') }}</h3>
                         </div>
@@ -195,7 +187,7 @@
                 <div class="card p-8" data-reveal>
                     <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
+                            <i class="fa-solid fa-truck-fast text-xl"></i>
                         </span>
                         <h3 class="text-xl font-bold text-gray-900">{{ __('Entrega a la compañía de envío') }}</h3>
                     </div>
@@ -208,7 +200,7 @@
                 <div class="card p-8" data-reveal style="--reveal-delay: 100ms">
                     <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <i class="fa-solid fa-clock text-xl"></i>
                         </span>
                         <h3 class="text-xl font-bold text-gray-900">{{ __('Almacenamiento') }}</h3>
                     </div>
@@ -225,7 +217,7 @@
 
             <div class="mx-auto mt-12 max-w-3xl rounded-2xl bg-amber-50 p-8 sm:p-10 text-center shadow-inner border border-amber-100" data-reveal>
                 <h3 class="flex items-center justify-center gap-2 text-xl font-bold text-amber-800">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                     {{ __('Importante') }}
                 </h3>
                 <p class="mt-4 text-base text-amber-700">{{ __('Los costos de los productos, impuestos, shipping de las tiendas, envío internacional y cualquier cargo de aduana o importación no están incluidos en nuestros fees de servicio.') }}</p>
@@ -243,24 +235,22 @@
 
             <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @php $features = [
-                    ['0 0 24 24', 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z', __('No hidden fees'), __('We quote the full cost — product, fees and shipping — before buying anything. No surprises.'), 'from-emerald-500 to-teal-600'],
-                    ['0 0 24 24', 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', __('Smart consolidation'), __('We join all your packages into one box to save you on international shipping.'), 'from-teal-500 to-cyan-600'],
-                    ['0 0 24 24', 'M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z', __('Real-time tracking'), __('Follow every package from Baytown to your door from your private account.'), 'from-emerald-500 to-lime-500'],
-                    ['0 0 24 24', 'M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48zM12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z', __('Deals and discounts'), __('We look for the best promotions and coupons so you always pay less.'), 'from-amber-500 to-orange-500'],
-                    ['0 0 24 24', 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', __('Secure packing'), __('Your items are packed with care and protection so they arrive in perfect condition.'), 'from-emerald-500 to-green-600'],
-                    ['0 0 24 24', 'M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z', __('Personal attention'), __('Direct communication by WhatsApp at every step of your order.'), 'from-sky-500 to-indigo-500'],
+                    ['fa-solid fa-credit-card', __('No hidden fees'), __('We quote the full cost — product, fees and shipping — before buying anything. No surprises.'), 'from-emerald-500 to-teal-600'],
+                    ['fa-solid fa-boxes-stacked', __('Smart consolidation'), __('We join all your packages into one box to save you on international shipping.'), 'from-teal-500 to-cyan-600'],
+                    ['fa-solid fa-table-cells', __('Real-time tracking'), __('Follow every package from Baytown to your door from your private account.'), 'from-emerald-500 to-lime-500'],
+                    ['fa-solid fa-fire', __('Deals and discounts'), __('We look for the best promotions and coupons so you always pay less.'), 'from-amber-500 to-orange-500'],
+                    ['fa-solid fa-shield-halved', __('Secure packing'), __('Your items are packed with care and protection so they arrive in perfect condition.'), 'from-emerald-500 to-green-600'],
+                    ['fa-brands fa-whatsapp', __('Personal attention'), __('Direct communication by WhatsApp at every step of your order.'), 'from-sky-500 to-indigo-500'],
                 ]; @endphp
 
                 @foreach ($features as $index => $feat)
                     <div class="card card-hover flex items-start gap-4 p-5" data-reveal style="--reveal-delay: {{ $index * 70 }}ms">
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md shadow-gray-200 {{ $feat[4] }}">
-                            <svg class="h-6 w-6" fill="none" viewBox="{{ $feat[0] }}" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $feat[1] }}" />
-                            </svg>
+                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md shadow-gray-200 {{ $feat[3] }}">
+                            <i class="{{ $feat[0] }} text-2xl"></i>
                         </span>
                         <div>
-                            <h3 class="font-semibold text-gray-900">{{ $feat[2] }}</h3>
-                            <p class="mt-1.5 text-sm leading-relaxed text-gray-500">{{ $feat[3] }}</p>
+                            <h3 class="font-semibold text-gray-900">{{ $feat[1] }}</h3>
+                            <p class="mt-1.5 text-sm leading-relaxed text-gray-500">{{ $feat[2] }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -272,9 +262,7 @@
                 <div class="card p-6">
                     <div class="flex items-start gap-4">
                         <span class="icon-chip shrink-0 bg-emerald-50 text-emerald-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm-3 3.75c-2.5 0-5 1.5-5 3.75V21h10v-3c0-2.25-2.5-3.75-5-3.75zM6.75 6.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm10.5 0a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
-                            </svg>
+                            <i class="fa-solid fa-location-dot text-xl"></i>
                         </span>
                         <div>
                             <h3 class="font-semibold text-gray-900">{{ __('Receive your packages in Baytown') }}</h3>
@@ -284,9 +272,7 @@
                                 <button type="button" data-copy="{{ \App\Models\Setting::get('warehouse_address') }}"
                                         data-title="{{ __('Copy address') }}" data-copied="{{ __('Copied') }}"
                                         class="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-emerald-300 hover:text-emerald-600">
-                                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
-                                    </svg>
+                                    <i class="fa-solid fa-copy text-sm"></i>
                                     {{ __('Copy') }}
                                 </button>
                             </div>
@@ -297,9 +283,7 @@
                 <div class="card p-6">
                     <div class="flex items-start gap-4">
                         <span class="icon-chip shrink-0 bg-amber-50 text-amber-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            <i class="fa-solid fa-clock text-xl"></i>
                         </span>
                         <div>
                             <h3 class="font-semibold text-gray-900">{{ __('Estimated delivery times') }}</h3>
@@ -348,9 +332,7 @@
                             class="flex w-full items-center justify-between gap-4 px-5 py-4 text-start"
                             @click="open = open === {{ $index }} ? null : {{ $index }}">
                         <span class="font-medium text-gray-900">{{ $faq[0] }}</span>
-                        <svg class="h-4.5 w-4.5 shrink-0 text-emerald-500 transition-transform duration-300" :class="open === {{ $index }} ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                        </svg>
+                        <i class="fa-solid fa-chevron-down text-lg text-emerald-500 transition-transform duration-300" :class="open === {{ $index }} ? 'rotate-180' : ''"></i>
                     </button>
                     <div x-show="open === {{ $index }}" x-cloak
                          x-transition:enter="transition ease-out duration-200"
@@ -384,9 +366,7 @@
                     <figure class="card card-hover p-6" data-reveal style="--reveal-delay: {{ $index * 100 }}ms">
                         <div class="flex gap-1 text-amber-400">
                             @for ($i = 0; $i < 5; $i++)
-                                <svg class="h-4.5 w-4.5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.92 6.26 6.58.8-4.9 4.79 1.2 6.65L12 17.3l-5.8 3.2 1.2-6.65-4.9-4.79 6.58-.8L12 2z" />
-                                </svg>
+                                <i class="fa-solid fa-star text-lg"></i>
                             @endfor
                         </div>
                         <blockquote class="mt-4 text-sm leading-relaxed text-gray-600">“{{ $t[2] }}”</blockquote>
@@ -418,9 +398,7 @@
             <div class="relative mt-8 flex flex-wrap items-center justify-center gap-3">
                 <a href="{{ route('request') }}" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-emerald-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl">
                     {{ __('Request a Purchase') }}
-                    <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
+                    <i class="fa-solid fa-arrow-right text-lg"></i>
                 </a>
                 @guest
                     <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
@@ -441,7 +419,7 @@
                 <div class="mt-10">
                     <h3 class="font-semibold text-gray-900">{{ __('Countries We Ship To') }}</h3>
                     <div class="mt-3 flex flex-wrap gap-2">
-                        @foreach (explode(',', \App\Models\Setting::get('countries_served', 'MX,GT,HN,SV,NI,CR,PA,CO,EC,PE,CL,AR')) as $code)
+                        @foreach (explode(',', \App\Models\Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX')) as $code)
                             <span class="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-100">
                                 {{ country_name(trim($code)) }}
                             </span>
@@ -470,9 +448,7 @@
                                 </p>
                             </div>
                         </div>
-                        <svg class="h-5 w-5 text-emerald-100" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                        </svg>
+                        <i class="fa-solid fa-comments text-xl text-emerald-100"></i>
                     </div>
                     <div class="space-y-4 p-5">
                         <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-700">
@@ -482,9 +458,7 @@
                             {{ __('Link, size, color, brand... anything we should know.') }}
                         </div>
                         <a href="{{ route('request') }}" class="btn-primary w-full justify-center">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                            </svg>
+                            <i class="fa-solid fa-comments text-base"></i>
                             {{ __('Open chat and send your request') }}
                         </a>
                     </div>

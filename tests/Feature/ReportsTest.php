@@ -3,9 +3,14 @@
 use App\Livewire\Admin\Reports\ReportsIndex;
 use App\Models\Customer;
 use App\Models\Package;
+use App\Models\Payment;
 use App\Models\PurchaseRequest;
+use App\Models\Setting;
 use App\Models\Shipment;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 it('renders the reports page', function () {
     $this->actingAs(createAdmin());
@@ -45,7 +50,7 @@ it('exports the financial report in csv, excel and pdf', function () {
 it('allows filtering the report by custom dates', function () {
     $admin = createAdmin();
     $customer = Customer::factory()->create(['user_id' => $admin->id]);
-    \App\Models\Payment::factory()->create([
+    Payment::factory()->create([
         'customer_id' => $customer->id,
         'invoice_total' => 100,
         'amount_paid' => 100,
@@ -64,16 +69,16 @@ it('allows filtering the report by custom dates', function () {
 
 it('embeds the custom logo in the excel report', function () {
     seedRoles();
-    \Illuminate\Support\Facades\Storage::disk('public')->put('branding/logo.png', base64_decode(
+    Storage::disk('public')->put('branding/logo.png', base64_decode(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
     ));
-    \App\Models\Setting::set('logo_path', 'branding/logo.png');
+    Setting::set('logo_path', 'branding/logo.png');
 
     $component = new ReportsIndex;
     $data = (fn () => $this->reportData(now()->startOfMonth(), now()->endOfMonth()))->call($component);
     $spreadsheet = (fn () => $this->buildExcel($data))->call($component);
 
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $writer = new Xlsx($spreadsheet);
     ob_start();
     $writer->save('php://output');
     $xlsx = ob_get_clean();
@@ -85,14 +90,14 @@ it('embeds the custom logo in the excel report', function () {
 
 it('embeds the custom logo in the pdf report', function () {
     seedRoles();
-    \Illuminate\Support\Facades\Storage::disk('public')->put('branding/logo.png', base64_decode(
+    Storage::disk('public')->put('branding/logo.png', base64_decode(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
     ));
-    \App\Models\Setting::set('logo_path', 'branding/logo.png');
+    Setting::set('logo_path', 'branding/logo.png');
 
     $component = new ReportsIndex;
     $data = (fn () => $this->reportData(now()->startOfMonth(), now()->endOfMonth()))->call($component);
-    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf', $data)->output();
+    $pdf = Pdf::loadView('reports.pdf', $data)->output();
 
     expect(str_contains($pdf, '/Image'))->toBeTrue();
 });

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Customer;
+use App\Services\AdminNotifier;
 use Livewire\Component;
 
 class ChatRequestForm extends Component
@@ -94,12 +95,14 @@ class ChatRequestForm extends Component
             'registered_at' => today(),
         ]);
 
-        $customer->purchaseRequests()->create([
+        $request = $customer->purchaseRequests()->create([
             'product_name' => $this->product_name ?: __('Chat consultation'),
             'product_url' => $this->product_url ?: null,
             'description' => $this->description ?: null,
             'status' => 'new',
         ]);
+
+        AdminNotifier::notifyNewPurchaseRequest($request);
 
         $this->finished = true;
     }

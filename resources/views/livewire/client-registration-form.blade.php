@@ -3,9 +3,7 @@
         <div class="flex flex-col items-center px-6 py-12 text-center">
             <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-200 opacity-60"></span>
-                <svg class="relative h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
+                <i class="fa-solid fa-check text-3xl relative text-emerald-600"></i>
             </span>
             <h3 class="mt-4 text-lg font-bold text-gray-900">{{ __('Request sent successfully') }}</h3>
             <p class="mt-1 max-w-xs text-sm text-gray-500">{{ __('We will contact you soon') }}</p>
@@ -33,22 +31,34 @@
                     <h3 class="text-sm font-bold text-gray-900">{{ __('Personal Information') }}</h3>
                     <div class="mt-3 grid gap-3 sm:grid-cols-2">
                         <div class="sm:col-span-2">
-                            <label class="label" for="name">{{ __('Full name') }} *</label>
+                            <label class="label flex items-center gap-1.5" for="name">
+                                <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
+                                <span>{{ __('Full name') }} *</span>
+                            </label>
                             <input id="name" type="text" wire:model="form.name" class="input" placeholder="María González">
                             @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="whatsapp">{{ __('WhatsApp number') }} *</label>
+                            <label class="label flex items-center gap-1.5" for="whatsapp">
+                                <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
+                                <span>{{ __('WhatsApp number') }} *</span>
+                            </label>
                             <input id="whatsapp" type="text" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
                             @error('form.whatsapp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="email">{{ __('Email address') }} *</label>
+                            <label class="label flex items-center gap-1.5" for="email">
+                                <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
+                                <span>{{ __('Email address') }} *</span>
+                            </label>
                             <input id="email" type="email" wire:model="form.email" class="input" placeholder="you@example.com">
                             @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="country">{{ __('Destination country') }} *</label>
+                            <label class="label flex items-center gap-1.5" for="country">
+                                <i class="fa-solid fa-location-dot text-emerald-600 text-xs"></i>
+                                <span>{{ __('Destination country') }} *</span>
+                            </label>
                             <select id="country" wire:model="form.country" class="input">
                                 <option value="">—</option>
                                 @foreach ($this->countries() as $code => $name)
@@ -58,11 +68,17 @@
                             @error('form.country') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="city">{{ __('City / State / Province') }}</label>
+                            <label class="label flex items-center gap-1.5" for="city">
+                                <i class="fa-solid fa-city text-emerald-600 text-xs"></i>
+                                <span>{{ __('City / State / Province') }}</span>
+                            </label>
                             <input id="city" type="text" wire:model="form.city" class="input">
                         </div>
                         <div class="sm:col-span-2">
-                            <label class="label" for="address">{{ __('Delivery address') }}</label>
+                            <label class="label flex items-center gap-1.5" for="address">
+                                <i class="fa-solid fa-map-pin text-emerald-600 text-xs"></i>
+                                <span>{{ __('Delivery address') }}</span>
+                            </label>
                             <textarea id="address" rows="2" wire:model="form.address" class="input"></textarea>
                         </div>
                     </div>
@@ -89,17 +105,112 @@
                     <h3 class="text-sm font-bold text-gray-900">{{ __('Request Information') }}</h3>
                     <div class="mt-3 space-y-3">
                         <div>
-                            <label class="label" for="products">{{ __('What products do you want to buy or send?') }} *</label>
+                            <label class="label flex items-center gap-1.5" for="products">
+                                <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs"></i>
+                                <span>{{ __('What products do you want to buy or send?') }} *</span>
+                            </label>
                             <textarea id="products" rows="3" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
                             @error('form.products') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="label" for="preferred_stores">{{ __('Preferred store(s)') }}</label>
+                            <label class="label flex items-center gap-1.5" for="preferred_stores">
+                                <i class="fa-solid fa-store text-emerald-600 text-xs"></i>
+                                <span>{{ __('Preferred store(s)') }}</span>
+                            </label>
                             <input id="preferred_stores" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
                         </div>
-                        <div>
-                            <label class="label" for="budget">{{ __('Approximate budget') }}</label>
-                            <input id="budget" type="number" step="0.01" min="0" wire:model="form.budget" class="input" placeholder="0.00">
+                        <div x-data="{
+                            budget: @entangle('form.budget'),
+                            get tier() {
+                                const val = parseFloat(this.budget);
+                                if (isNaN(val) || val <= 0) return 0;
+                                if (val >= 100 && val <= 699) return 1;
+                                if (val >= 700 && val <= 1499) return 2;
+                                if (val >= 1500) return 3;
+                                return 0;
+                            },
+                            get feePercent() {
+                                if (this.tier === 1) return 20;
+                                if (this.tier === 2 || this.tier === 3) return 15;
+                                return 0;
+                            },
+                            get estimatedFee() {
+                                const val = parseFloat(this.budget);
+                                if (isNaN(val) || val <= 0) return '0.00';
+                                return ((val * this.feePercent) / 100).toFixed(2);
+                            }
+                        }" class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="label mb-0 flex items-center gap-1.5" for="budget">
+                                    <i class="fa-solid fa-dollar-sign text-emerald-600 text-xs"></i>
+                                    <span>{{ __('Approximate budget') }} (USD)</span>
+                                </label>
+                                <template x-if="tier > 0">
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 animate-fade-in">
+                                        <i class="fa-solid fa-calculator text-xs"></i>
+                                        {{ __('Fee estimado') }}: $<span x-text="estimatedFee"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3.5 text-sm font-bold text-gray-500 bg-gray-100 border border-e-0 border-gray-300 rounded-s-lg">$</span>
+                                <input id="budget" type="number" step="0.01" min="0" wire:model.live="form.budget" x-model="budget" class="input rounded-none rounded-e-lg" placeholder="0.00">
+                            </div>
+                            @error('form.budget') <p class="helper-error">{{ $message }}</p> @enderror
+
+                            <!-- Guía de Fees por Presupuesto -->
+                            <div class="mt-2 rounded-xl border border-gray-200 bg-gray-50/90 p-3 text-xs shadow-sm">
+                                <p class="mb-2 font-bold text-gray-800 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-tags text-emerald-600"></i>
+                                    {{ __('Tarifas según presupuesto:') }}
+                                </p>
+                                <div class="grid gap-2">
+                                    <!-- Tier 1 -->
+                                    <div class="rounded-lg border p-2.5 transition-all duration-200"
+                                         :class="tier === 1 ? 'border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-400/20 shadow-sm' : 'border-gray-200 bg-white'">
+                                        <div class="flex items-center justify-between font-bold text-gray-900">
+                                            <span class="flex items-center gap-1.5">
+                                                <template x-if="tier === 1">
+                                                    <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                                                </template>
+                                                {{ __('Compras de $100 a $699') }}
+                                            </span>
+                                            <span class="rounded bg-emerald-100 px-2 py-0.5 font-extrabold text-emerald-700">{{ __('Fee: 20%') }}</span>
+                                        </div>
+                                        <p class="mt-1 text-[11px] text-gray-500">{{ __('Incluye hasta 2 tiendas y 2 horas de servicio.') }}</p>
+                                    </div>
+
+                                    <!-- Tier 2 -->
+                                    <div class="rounded-lg border p-2.5 transition-all duration-200"
+                                         :class="tier === 2 ? 'border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-400/20 shadow-sm' : 'border-gray-200 bg-white'">
+                                        <div class="flex items-center justify-between font-bold text-gray-900">
+                                            <span class="flex items-center gap-1.5">
+                                                <template x-if="tier === 2">
+                                                    <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                                                </template>
+                                                {{ __('Compras de $700 a $1,499') }}
+                                            </span>
+                                            <span class="rounded bg-emerald-100 px-2 py-0.5 font-extrabold text-emerald-700">{{ __('Fee: 15%') }}</span>
+                                        </div>
+                                        <p class="mt-1 text-[11px] text-gray-500">{{ __('Incluye hasta 3 tiendas y 3 horas de servicio.') }}</p>
+                                    </div>
+
+                                    <!-- Tier 3 -->
+                                    <div class="rounded-lg border p-2.5 transition-all duration-200"
+                                         :class="tier === 3 ? 'border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-400/20 shadow-sm' : 'border-gray-200 bg-white'">
+                                        <div class="flex items-center justify-between font-bold text-gray-900">
+                                            <span class="flex items-center gap-1.5">
+                                                <template x-if="tier === 3">
+                                                    <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                                                </template>
+                                                {{ __('Compras de $1,500 o más') }}
+                                            </span>
+                                            <span class="rounded bg-emerald-100 px-2 py-0.5 font-extrabold text-emerald-700">{{ __('Fee: 15%') }}</span>
+                                        </div>
+                                        <p class="mt-1 text-[11px] text-gray-500">{{ __('Incluye hasta 4 tiendas y 4 horas de servicio.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
@@ -199,9 +310,7 @@
             <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
                 @if ($this->step > 1)
                     <button type="button" wire:click="back" class="btn-ghost">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                        </svg>
+                        <i class="fa-solid fa-arrow-left text-base"></i>
                         {{ __('Back') }}
                     </button>
                 @else
@@ -211,15 +320,11 @@
                 @if ($this->step < \App\Livewire\ClientRegistrationForm::TOTAL_STEPS)
                     <button type="button" wire:click="next" class="btn-primary">
                         {{ __('Next') }}
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
+                        <i class="fa-solid fa-chevron-right text-base"></i>
                     </button>
                 @else
                     <button type="submit" class="btn-primary">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                        </svg>
+                        <i class="fa-solid fa-paper-plane text-base"></i>
                         {{ __('Submit Request') }}
                     </button>
                 @endif

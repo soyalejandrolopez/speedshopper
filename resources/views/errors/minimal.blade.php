@@ -50,9 +50,7 @@
             <!-- Actions -->
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a href="{{ url('/') }}" class="btn-primary w-full sm:w-auto px-6 py-2.5">
-                    <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
+                    <i class="fa-solid fa-arrow-left text-base w-4.5 h-4.5"></i>
                     <span class="ml-2">Volver al Inicio</span>
                 </a>
             </div>

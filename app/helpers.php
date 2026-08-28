@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
+
 if (! function_exists('money')) {
     function money(float|int|string|null $amount, string $currency = 'USD'): string
     {
@@ -12,25 +15,25 @@ if (! function_exists('money')) {
 if (! function_exists('brand_logo_url')) {
     function brand_logo_url(): ?string
     {
-        $path = \App\Models\Setting::get('logo_path');
+        $path = Setting::get('logo_path');
 
-        return $path ? \Illuminate\Support\Facades\Storage::disk('public')->url($path) : null;
+        return $path ? Storage::disk('public')->url($path) : null;
     }
 }
 
 if (! function_exists('brand_favicon_url')) {
     function brand_favicon_url(): ?string
     {
-        $path = \App\Models\Setting::get('favicon_path');
+        $path = Setting::get('favicon_path');
 
-        return $path ? \Illuminate\Support\Facades\Storage::disk('public')->url($path) : null;
+        return $path ? Storage::disk('public')->url($path) : null;
     }
 }
 
 if (! function_exists('theme_color')) {
     function theme_color(): string
     {
-        return \App\Models\Setting::get('theme_color', '#059669');
+        return Setting::get('theme_color', '#059669');
     }
 }
 

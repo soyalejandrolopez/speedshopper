@@ -25,9 +25,7 @@
                                          class="h-14 w-14 cursor-zoom-in rounded-lg border border-gray-200 object-cover">
                                 @else
                                     <span class="flex h-14 w-14 items-center justify-center rounded-lg bg-gray-50 text-gray-300">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                                        </svg>
+                                        <i class="fa-solid fa-box text-xl"></i>
                                     </span>
                                 @endif
                             </td>

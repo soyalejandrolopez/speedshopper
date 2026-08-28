@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
+use App\Services\AdminNotifier;
 use Livewire\Component;
 
 class PublicRequestForm extends Component
@@ -126,13 +127,14 @@ class PublicRequestForm extends Component
 
         $created = 0;
         foreach ($validated['items'] as $item) {
-            PurchaseRequest::create([
+            $req = PurchaseRequest::create([
                 'customer_id' => $customer->id,
                 'product_name' => $item['product_name'],
                 'product_url' => ! empty($item['product_url']) ? $item['product_url'] : null,
                 'description' => ! empty($item['description']) ? $item['description'] : null,
                 'quantity' => ! empty($item['quantity']) ? (int) $item['quantity'] : 1,
             ]);
+            AdminNotifier::notifyNewPurchaseRequest($req);
             $created++;
         }
 
