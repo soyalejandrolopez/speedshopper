@@ -72,7 +72,112 @@
         </div>
     </section>
 
-    <section id="how-it-works" class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+    <!-- QUICK QUOTE SECTION AT TOP -->
+    <section id="quick-quote" class="relative -mt-12 z-20 mx-auto max-w-7xl px-4 pb-12 sm:px-6">
+        <div class="rounded-3xl border border-emerald-100/80 bg-white p-6 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-950/10">
+            <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
+                
+                <!-- Left Details & Value Props -->
+                <div class="lg:col-span-5 flex flex-col justify-between" data-reveal>
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 uppercase tracking-wide">
+                            <i class="fa-solid fa-bolt text-xs text-emerald-600"></i>
+                            Quick Quote
+                        </span>
+
+                        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                            {{ __('Envíanos tu solicitud de compra') }}
+                        </h2>
+
+                        <p class="mt-3 text-base text-gray-600 leading-relaxed">
+                            {{ __('Cuéntanos qué quieres y te cotizamos el costo total antes de comprar cualquier cosa.') }}
+                        </p>
+
+                        <!-- Benefit bullets -->
+                        <div class="mt-6 space-y-3.5">
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
+                                    <i class="fa-solid fa-check text-xs"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-gray-800">{{ __('Cotización gratis, sin compromiso') }}</span>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
+                                    <i class="fa-solid fa-check text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">{{ __('Envía el link del producto y nosotros nos encargamos del resto.') }}</span>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
+                                    <i class="fa-solid fa-check text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">{{ __('Buscamos las mejores ofertas y descuentos para ti.') }}</span>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
+                                    <i class="fa-solid fa-check text-xs"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-emerald-700">{{ __('Respuesta rápida por chat · Sin pago por adelantado') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Consolidación de Paquetes Highlight Card -->
+                        <div class="mt-6 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-teal-50/60 to-white p-4 shadow-sm">
+                            <div class="flex items-center gap-3.5">
+                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
+                                    <i class="fa-solid fa-boxes-packing text-lg"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-900">{{ __('Consolidación de Paquetes') }}</h4>
+                                    <p class="text-xs text-gray-600 mt-0.5">{{ __('Consolidamos todos tus paquetes en una sola caja.') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Stats Metrics Row -->
+                    <div class="mt-8 pt-6 border-t border-gray-100 grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-2xl font-black text-emerald-600 tracking-tight">12+</p>
+                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Países a los que enviamos') }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-2xl font-black text-emerald-600 tracking-tight">&lt; 1h</p>
+                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Respondemos en menos de 1 hora por chat.') }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-2xl font-black text-emerald-600 tracking-tight">100%</p>
+                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Sin pago por adelantado') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Form: Public Request Form / Quick Quote -->
+                <div class="lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
+                    <div class="overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-xl shadow-gray-200/50">
+                        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-6 py-4 text-white">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-base font-bold">{{ __('Cotizador Rápido') }}</h3>
+                                    <p class="text-xs text-emerald-100">{{ __('Completa tus datos y los links o nombres de lo que buscas') }}</p>
+                                </div>
+                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+                                    <i class="fa-solid fa-bolt text-white text-sm"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <livewire:public-request-form />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div class="text-center" data-reveal>
             <span class="section-eyebrow">{{ __('How it works') }}</span>
             <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Fácil, rápido y confiable. Nosotros nos encargamos del proceso por ti.') }}</h2>
