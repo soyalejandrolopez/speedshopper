@@ -73,8 +73,12 @@
                 </div>
 
                 <div class="order-1 flex items-start lg:order-2 lg:sticky lg:top-24" data-reveal style="--reveal-delay: 120ms">
-                    <div class="w-full">
-                        <livewire:public-request-form />
+                    <div class="w-full rounded-[1.75rem] border border-gray-200 bg-white p-6 shadow-xl shadow-emerald-100/50 ring-1 ring-black/5 sm:p-8">
+                        <h2 class="text-lg font-bold text-gray-900">{{ __('Client Registration') }}</h2>
+                        <p class="mt-1 text-sm text-gray-500">{{ __('Complete the following information to get started. This helps us identify your request and offer you the right service.') }}</p>
+                        <div class="mt-5">
+                            <livewire:client-registration-form />
+                        </div>
                     </div>
                 </div>
             </div>

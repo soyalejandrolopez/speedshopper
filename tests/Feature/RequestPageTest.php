@@ -1,18 +1,64 @@
 <?php
 
 use App\Livewire\ChatRequestForm;
+use App\Livewire\ClientRegistrationForm;
 use App\Livewire\PublicRequestForm;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
 use Livewire\Livewire;
 
-it('renders the request page with header, footer and the request form', function () {
+it('renders the request page with header, footer and the registration form', function () {
     seedRoles();
 
     $this->get(route('request'))
         ->assertOk()
         ->assertSee(__('Send us your purchase request'))
-        ->assertSeeLivewire(PublicRequestForm::class);
+        ->assertSee(__('Client Registration'))
+        ->assertSeeLivewire(ClientRegistrationForm::class);
+});
+
+it('registers a client and creates a request through the 3-step form', function () {
+    $component = Livewire::test(ClientRegistrationForm::class)
+        ->assertSet('step', 1)
+        ->set('form.name', 'María González')
+        ->set('form.whatsapp', '+50255550123')
+        ->set('form.email', 'maria@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.city', 'Guatemala')
+        ->set('form.address', 'Zona 10')
+        ->set('form.services', ['online_shopping', 'consolidation'])
+        ->call('next')
+        ->assertSet('step', 2)
+
+        ->set('form.products', 'Nike Air Max 270, Zapatos Zara')
+        ->set('form.preferred_stores', 'Nike, Zara')
+        ->set('form.budget', '200')
+        ->set('form.find_deals', 'yes')
+        ->call('next')
+        ->assertSet('step', 3)
+
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('sent', true);
+
+    expect($component->instance()->progressPercent())->toBe(100);
+
+    $customer = Customer::where('email', 'maria@example.com')->first();
+
+    expect($customer)->not->toBeNull()
+        ->and($customer->name)->toBe('María González')
+        ->and($customer->whatsapp)->toBe('+50255550123')
+        ->and($customer->country)->toBe('GT');
+
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+
+    expect($request)->not->toBeNull()
+        ->and($request->status->value)->toBe('new')
+        ->and($request->description)->toContain('Compras Online')
+        ->and($request->description)->toContain('Nike Air Max 270, Zapatos Zara');
 });
 
 it('guides the visitor step by step and creates the customer and request at the end', function () {

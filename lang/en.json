@@ -548,5 +548,10 @@
     "Entrega a la compañía de envío": "Delivery to shipping company",
     "Precio": "Price",
     "Enviamos tu caja preparada a la compañía de envío seleccionada.": "We send your prepared box to the selected shipping company.",
-    "Precio: $20": "Price: $20"
+    "Precio: $20": "Price: $20",
+    "Personal": "Personal",
+    "Confirm": "Confirmation",
+    "Next": "Next",
+    "Client Registration": "Client Registration",
+    "Complete the following information to get started. This helps us identify your request and offer you the right service.": "Complete the following information to get started. This helps us identify your request and offer you the right service."
 }
