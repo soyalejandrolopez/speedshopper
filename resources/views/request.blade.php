@@ -22,7 +22,7 @@
                         </h1>
 
                         <p class="mt-3 text-base text-gray-600 leading-relaxed">
-                            {{ __('Cuéntanos qué quieres y te cotizamos el costo total antes de comprar cualquier cosa.') }}
+                            {{ __('Cuéntanos qué quieres y te cotizamos el costo total.') }}
                         </p>
 
                         <!-- Benefit bullets -->

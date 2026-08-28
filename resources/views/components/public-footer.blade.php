@@ -9,7 +9,7 @@
             <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-gray-500">
                 <span class="inline-flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-base text-emerald-500"></i>
-                    Zelle · PayPal · Card
+                    Zelle · PayPal
                 </span>
             </div>
         </div>
@@ -44,14 +44,14 @@
 
         <div>
             <p class="text-sm font-semibold uppercase tracking-wider text-gray-900">{{ __('We ship to') }}</p>
-            <div class="mt-3 flex flex-wrap gap-2">
+            <div class="mt-3 flex flex-wrap gap-1.5">
                 @php
-                    $rawCountries = \App\Models\Setting::get('countries_served');
-                    $footerCodes = $rawCountries ? explode(',', $rawCountries) : ['VE', 'CO', 'EC', 'PE', 'CL', 'CR'];
-                    $footerList = collect($footerCodes)->map(fn ($c) => strtoupper(trim($c)))->filter()->reject(fn ($c) => $c === 'VE')->prepend('VE')->take(6);
+                    $rawCountries = \App\Models\Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX');
+                    $footerCodes = explode(',', $rawCountries);
+                    $footerList = collect($footerCodes)->map(fn ($c) => strtoupper(trim($c)))->filter()->reject(fn ($c) => $c === 'VE')->prepend('VE');
                 @endphp
                 @foreach ($footerList as $code)
-                    <span class="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">{{ country_name($code) }}</span>
+                    <span class="rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">{{ country_name($code) }}</span>
                 @endforeach
             </div>
         </div>
