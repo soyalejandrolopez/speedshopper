@@ -502,13 +502,9 @@
                 <div class="mt-10">
                     <h3 class="font-semibold text-gray-900">{{ __('Countries We Ship To') }}</h3>
                     <div class="mt-3 flex flex-wrap gap-2">
-                        @php
-                            $codes = explode(',', \App\Models\Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX'));
-                            $countriesList = collect($codes)->map(fn ($c) => strtoupper(trim($c)))->filter()->reject(fn ($c) => $c === 'VE')->prepend('VE');
-                        @endphp
-                        @foreach ($countriesList as $code)
+                        @foreach (countries_served_list() as $code)
                             <span class="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-100">
-                                {{ country_name(trim($code)) }}
+                                {{ country_name($code) }}
                             </span>
                         @endforeach
                     </div>

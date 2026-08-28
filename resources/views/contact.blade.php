@@ -92,18 +92,14 @@
                     <div class="card p-6">
                         <h3 class="flex items-center gap-2 font-bold text-gray-900 text-sm">
                             <i class="fa-solid fa-plane-departure text-emerald-600"></i>
-                            {{ __('Países de Destino con Cobertura') }}
+                            {{ __('Países a los que enviamos') }}
                         </h3>
                         <p class="mt-1 text-xs text-gray-500">{{ __('Realizamos envíos puerta a puerta a los siguientes países:') }}</p>
                         <div class="mt-3 flex flex-wrap gap-1.5">
-                            @php
-                                $codes = explode(',', \App\Models\Setting::get('countries_served', 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX'));
-                                $contactCountries = collect($codes)->map(fn ($c) => strtoupper(trim($c)))->filter()->reject(fn ($c) => $c === 'VE')->prepend('VE');
-                            @endphp
-                            @foreach ($contactCountries as $code)
+                            @foreach (countries_served_list() as $code)
                                 <span class="rounded-lg border border-emerald-100 bg-emerald-50/80 px-2.5 py-1 text-xs font-semibold text-emerald-800 shadow-sm">
                                     <i class="fa-solid fa-circle-check text-[10px] text-emerald-500 me-1"></i>
-                                    {{ country_name(trim($code)) }}
+                                    {{ country_name($code) }}
                                 </span>
                             @endforeach
                         </div>

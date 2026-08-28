@@ -27,15 +27,7 @@ class ContactForm extends Component
     /** @return array<string, string> */
     public function countries(): array
     {
-        $raw = Setting::get('countries_served');
-        $codes = $raw ? explode(',', $raw) : ['VE', 'CO', 'EC', 'PE', 'CL', 'CR', 'PA', 'DO', 'SV', 'HN', 'MX'];
-
-        return collect($codes)
-            ->map(fn ($code) => strtoupper(trim($code)))
-            ->filter()
-            ->unique()
-            ->reject(fn ($code) => $code === 'VE')
-            ->prepend('VE')
+        return collect(countries_served_list())
             ->mapWithKeys(fn ($code) => [$code => country_name($code)])
             ->all();
     }

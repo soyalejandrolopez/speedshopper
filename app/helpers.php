@@ -122,6 +122,16 @@ if (! function_exists('country_name')) {
     }
 }
 
+if (! function_exists('countries_served_list')) {
+    /**
+     * @return array<int, string>
+     */
+    function countries_served_list(): array
+    {
+        return ['VE', 'CO', 'EC', 'PE', 'CL', 'CR', 'PA', 'DO', 'SV', 'HN', 'MX'];
+    }
+}
+
 if (! function_exists('service_options')) {
     /**
      * @return array<string, string>
