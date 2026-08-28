@@ -5,6 +5,7 @@ use App\Livewire\Admin\Customers\CustomerShow;
 use App\Livewire\Admin\Customers\CustomersIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Inquiries\InquiriesIndex;
+use App\Livewire\Admin\Mail\MailCompose;
 use App\Livewire\Admin\Packages\PackageShow;
 use App\Livewire\Admin\Packages\PackagesIndex;
 use App\Livewire\Admin\Payments\PaymentShow;
@@ -65,6 +66,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/payments/{payment}', PaymentShow::class)->name('payments.show');
 
         Route::get('/inquiries', InquiriesIndex::class)->name('inquiries.index');
+
+        Route::get('/mail', MailCompose::class)->name('mail.index');
 
         Route::get('/settings', SettingsIndex::class)->name('settings.index');
     });

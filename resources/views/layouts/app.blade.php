@@ -94,6 +94,12 @@
                         @endif
                     </a>
 
+                    <a href="{{ route('admin.mail.index') }}" wire:navigate
+                       class="sidebar-link {{ request()->routeIs('admin.mail.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
+                        <i class="fa-solid fa-paper-plane text-xl w-5 text-center"></i>
+                        {{ __('Enviar Correo') }}
+                    </a>
+
                     <p class="px-3 pb-1 pt-4 text-[11px] font-bold uppercase tracking-widest text-gray-400">{{ __('Insights') }}</p>
 
                     <a href="{{ route('admin.reports.index') }}" wire:navigate
@@ -180,6 +186,7 @@
                 ['label' => __('Shipments'), 'url' => route('admin.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('admin.shipments.*'), 'navigate' => true],
                 ['label' => __('Payments'), 'url' => route('admin.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('admin.payments.*'), 'navigate' => true],
                 ['label' => __('Reports'), 'url' => route('admin.reports.index'), 'icon' => 'fa-solid fa-chart-simple', 'active' => request()->routeIs('admin.reports.*'), 'navigate' => true],
+                ['label' => __('Mail'), 'url' => route('admin.mail.index'), 'icon' => 'fa-solid fa-paper-plane', 'active' => request()->routeIs('admin.mail.*'), 'navigate' => true],
                 ['label' => __('Settings'), 'url' => route('admin.settings.index'), 'icon' => 'fa-solid fa-gear', 'active' => request()->routeIs('admin.settings.*'), 'navigate' => true],
             ];
         @endphp
