@@ -143,39 +143,6 @@
         </div>
     </section>
 
-    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <div class="text-center" data-reveal>
-            <span class="section-eyebrow">{{ __('What can you buy?') }}</span>
-            <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Almost anything from the US') }}</h2>
-            <p class="mx-auto mt-3 max-w-2xl text-gray-500">{{ __('From the brands you love, we buy for you and deliver to your door in Latin America.') }}</p>
-        </div>
-
-        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            @php $categories = [
-                ['fashion', __('Clothing and footwear'), __('Nike, Adidas, Zara, H&M, Amazon and more'), 'M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244', 'bg-emerald-50 text-emerald-600'],
-                ['tech', __('Electronics'), __('Amazon, Best Buy, Target — cellphones, laptops and more'), 'M6.18 6.84a.75.75 0 01.667-1.124 5.25 5.25 0 0110.306 0 .75.75 0 01.667 1.124c-.05.09-.11.176-.17.258a1.5 1.5 0 01-1.712.366 3 3 0 00-3.37.007.75.75 0 01-1.69-.052c-.05-.09-.11-.176-.17-.258zM6.75 9.75a.75.75 0 01.75-.75h9a.75.75 0 01.75.75v6a.75.75 0 01-.75.75h-9a.75.75 0 01-.75-.75v-6zm9 7.5v.75a2.25 2.25 0 01-2.25 2.25h-3a2.25 2.25 0 01-2.25-2.25v-.75', 'bg-teal-50 text-teal-600'],
-                ['beauty', __('Cosmetics and beauty'), __('Sephora, Ulta, Bath & Body Works and more'), 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z', 'bg-amber-50 text-amber-600'],
-                ['baby', __('Baby items'), __('Diapers, strollers, car seats and more'), 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75', 'bg-rose-50 text-rose-600'],
-                ['health', __('Supplements and health'), __('Vitamins, supplements and pharmacy items'), 'M4.5 12.75l6 6 9-13.5', 'bg-sky-50 text-sky-600'],
-                ['home', __('Home and lifestyle'), __('Kitchen, decor, tools and everything for your home'), 'M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819', 'bg-indigo-50 text-indigo-600'],
-            ]; @endphp
-
-            @foreach ($categories as $index => $cat)
-                <div class="card card-hover flex items-start gap-4 p-5" data-reveal style="--reveal-delay: {{ $index * 70 }}ms">
-                    <span class="icon-chip shrink-0 {{ $cat[4] }}">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $cat[3] }}" />
-                        </svg>
-                    </span>
-                    <div>
-                        <h3 class="font-semibold text-gray-900">{{ $cat[1] }}</h3>
-                        <p class="mt-1 text-sm text-gray-500">{{ $cat[2] }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section>
-
     <section class="bg-gradient-to-b from-white to-emerald-50/50 py-20" id="fees">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
             <div class="text-center" data-reveal>
