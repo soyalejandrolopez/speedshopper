@@ -32,8 +32,8 @@ class SettingsSeeder extends Seeder
             'mail_username' => '',
             'mail_password' => '',
             'mail_encryption' => 'tls',
-            'mail_from_address' => '',
-            'mail_from_name' => '',
+            'mail_from_address' => 'info@speedingshopper.com',
+            'mail_from_name' => 'SpeedShopper',
         ];
 
         foreach ($defaults as $key => $value) {

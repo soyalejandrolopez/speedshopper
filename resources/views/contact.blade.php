@@ -66,9 +66,9 @@
                             <div>
                                 <h3 class="font-bold text-gray-900">{{ __('Correo Electrónico') }}</h3>
                                 <p class="text-xs text-gray-500">{{ __('Para cotizaciones formales y seguimiento') }}</p>
-                                <a href="mailto:{{ \App\Models\Setting::get('mail_from_address', 'contacto@speedshopper.com') }}"
+                                <a href="mailto:{{ \App\Models\Setting::get('mail_from_address', 'info@speedingshopper.com') }}"
                                    class="mt-1 inline-block text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700">
-                                    {{ \App\Models\Setting::get('mail_from_address', 'contacto@speedshopper.com') }}
+                                    {{ \App\Models\Setting::get('mail_from_address', 'info@speedingshopper.com') }}
                                 </a>
                             </div>
                         </div>

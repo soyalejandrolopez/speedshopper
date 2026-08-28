@@ -16,6 +16,7 @@ it('applies the smtp configuration when enabled', function () {
     Setting::set('mail_username', 'no-reply@example.com');
     Setting::set('mail_encryption', 'tls');
     Setting::set('mail_from_name', 'Mi Empresa');
+    Setting::set('mail_from_address', 'no-reply@example.com');
 
     app()->getProvider(MailConfigServiceProvider::class)->apply();
 

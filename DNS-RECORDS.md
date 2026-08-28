@@ -11,7 +11,7 @@ Panel: **cPanel** → **Zone Editor** (o el registrador donde apunte el DNS)
 |---|---|---|
 | CAA | `@` | `0 issue "letsencrypt.org"` |
 | CAA | `@` | `0 issuewild "letsencrypt.org"` |
-| CAA | `@` | `0 iodef "mailto:notify@speedingshopper.com"` |
+| CAA | `@` | `0 iodef "mailto:info@speedingshopper.com"` |
 
 > En cPanel Zone Editor: registros **CAA** → host `@`, tipo `0`, tag `issue`/`issuewild`/`iodef`, valor como arriba.
 
@@ -43,7 +43,7 @@ max_age: 604800
 
 | Tipo | Nombre | Valor |
 |---|---|---|
-| TXT | `_smtp._tls` | `v=TLSRPTv1; rua=mailto:notify@speedingshopper.com` |
+| TXT | `_smtp._tls` | `v=TLSRPTv1; rua=mailto:info@speedingshopper.com` |
 
 ---
 
