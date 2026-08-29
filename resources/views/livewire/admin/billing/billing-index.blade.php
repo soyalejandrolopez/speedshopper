@@ -805,20 +805,20 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="table-base">
-                <thead class="bg-gray-50/80 text-[11px] uppercase tracking-wider text-gray-500">
+            <table class="table-base text-xs" style="min-width: 900px;">
+                <thead class="bg-gray-50/80 text-[10px] uppercase tracking-wider text-gray-500">
                     <tr>
-                        <th class="px-4 py-3">{{ __('N° Factura') }}</th>
-                        <th class="px-4 py-3">{{ __('Cliente') }}</th>
-                        <th class="px-4 py-3">{{ __('Productos / Resumen') }}</th>
-                        <th class="px-4 py-3">{{ __('Presupuesto / Producto') }}</th>
-                        <th class="px-4 py-3">{{ __('Total Facturado') }}</th>
-                        <th class="px-4 py-3">{{ __('Ganancia (Comisión)') }}</th>
-                        <th class="px-4 py-3">{{ __('Monto Pagado') }}</th>
-                        <th class="px-4 py-3">{{ __('Saldo') }}</th>
-                        <th class="px-4 py-3">{{ __('Estado') }}</th>
-                        <th class="px-4 py-3">{{ __('Fecha') }}</th>
-                        <th class="px-4 py-3 text-end">{{ __('Acciones') }}</th>
+                        <th class="px-2 py-2 whitespace-nowrap">{{ __('N° Factura') }}</th>
+                        <th class="px-2 py-2">{{ __('Cliente') }}</th>
+                        <th class="px-2 py-2">{{ __('Producto') }}</th>
+                        <th class="px-2 py-2 whitespace-nowrap">{{ __('Presupuesto') }}</th>
+                        <th class="px-2 py-2 whitespace-nowrap">{{ __('Total') }}</th>
+                        <th class="px-2 py-2 whitespace-nowrap">{{ __('Ganancia') }}</th>
+                        <th class="px-2 py-2 whitespace-nowrap">{{ __('Pagado') }}</th>
+                        <th class="px-2 py-2">{{ __('Saldo') }}</th>
+                        <th class="px-2 py-2">{{ __('Estado') }}</th>
+                        <th class="px-2 py-2">{{ __('Fecha') }}</th>
+                        <th class="px-2 py-2 text-end">{{ __('Acciones') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-xs">
@@ -835,79 +835,72 @@
                             $balance = max(0.0, $totalCost - $paidAmount);
                         @endphp
                         <tr class="hover:bg-gray-50/80 transition-colors">
-                            <td class="px-4 py-3 font-mono font-bold text-gray-900">
+                            <td class="px-2 py-2 font-mono font-bold text-gray-900 whitespace-nowrap">
                                 <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="hover:text-emerald-700 hover:underline">
                                     {{ $request->number }}
                                 </a>
                             </td>
-                            <td class="px-4 py-3 font-medium text-gray-900">
+                            <td class="px-2 py-2 font-medium text-gray-900 max-w-[120px]">
                                 @if ($request->customer)
-                                    <a href="{{ route('admin.customers.show', $request->customer) }}" wire:navigate class="hover:text-emerald-700">
+                                    <a href="{{ route('admin.customers.show', $request->customer) }}" wire:navigate class="hover:text-emerald-700 block truncate">
                                         {{ $request->customer->name }}
                                     </a>
                                     @if ($request->customer->whatsapp)
-                                        <p class="text-[11px] text-gray-400 font-normal">{{ $request->customer->whatsapp }}</p>
+                                        <p class="text-[10px] text-gray-400 font-normal truncate">{{ $request->customer->whatsapp }}</p>
                                     @endif
                                 @else
                                     <span class="text-gray-400">—</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-gray-700 max-w-xs truncate">
-                                <span class="font-medium">{{ $request->product_name }}</span>
+                            <td class="px-2 py-2 text-gray-700 max-w-[130px]">
+                                <span class="font-medium block truncate" title="{{ $request->product_name }}">{{ $request->product_name }}</span>
                                 @if ($request->quantity > 1)
-                                    <span class="text-gray-400 font-normal">({{ $request->quantity }} uds)</span>
+                                    <span class="text-gray-400 font-normal">×{{ $request->quantity }}</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 font-medium text-gray-600">
+                            <td class="px-2 py-2 font-medium text-gray-600 whitespace-nowrap">
                                 {{ $productCost > 0 ? money($productCost) : '—' }}
                             </td>
-                            <td class="px-4 py-3 font-bold text-gray-900">
+                            <td class="px-2 py-2 font-bold text-gray-900 whitespace-nowrap">
                                 {{ money($totalCost) }}
                             </td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 shadow-2xs" title="{{ __('Ganancia neta estimada de la empresa') }}">
+                            <td class="px-2 py-2 whitespace-nowrap">
+                                <span class="inline-flex items-center gap-0.5 font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200" title="{{ __('Ganancia neta estimada de la empresa') }}">
                                     💰 {{ money($earnings) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 font-semibold text-teal-700">
+                            <td class="px-2 py-2 font-semibold text-teal-700 whitespace-nowrap">
                                 {{ money($paidAmount) }}
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-2 py-2 whitespace-nowrap">
                                 @if ($balance <= 0)
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
-                                        <i class="fa-solid fa-check text-[10px]"></i> {{ __('Pagada') }}
+                                    <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                                        <i class="fa-solid fa-check text-[9px]"></i> {{ __('OK') }}
                                     </span>
                                 @else
-                                    <div class="flex flex-col">
-                                        <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-                                            {{ money($balance) }}
-                                        </span>
-                                        @if ($paidAmount > 0)
-                                            <span class="text-[10px] text-amber-600 font-medium mt-0.5">{{ __('Pendiente') }}</span>
-                                        @endif
-                                    </div>
+                                    <span class="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                                        {{ money($balance) }}
+                                    </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-2 py-2">
                                 <x-status-badge :status="$request->status" />
                             </td>
-                            <td class="px-4 py-3 text-gray-500">
-                                {{ $request->created_at->format('Y-m-d') }}
+                            <td class="px-2 py-2 text-gray-500 whitespace-nowrap">
+                                {{ $request->created_at->format('m/d/y') }}
                             </td>
-                            <td class="px-4 py-3 text-end space-x-1">
+                            <td class="px-2 py-2 text-end whitespace-nowrap">
                                 <button type="button" wire:click="editInvoice({{ $request->id }})" title="{{ __('Editar Factura') }}"
-                                        class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                                        class="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
                                     <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </button>
-
                                 <a href="{{ route('admin.requests.print', $request) }}" target="_blank" title="{{ __('Imprimir Factura con QR') }}"
-                                   class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300">
+                                   class="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300">
                                     <i class="fa-solid fa-print text-xs"></i>
                                 </a>
-
                                 @if ($balance > 0)
                                     <button type="button" wire:click="openPaymentModal({{ $request->id }})" title="{{ __('Registrar Abono / Pago') }}"
-                                            class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100">
+                                            class="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100">
                                         <i class="fa-solid fa-credit-card text-xs"></i>
                                     </button>
                                 @endif
