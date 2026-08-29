@@ -512,6 +512,38 @@ test('invoice pdf renders payment methods and instructions for pending and quote
         ->and($printHtml)->toContain('MÉTODOS DE PAGO DISPONIBLES');
 });
 
+test('updating an invoice automatically sends updated email to customer and admin', function () {
+    Mail::fake();
+    Setting::set('admin_notification_email', 'admin@speedingshopper.com');
+
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['email' => 'client.update@example.com']);
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Quoted,
+        'product_name' => 'Original Product',
+        'unit_price' => 100.0,
+        'quantity' => 1,
+    ]);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('editInvoice', $request->id)
+        ->set('invoiceForm.items.0.product_name', 'Updated Product Name')
+        ->set('invoiceForm.items.0.unit_price', 150.0)
+        ->call('setInvoiceType', 'pendiente')
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    Mail::assertSent(InvoiceCreatedMail::class, function ($mail) {
+        return $mail->hasTo('client.update@example.com')
+            && $mail->hasBcc('admin@speedingshopper.com')
+            && $mail->isUpdate === true
+            && str_contains($mail->envelope()->subject, '[Actualización] Factura Pendiente')
+            && ! empty($mail->pdfOutput);
+    });
+});
+
 test('unauthenticated users are redirected from billing and rates routes', function () {
     $this->get(route('admin.billing.index'))->assertRedirect(route('login'));
     $this->get(route('admin.rates.index'))->assertRedirect(route('login'));

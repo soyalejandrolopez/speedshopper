@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Enums\RequestStatus;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
@@ -31,15 +32,19 @@ class InvoiceCreatedMail extends Mailable
 
     public float $balance = 0.0;
 
+    public bool $isUpdate = false;
+
     public function __construct(
         public PurchaseRequest $purchaseRequest,
         string $locale = 'es',
         ?string $pdfOutput = null,
-        string $pdfFilename = 'SpeedShopper_Factura.pdf'
+        string $pdfFilename = 'SpeedShopper_Factura.pdf',
+        bool $isUpdate = false
     ) {
         $this->locale = in_array($locale, ['es', 'en'], true) ? $locale : 'es';
         $this->pdfOutput = $pdfOutput;
         $this->pdfFilename = $pdfFilename;
+        $this->isUpdate = $isUpdate;
         $this->companyName = Setting::get('company_name', 'Speed Shopper');
 
         $this->totalCost = (float) $this->purchaseRequest->total_cost;
@@ -51,9 +56,24 @@ class InvoiceCreatedMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $subject = $this->locale === 'es'
-            ? "Factura Oficial #{$this->purchaseRequest->number} - {$this->companyName}"
-            : "Official Invoice #{$this->purchaseRequest->number} - {$this->companyName}";
+        $status = $this->purchaseRequest->status;
+        $number = $this->purchaseRequest->number;
+
+        if ($status === RequestStatus::Quoted) {
+            $prefix = $this->isUpdate
+                ? ($this->locale === 'es' ? '[Actualización] Cotización' : '[Updated] Quote')
+                : ($this->locale === 'es' ? 'Cotización' : 'Quotation');
+        } elseif ($status === RequestStatus::Purchased || ($this->totalCost > 0 && $this->balance <= 0)) {
+            $prefix = $this->isUpdate
+                ? ($this->locale === 'es' ? '[Actualización] Factura Pagada' : '[Updated] Paid Invoice')
+                : ($this->locale === 'es' ? 'Factura Oficial Pagada' : 'Official Paid Invoice');
+        } else {
+            $prefix = $this->isUpdate
+                ? ($this->locale === 'es' ? '[Actualización] Factura Pendiente' : '[Updated] Pending Invoice')
+                : ($this->locale === 'es' ? 'Factura Pendiente de Pago' : 'Pending Invoice');
+        }
+
+        $subject = "{$prefix} #{$number} - {$this->companyName}";
 
         return new Envelope(
             subject: $subject,

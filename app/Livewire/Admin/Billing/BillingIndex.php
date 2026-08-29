@@ -759,11 +759,37 @@ class BillingIndex extends Component
                 }
             }
 
+            // Sync payments if updated
+            $totalInvoiced = $this->invoicedTotal;
+            $amountPaid = (float) ($this->invoiceForm['amount_paid'] ?? 0);
+            $alreadyPaid = (float) Payment::where('billable_type', PurchaseRequest::class)
+                ->where('billable_id', $purchaseRequest->id)
+                ->sum('amount_paid');
+
+            if ($amountPaid > $alreadyPaid) {
+                Payment::create([
+                    'customer_id' => $purchaseRequest->customer_id,
+                    'billable_type' => PurchaseRequest::class,
+                    'billable_id' => $purchaseRequest->id,
+                    'invoice_total' => $totalInvoiced,
+                    'amount_paid' => $amountPaid - $alreadyPaid,
+                    'payment_method' => PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle,
+                    'reference' => $this->invoiceForm['payment_reference'] ?? null,
+                    'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
+                    'notes' => 'Pago registrado al actualizar factura '.$purchaseRequest->number,
+                ]);
+            }
+
+            $purchaseRequest->load(['customer', 'costItems']);
+
+            // Automatically send updated email to customer and administrator
+            $this->sendInvoiceNotificationMail($purchaseRequest, isUpdate: true);
+
             $this->showCreateForm = false;
             $this->isEditing = false;
             $this->editingRequestId = null;
             $this->editingRequestNumber = null;
-            $this->swalSuccess(__('Factura :number actualizada correctamente.', ['number' => $purchaseRequest->number]));
+            $this->swalSuccess(__('Factura :number actualizada y notificada por correo.', ['number' => $purchaseRequest->number]));
 
             return;
         }
@@ -839,7 +865,17 @@ class BillingIndex extends Component
             ]);
         }
 
+        $purchaseRequest->load(['customer', 'costItems']);
+
         // Automatically send email to customer and administrator with attached PDF in active locale
+        $this->sendInvoiceNotificationMail($purchaseRequest, isUpdate: false);
+
+        $this->showCreateForm = false;
+        $this->swalSuccess(__('Factura :number creada correctamente con sus tarifas organizadas.', ['number' => $purchaseRequest->number]));
+    }
+
+    protected function sendInvoiceNotificationMail(PurchaseRequest $purchaseRequest, bool $isUpdate = false): void
+    {
         $currentLocale = in_array(app()->getLocale(), ['es', 'en'], true) ? app()->getLocale() : 'es';
 
         try {
@@ -852,6 +888,7 @@ class BillingIndex extends Component
                 locale: $currentLocale,
                 pdfOutput: $pdfOutput,
                 pdfFilename: $pdfFilename,
+                isUpdate: $isUpdate,
             );
 
             $adminEmail = Setting::get('admin_notification_email') ?: config('mail.from.address');
@@ -869,9 +906,6 @@ class BillingIndex extends Component
         } catch (\Throwable $e) {
             Log::warning('Could not send automated invoice email: '.$e->getMessage());
         }
-
-        $this->showCreateForm = false;
-        $this->swalSuccess(__('Factura :number creada correctamente con sus tarifas organizadas.', ['number' => $purchaseRequest->number]));
     }
 
     public function openPaymentModal(int $requestId): void
