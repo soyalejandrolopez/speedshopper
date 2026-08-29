@@ -1,12 +1,12 @@
 <div>
-    <x-slot name="header">{{ __('Rate Sheet & Pricing PDF') }}</x-slot>
+    <x-slot name="header">{{ __('Ajuste de Factura') }}</x-slot>
 
     <form wire:submit="save" class="space-y-6">
         <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
             <div class="border-b border-gray-100 pb-5">
-                <h2 class="text-lg font-bold text-gray-900">{{ __('Rate Sheet & Pricing PDF') }}</h2>
+                <h2 class="text-lg font-bold text-gray-900">{{ __('Ajuste de Factura') }}</h2>
                 <p class="mt-0.5 text-xs text-gray-500">
-                    {{ __('Configure personal shopper tiers, heavy duty boxes, logistics fees, and bilingual notes for the official rate sheet.') }}
+                    {{ __('Configura los niveles de personal shopper, cajas heavy duty de reempaque, tarifas de logística y notas para el ajuste de facturas.') }}
                 </p>
             </div>
 
@@ -58,60 +58,50 @@
                     </div>
                 </div>
 
-                {{-- 2. Compras Online & Servicios de Almacén --}}
+                {{-- 2. Repackaging & Warehouse Services --}}
                 <div class="border-t border-gray-100 pt-5">
                     <h3 class="flex items-center gap-2 text-sm font-bold text-gray-900">
-                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-xs font-extrabold text-blue-800">2</span>
-                        {{ __('Compras Online (Reempaque / Almacén)') }}
+                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-teal-100 text-xs font-extrabold text-teal-800">2</span>
+                        {{ __('Repackaging & Warehouse Services') }}
                     </h3>
                     <div class="mt-3 grid gap-3 sm:grid-cols-3">
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Comisión Almacén (%)') }}</label>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Small Heavy Duty ($)') }}</label>
+                            <input type="number" step="0.01" min="0" wire:model="rates.box_small_heavy_duty"
+                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Medium Heavy Duty ($)') }}</label>
+                            <input type="number" step="0.01" min="0" wire:model="rates.box_medium_heavy_duty"
+                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Large Heavy Duty ($)') }}</label>
+                            <input type="number" step="0.01" min="0" wire:model="rates.box_large_heavy_duty"
+                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Warehouse Commission (%)') }}</label>
                             <input type="number" step="0.5" min="0" max="100" wire:model="rates.warehouse_percent"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Servicio de Traslado de Caja al Almacén ($)') }}</label>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Box Drop-off at Warehouse ($)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.warehouse_delivery_fee"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Almacenaje mensual tras 30 días ($/mes)') }}</label>
+                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Monthly Storage Fee ($/month after 30 days)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.monthly_storage_fee"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         </div>
                     </div>
                 </div>
 
-                {{-- 3. Precios de los Reempaques (Cajas Heavy Duty) --}}
+                {{-- 3. Descriptive Notes & Policy (Bilingual) --}}
                 <div class="border-t border-gray-100 pt-5">
                     <h3 class="flex items-center gap-2 text-sm font-bold text-gray-900">
-                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-teal-100 text-xs font-extrabold text-teal-800">3</span>
-                        {{ __('Precios de los Reempaques (Cajas Heavy Duty)') }}
-                    </h3>
-                    <div class="mt-3 grid gap-3 sm:grid-cols-3">
-                        <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Caja Small Heavy Duty ($)') }}</label>
-                            <input type="number" step="0.01" min="0" wire:model="rates.box_small_heavy_duty"
-                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Caja Mediana Heavy Duty ($)') }}</label>
-                            <input type="number" step="0.01" min="0" wire:model="rates.box_medium_heavy_duty"
-                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Caja Larga Heavy Duty ($)') }}</label>
-                            <input type="number" step="0.01" min="0" wire:model="rates.box_large_heavy_duty"
-                                   class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                        </div>
-                    </div>
-                </div>
-
-                {{-- 4. Descriptive Notes & Policy (Bilingual) --}}
-                <div class="border-t border-gray-100 pt-5">
-                    <h3 class="flex items-center gap-2 text-sm font-bold text-gray-900">
-                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-100 text-xs font-extrabold text-purple-800">4</span>
+                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-100 text-xs font-extrabold text-purple-800">3</span>
                         {{ __('Descriptive Notes & Policy (Bilingual)') }}
                     </h3>
                     <div class="mt-3 grid gap-4 sm:grid-cols-2">

@@ -21,7 +21,7 @@ test('admin can view dedicated rate sheet configuration page', function () {
     $this->actingAs($admin)
         ->get(route('admin.rates.index'))
         ->assertOk()
-        ->assertSee('Tarifario y PDF Oficial');
+        ->assertSee('Ajuste de Factura');
 });
 
 test('admin can view billing invoice management page', function () {
@@ -288,7 +288,7 @@ test('billing and rates views render in english when locale is set to en', funct
         ->withSession(['locale' => 'en'])
         ->get(route('admin.rates.index'))
         ->assertOk()
-        ->assertSee('Rate Sheet')
+        ->assertSee('Invoice Adjustment')
         ->assertSee('Personal Shopper Tiers');
 });
 
@@ -342,6 +342,55 @@ test('online purchase mode automatically enables 15 percent commission, fixed 20
         ->get();
     expect($receivingCosts)->toHaveCount(2)
         ->and((float) $receivingCosts->sum('amount'))->toBe(65.0);
+});
+
+test('repack mode automatically enables fixed 20 dollar transfer, allows box selection with rate sheet prices, and excludes product price from invoice total', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['email' => 'repack.client@example.com']);
+
+    $component = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->call('setServiceType', 'repack')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Shein Clothes Pack',
+                'store' => 'Shein',
+                'quantity' => 1,
+                'unit_price' => 180.0,
+            ],
+        ])
+        ->set('guidedQuestions.boxes_small_count', 1)
+        ->set('guidedQuestions.boxes_medium_count', 1)
+        ->call('syncGuidedQuestionsToCosts');
+
+    expect($component->get('serviceType'))->toBe('repack')
+        ->and($component->get('guidedQuestions.apply_warehouse_commission'))->toBeFalse()
+        ->and($component->get('guidedQuestions.apply_shopper_commission'))->toBeFalse()
+        ->and($component->get('guidedQuestions.warehouse_delivery_count'))->toBe(1)
+        ->and($component->get('productsSubtotal'))->toBe(180.0)
+        ->and((float) $component->get('invoicedTotal'))->toBe(55.0); // $15 small + $20 medium + $20 delivery = $55
+
+    // Save repack invoice
+    $component->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $createdRequest = PurchaseRequest::where('customer_id', $customer->id)->latest()->first();
+    expect($createdRequest)->not->toBeNull()
+        ->and((float) $createdRequest->total_cost)->toBe(55.0);
+
+    $packingCosts = CostItem::where('costable_id', $createdRequest->id)
+        ->where('type', CostType::PackingFee)
+        ->get();
+    expect($packingCosts)->toHaveCount(2)
+        ->and((float) $packingCosts->sum('amount'))->toBe(35.0);
+
+    $deliveryCost = CostItem::where('costable_id', $createdRequest->id)
+        ->where('type', CostType::ReceivingFee)
+        ->first();
+    expect($deliveryCost)->not->toBeNull()
+        ->and((float) $deliveryCost->amount)->toBe(20.0);
 });
 
 test('unauthenticated users are redirected from billing and rates routes', function () {

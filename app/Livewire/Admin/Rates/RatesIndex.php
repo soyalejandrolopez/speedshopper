@@ -13,7 +13,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Title('Tarifario Oficial & Pricing PDF')]
+#[Title('Ajuste de Factura')]
 class RatesIndex extends Component
 {
     use SwalNotifies;

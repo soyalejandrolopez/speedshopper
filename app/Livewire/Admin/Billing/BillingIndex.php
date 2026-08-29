@@ -166,11 +166,15 @@ class BillingIndex extends Component
 
     public function setServiceType(string $type): void
     {
-        $this->serviceType = in_array($type, ['shopper', 'online'], true) ? $type : 'shopper';
+        $this->serviceType = in_array($type, ['shopper', 'online', 'repack'], true) ? $type : 'shopper';
 
         if ($this->serviceType === 'online') {
             $this->guidedQuestions['apply_shopper_commission'] = false;
             $this->guidedQuestions['apply_warehouse_commission'] = true;
+            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
+        } elseif ($this->serviceType === 'repack') {
+            $this->guidedQuestions['apply_shopper_commission'] = false;
+            $this->guidedQuestions['apply_warehouse_commission'] = false;
             $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
         } else {
             $this->guidedQuestions['apply_shopper_commission'] = true;
@@ -192,13 +196,16 @@ class BillingIndex extends Component
         $this->editingRequestNumber = $request->number;
 
         // Detect service type based on cost items
-        $hasReceiving = $request->costItems->where('type', CostType::ReceivingFee)->isNotEmpty();
+        $hasReceivingCommission = $request->costItems->where('type', CostType::ReceivingFee)->filter(fn ($c) => stripos($c->description, 'Comisión') !== false)->isNotEmpty();
         $hasShopperFee = $request->costItems->where('type', CostType::ShopperFee)->isNotEmpty();
+        $hasBoxesOrDelivery = $request->costItems->whereIn('type', [CostType::PackingFee, CostType::ReceivingFee])->isNotEmpty();
         $productCosts = $request->costItems->where('type', CostType::ProductCost);
         $productTotal = (float) $productCosts->sum('amount');
 
-        if ($hasReceiving && ($productTotal === 0.0 || ! $hasShopperFee)) {
+        if ($hasReceivingCommission) {
             $this->serviceType = 'online';
+        } elseif ($hasBoxesOrDelivery && ($productTotal === 0.0 || ! $hasShopperFee)) {
+            $this->serviceType = 'repack';
         } else {
             $this->serviceType = 'shopper';
         }
@@ -209,7 +216,7 @@ class BillingIndex extends Component
             foreach ($productCosts as $cost) {
                 // Extract price if format contains "(Comprado online - Pagado en internet: $XX.XX)"
                 $unitPrice = (float) $cost->amount;
-                if ($this->serviceType === 'online' && preg_match('/Pagado en internet:\s*\$([0-9\.,]+)/i', $cost->description ?? '', $m)) {
+                if (($this->serviceType === 'online' || $this->serviceType === 'repack') && preg_match('/Pagado en internet:\s*\$([0-9\.,]+)/i', $cost->description ?? '', $m)) {
                     $unitPrice = (float) str_replace(',', '', $m[1]);
                 }
 
@@ -239,7 +246,7 @@ class BillingIndex extends Component
             'boxes_medium_count' => 0,
             'boxes_large_count' => 0,
             'apply_warehouse_commission' => $this->serviceType === 'online',
-            'warehouse_delivery_count' => $this->serviceType === 'online' ? 1 : 0,
+            'warehouse_delivery_count' => ($this->serviceType === 'online' || $this->serviceType === 'repack') ? 1 : 0,
             'storage_months_count' => 0,
         ];
         $this->customCosts = [];
@@ -506,8 +513,8 @@ class BillingIndex extends Component
             ];
         }
 
-        // 4. Comisión Almacén / Compras Online (15% sobre el valor del pedido online)
-        if ($this->serviceType === 'online' || ! empty($this->guidedQuestions['apply_warehouse_commission'])) {
+        // 4. Comisión Almacén / Compras Online (15% sobre el valor del pedido online - no aplica en reempaque)
+        if ($this->serviceType === 'online' || ($this->serviceType !== 'repack' && ! empty($this->guidedQuestions['apply_warehouse_commission']))) {
             $pct = (float) ($this->rates['warehouse_percent'] ?? 15.0);
             $costs[] = [
                 'preset' => 'warehouse_commission',
@@ -517,9 +524,9 @@ class BillingIndex extends Component
             ];
         }
 
-        // 5. Traslado de caja al Almacén (Fijo $20 en compras online)
+        // 5. Traslado de caja al Almacén (Fijo $20 en compras online y reempaque)
         $delivery = (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0);
-        if ($this->serviceType === 'online' && $delivery === 0) {
+        if (($this->serviceType === 'online' || $this->serviceType === 'repack') && $delivery === 0) {
             $delivery = 1;
             $this->guidedQuestions['warehouse_delivery_count'] = 1;
         }

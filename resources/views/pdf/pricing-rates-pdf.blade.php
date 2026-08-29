@@ -206,11 +206,8 @@
     {{-- SECTION 1: PERSONAL SHOPPER --}}
     <div class="section-header">
         <h2 class="section-title">
-            {{ $locale === 'es' ? '1. Personal Shopper (Compras Físicas)' : '1. Personal Shopper (In-Store Purchases)' }}
+            {{ $locale === 'es' ? '1. Tarifas de Compras Personales (Personal Shopper)' : '1. Personal Shopper Rates & Store Visits' }}
         </h2>
-        <div style="font-size: 10px; color: #047857; margin-top: 2px;">
-            {{ $locale === 'es' ? 'Compramos en tiendas físicas + comisión por tramos (20% - 15%)' : 'In-store shopping + tiered commission (20% - 15%)' }}
-        </div>
     </div>
 
     <table class="rate-table" cellpadding="0" cellspacing="0">
@@ -254,64 +251,59 @@
         </tbody>
     </table>
 
-    {{-- SECTION 2: COMPRAS ONLINE & REEMPAQUES --}}
-    <table class="two-col-table" cellpadding="0" cellspacing="0" style="margin-top: 14px;">
+    {{-- SECTION 2: REPACKAGING & WAREHOUSE --}}
+    <div class="section-header" style="margin-top: 18px;">
+        <h2 class="section-title">
+            {{ $locale === 'es' ? '2. Tarifas de Reempaque y Almacén' : '2. Repackaging & Warehouse Services' }}
+        </h2>
+    </div>
+
+    <table class="two-col-table" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="width: 48%;">
-                <div class="section-header" style="margin-top: 0; margin-bottom: 8px;">
-                    <h2 class="section-title">
-                        {{ $locale === 'es' ? '2. Compras Online (Almacén)' : '2. Online Purchases (Warehouse)' }}
-                    </h2>
-                </div>
+            <td style="width: 50%;">
                 <table class="rate-table" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>{{ $locale === 'es' ? 'Servicio Online' : 'Online Service' }}</th>
-                            <th class="text-right">{{ $locale === 'es' ? 'Tarifa' : 'Rate' }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ $locale === 'es' ? 'Comisión Almacén (Compras Online)' : 'Warehouse Commission (Online)' }}</td>
-                            <td class="text-right font-semibold text-emerald">{{ $rates['warehouse_percent'] }}%</td>
-                        </tr>
-                        <tr>
-                            <td>{{ $locale === 'es' ? 'Servicio de Traslado de Caja al Almacén' : 'Box Drop-off Transfer at Warehouse' }}</td>
-                            <td class="text-right font-semibold text-emerald">${{ number_format($rates['warehouse_delivery_fee'], 2) }} USD</td>
-                        </tr>
-                        <tr>
-                            <td>{{ $locale === 'es' ? 'Almacenaje mensual (después de 30 días)' : 'Monthly storage (after 30 days)' }}</td>
-                            <td class="text-right font-semibold text-amber">${{ number_format($rates['monthly_storage_fee'], 2) }} USD</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td style="width: 4%;"></td>
-            <td style="width: 48%;">
-                <div class="section-header" style="margin-top: 0; margin-bottom: 8px;">
-                    <h2 class="section-title">
-                        {{ $locale === 'es' ? '3. Precios de los Reempaques' : '3. Repackaging Box Rates' }}
-                    </h2>
-                </div>
-                <table class="rate-table" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>{{ $locale === 'es' ? 'Cajas Heavy Duty' : 'Heavy Duty Boxes' }}</th>
+                            <th>{{ $locale === 'es' ? 'Tipo de Caja (Heavy Duty)' : 'Box Type (Heavy Duty)' }}</th>
                             <th class="text-right">{{ $locale === 'es' ? 'Precio' : 'Price' }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>1 {{ $locale === 'es' ? 'Caja Small' : 'Small Box' }}</strong> Heavy Duty</td>
+                            <td><strong>1 {{ $locale === 'es' ? 'Caja Small' : 'Small Box' }}</strong> (Heavy Duty)</td>
                             <td class="text-right font-semibold text-emerald">${{ number_format($rates['box_small_heavy_duty'], 2) }} USD</td>
                         </tr>
                         <tr>
-                            <td><strong>1 {{ $locale === 'es' ? 'Caja Mediana' : 'Medium Box' }}</strong> Heavy Duty</td>
+                            <td><strong>1 {{ $locale === 'es' ? 'Caja Mediana' : 'Medium Box' }}</strong> (Heavy Duty)</td>
                             <td class="text-right font-semibold text-emerald">${{ number_format($rates['box_medium_heavy_duty'], 2) }} USD</td>
                         </tr>
                         <tr>
-                            <td><strong>1 {{ $locale === 'es' ? 'Caja Larga' : 'Large Box' }}</strong> Heavy Duty</td>
+                            <td><strong>1 {{ $locale === 'es' ? 'Caja Larga' : 'Large Box' }}</strong> (Heavy Duty)</td>
                             <td class="text-right font-semibold text-emerald">${{ number_format($rates['box_large_heavy_duty'], 2) }} USD</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="width: 50%;">
+                <table class="rate-table" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>{{ $locale === 'es' ? 'Servicios de Logística' : 'Logistics Services' }}</th>
+                            <th class="text-right">{{ $locale === 'es' ? 'Costo' : 'Cost' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ $locale === 'es' ? 'Comisión Almacén' : 'Warehouse Fee' }}</td>
+                            <td class="text-right font-semibold text-emerald">{{ $rates['warehouse_percent'] }}%</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $locale === 'es' ? 'Llevar caja al almacén' : 'Drop-off box at warehouse' }}</td>
+                            <td class="text-right font-semibold text-emerald">${{ number_format($rates['warehouse_delivery_fee'], 2) }} USD</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $locale === 'es' ? 'Almacenaje mensual (después de 30 días)' : 'Monthly storage (after 30 days)' }}</td>
+                            <td class="text-right font-semibold text-amber">${{ number_format($rates['monthly_storage_fee'], 2) }} USD/{{ $locale === 'es' ? 'mes' : 'mo' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -323,7 +315,7 @@
     <div class="info-card">
         <p class="info-title">
             <span style="color: #059669;">●</span>
-            {{ $locale === 'es' ? 'Compras Online y Reempaques' : 'Online Purchases & Repackaging' }}
+            {{ $locale === 'es' ? 'Compras Online y Recepción' : 'Online Purchases & Receiving' }}
         </p>
         <p class="info-text">
             {{ $locale === 'es' ? ($rates['notes_es']['repackage_notice'] ?? '') : ($rates['notes_en']['repackage_notice'] ?? '') }}

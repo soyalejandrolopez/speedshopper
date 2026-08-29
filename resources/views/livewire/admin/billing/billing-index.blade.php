@@ -77,39 +77,99 @@
             </div>
 
             <form wire:submit="saveInvoice" class="space-y-6">
-                {{-- Selector de Modalidad / Tipo de Servicio --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {{-- Selector de Modalidad / Tipo de Servicio (3 Opciones) --}}
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {{-- 1. Personal Shopper --}}
                     <button type="button" wire:click="setServiceType('shopper')"
-                            class="flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'shopper' ? 'border-emerald-600 bg-emerald-50/80 text-emerald-950 shadow-xs' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'shopper' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'shopper' ? 'border-emerald-600 bg-emerald-50/80 text-emerald-950 shadow-xs ring-1 ring-emerald-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'shopper' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500' }}">
                             <i class="fa-solid fa-cart-shopping text-sm"></i>
                         </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">{{ __('Personal Shopper (Compras Físicas)') }}</p>
-                            <p class="text-[11px] text-gray-500">{{ __('Compramos en tiendas físicas + comisión por tramos (20% - 15%)') }}</p>
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Personal Shopper') }}</p>
+                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Compras físicas + comisión por tramos (20% - 15%)') }}</p>
                         </div>
                     </button>
 
+                    {{-- 2. Comprar Online --}}
                     <button type="button" wire:click="setServiceType('online')"
-                            class="flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'online' ? 'border-blue-600 bg-blue-50/80 text-blue-950 shadow-xs' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'online' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'online' ? 'border-blue-600 bg-blue-50/80 text-blue-950 shadow-xs ring-1 ring-blue-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'online' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500' }}">
                             <i class="fa-solid fa-globe text-sm"></i>
                         </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">{{ __('Compras Online (Reempaque / Almacén)') }}</p>
-                            <p class="text-[11px] text-gray-500">{{ __('Comisión 15% automática + traslado fijo $20 (no se cobra el producto)') }}</p>
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Comprar Online') }}</p>
+                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Comisión 15% + traslado fijo $20 (no se cobra el producto)') }}</p>
+                        </div>
+                    </button>
+
+                    {{-- 3. Reempaque --}}
+                    <button type="button" wire:click="setServiceType('repack')"
+                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'repack' ? 'border-teal-600 bg-teal-50/80 text-teal-950 shadow-xs ring-1 ring-teal-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'repack' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                            <i class="fa-solid fa-boxes-packing text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Reempaque') }}</p>
+                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Cajas Small $15, Med $20, Larga $25 + traslado $20') }}</p>
                         </div>
                     </button>
                 </div>
 
+                {{-- Banner Informativo para Compras Online --}}
                 @if ($serviceType === 'online')
                     <div class="rounded-xl border border-blue-200 bg-blue-50/90 p-3.5 flex items-start gap-2.5 text-xs text-blue-900 shadow-2xs">
                         <i class="fa-solid fa-circle-info text-blue-600 mt-0.5 text-sm shrink-0"></i>
                         <div>
-                            <p class="font-bold">{{ __('Modo Online Activo') }}:</p>
+                            <p class="font-bold">{{ __('Modo Comprar Online Activo') }}:</p>
                             <p class="mt-0.5 leading-relaxed text-blue-800 text-[11.5px]">
                                 {{ __('El cliente pagó el valor de los productos en internet. Dicho valor NO se sumará a la factura. La factura cobrará automáticamente la comisión de almacén (15% = ') }}<strong>{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>{{ __(') y el servicio de traslado fijo de la caja ($20.00).') }}
                             </p>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Banner Informativo y Precios Prediseñados para Reempaque --}}
+                @if ($serviceType === 'repack')
+                    <div class="rounded-2xl border-2 border-teal-300 bg-teal-50/80 p-4 shadow-2xs">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shrink-0 shadow-xs">
+                                <i class="fa-solid fa-boxes-packing text-base"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-950 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-box-open text-teal-700"></i>
+                                        {{ __('PRECIOS DE LOS REEMPAQUES') }}
+                                    </h4>
+                                    <span class="text-[10px] font-bold uppercase bg-teal-200/80 text-teal-900 px-2 py-0.5 rounded-md">
+                                        {{ __('Ajuste de Factura') }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-xs text-teal-900 leading-relaxed">
+                                    {{ __('Estos precios son del reempaque si ustedes realizan la compra por cualquier página online y yo recibo aquí en casa. Si sus cajas permanecen un mes o más en nuestro almacén, tendrá un costo adicional de $15 por mes.') }}
+                                </p>
+
+                                {{-- Tarjetas de precios prediseñados --}}
+                                <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                    <div class="rounded-xl bg-white border border-teal-200 p-2 text-center shadow-2xs">
+                                        <p class="text-base font-extrabold text-teal-800">{{ money($rates['box_small_heavy_duty'] ?? 15) }}</p>
+                                        <p class="text-[10px] font-bold text-gray-700 uppercase mt-0.5 leading-tight">{{ __('1 Caja Small Heavy Duty') }}</p>
+                                    </div>
+                                    <div class="rounded-xl bg-white border border-teal-200 p-2 text-center shadow-2xs">
+                                        <p class="text-base font-extrabold text-teal-800">{{ money($rates['box_medium_heavy_duty'] ?? 20) }}</p>
+                                        <p class="text-[10px] font-bold text-gray-700 uppercase mt-0.5 leading-tight">{{ __('1 Caja Mediana Heavy Duty') }}</p>
+                                    </div>
+                                    <div class="rounded-xl bg-white border border-teal-200 p-2 text-center shadow-2xs">
+                                        <p class="text-base font-extrabold text-teal-800">{{ money($rates['box_large_heavy_duty'] ?? 25) }}</p>
+                                        <p class="text-[10px] font-bold text-gray-700 uppercase mt-0.5 leading-tight">{{ __('1 Caja Larga Heavy Duty') }}</p>
+                                    </div>
+                                    <div class="rounded-xl bg-white border border-teal-200 p-2 text-center shadow-2xs">
+                                        <p class="text-base font-extrabold text-teal-800">{{ money($rates['warehouse_delivery_fee'] ?? 20) }}</p>
+                                        <p class="text-[10px] font-bold text-gray-700 uppercase mt-0.5 leading-tight">{{ __('Llevar Caja al Almacén') }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -142,9 +202,19 @@
                         <div class="flex items-center gap-2">
                             <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">2</span>
                             <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800">
-                                {{ $serviceType === 'online' ? __('Artículos / Compras por Internet') : __('Productos y Artículos') }}
+                                @if ($serviceType === 'repack')
+                                    {{ __('Paquetes Recibidos para Reempaque') }}
+                                @elseif ($serviceType === 'online')
+                                    {{ __('Artículos / Compras por Internet') }}
+                                @else
+                                    {{ __('Productos y Artículos') }}
+                                @endif
                             </h3>
-                            @if ($serviceType === 'online')
+                            @if ($serviceType === 'repack')
+                                <span class="text-xs font-bold bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-lg">
+                                    {{ __('Valor Declarado: :amount (Pagado en internet por el cliente)', ['amount' => money($this->productsSubtotal)]) }}
+                                </span>
+                            @elseif ($serviceType === 'online')
                                 <span class="text-xs font-bold bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-lg">
                                     {{ __('Valor Online: :amount (Pagado en internet)', ['amount' => money($this->productsSubtotal)]) }}
                                 </span>
@@ -156,7 +226,7 @@
                         </div>
                         <button type="button" wire:click="addItem"
                                 class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-white px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 shadow-2xs">
-                            <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Producto') }}
+                            <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Producto / Paquete') }}
                         </button>
                     </div>
 
@@ -180,7 +250,7 @@
                                 </div>
                                 <div class="sm:col-span-2 relative">
                                     <label class="block text-[11px] font-medium text-gray-500">
-                                        {{ $serviceType === 'online' ? __('Valor en Internet ($)') : __('Precio ($)') }}
+                                        {{ ($serviceType === 'online' || $serviceType === 'repack') ? __('Valor en Internet ($)') : __('Precio ($)') }}
                                     </label>
                                     <div class="flex items-center gap-1 mt-1">
                                         <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.unit_price"
@@ -216,7 +286,7 @@
                                         <div>
                                             <h4 class="text-xs font-bold text-gray-900">{{ __('¿Aplica Servicio de Personal Shopper?') }}</h4>
                                             <p class="text-[11px] text-gray-500">
-                                                {{ __('Calcula automáticamente según el tarifario oficial:') }}
+                                                {{ __('Calcula automáticamente según el ajuste de factura:') }}
                                                 <span class="font-bold text-emerald-700">
                                                     {{ $this->shopperCommissionCalculation['percent'] }}% de {{ money($this->productsSubtotal) }} = {{ money($this->shopperCommissionCalculation['amount']) }}
                                                 </span>
@@ -257,7 +327,7 @@
                         @endif
 
                         {{-- Pregunta 2: Reempaque en Cajas Heavy Duty --}}
-                        <div class="rounded-2xl border border-teal-100 bg-white p-4 shadow-2xs">
+                        <div class="rounded-2xl border transition-all {{ $serviceType === 'repack' ? 'border-teal-300 bg-teal-50/30' : 'border-teal-100 bg-white' }} p-4 shadow-2xs">
                             <div class="flex items-start gap-3 mb-3">
                                 <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-100 text-teal-700 shrink-0">
                                     <i class="fa-solid fa-box text-xs"></i>
@@ -344,38 +414,40 @@
                                     <i class="fa-solid fa-warehouse text-xs"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-gray-900">{{ __('Servicios de Almacén y Compras Online') }}</h4>
+                                    <h4 class="text-xs font-bold text-gray-900">{{ __('Servicios de Almacén y Traslado') }}</h4>
                                     <p class="text-[11px] text-gray-500">{{ __('Recepción en casa/almacén, traslado fijo de cajas y almacenaje prolongado') }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-3">
-                                {{-- Comisión Almacén Compras Online --}}
-                                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
-                                    <div>
-                                        <p class="text-xs font-bold text-gray-800">
-                                            {{ __('Comisión de almacén (15% sobre compras online)') }}
-                                        </p>
-                                        <p class="text-[11px] text-gray-500">
-                                            {{ $rates['warehouse_percent'] ?? 15 }}% de {{ money($this->productsSubtotal) }} =
-                                            <strong class="text-blue-700 font-bold">{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>
-                                            @if ($serviceType === 'online')
-                                                <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Automática en compras online') }})</span>
-                                            @endif
-                                        </p>
+                                {{-- Comisión Almacén Compras Online (Solo visible si no es Reempaque) --}}
+                                @if ($serviceType !== 'repack')
+                                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-gray-800">
+                                                {{ __('Comisión de almacén (15% sobre compras online)') }}
+                                            </p>
+                                            <p class="text-[11px] text-gray-500">
+                                                {{ $rates['warehouse_percent'] ?? 15 }}% de {{ money($this->productsSubtotal) }} =
+                                                <strong class="text-blue-700 font-bold">{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>
+                                                @if ($serviceType === 'online')
+                                                    <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Automática en compras online') }})</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                        @if ($serviceType === 'online')
+                                            <span class="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-3 py-1 text-xs font-bold text-white">
+                                                <i class="fa-solid fa-check text-xs"></i> {{ __('Activada (15%)') }}
+                                            </span>
+                                        @else
+                                            <button type="button" wire:click="toggleQuestion('apply_warehouse_commission')"
+                                                    class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold transition-all {{ $guidedQuestions['apply_warehouse_commission'] ? 'bg-blue-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-100' }}">
+                                                <i class="fa-solid {{ $guidedQuestions['apply_warehouse_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
+                                                <span>{{ $guidedQuestions['apply_warehouse_commission'] ? __('Comisión 15% Aplicada') : __('No Aplicar') }}</span>
+                                            </button>
+                                        @endif
                                     </div>
-                                    @if ($serviceType === 'online')
-                                        <span class="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-3 py-1 text-xs font-bold text-white">
-                                            <i class="fa-solid fa-check text-xs"></i> {{ __('Activada (15%)') }}
-                                        </span>
-                                    @else
-                                        <button type="button" wire:click="toggleQuestion('apply_warehouse_commission')"
-                                                class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold transition-all {{ $guidedQuestions['apply_warehouse_commission'] ? 'bg-blue-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-100' }}">
-                                            <i class="fa-solid {{ $guidedQuestions['apply_warehouse_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
-                                            <span>{{ $guidedQuestions['apply_warehouse_commission'] ? __('Comisión 15% Aplicada') : __('No Aplicar') }}</span>
-                                        </button>
-                                    @endif
-                                </div>
+                                @endif
 
                                 {{-- Traslado fijo de caja al almacén --}}
                                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
@@ -383,8 +455,8 @@
                                         <p class="text-xs font-bold text-gray-800">{{ __('Servicio de Traslado de Caja al Almacén') }}</p>
                                         <p class="text-[11px] text-gray-500">
                                             <strong class="text-gray-900">{{ money($rates['warehouse_delivery_fee'] ?? 20) }} {{ __('fijo por caja') }}</strong>
-                                            @if ($serviceType === 'online')
-                                                <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Fijo automático en compras online') }})</span>
+                                            @if ($serviceType === 'online' || $serviceType === 'repack')
+                                                <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Fijo automático $20') }})</span>
                                             @endif
                                         </p>
                                     </div>
@@ -486,10 +558,10 @@
                         {{ __('Datos de Cobro y Pago (Lo que paga el cliente)') }}
                     </h3>
 
-                    @if ($serviceType === 'online')
-                        <div class="mb-4 rounded-xl border border-blue-200 bg-white p-3 text-xs text-blue-900 flex items-center justify-between shadow-2xs">
+                    @if ($serviceType === 'online' || $serviceType === 'repack')
+                        <div class="mb-4 rounded-xl border {{ $serviceType === 'repack' ? 'border-teal-200 text-teal-900' : 'border-blue-200 text-blue-900' }} bg-white p-3 text-xs flex items-center justify-between shadow-2xs">
                             <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-globe text-blue-600"></i>
+                                <i class="fa-solid {{ $serviceType === 'repack' ? 'fa-boxes-packing text-teal-600' : 'fa-globe text-blue-600' }}"></i>
                                 <span>{{ __('Valor Pagado por el Cliente en Internet (No se cobra en esta factura):') }}</span>
                             </div>
                             <span class="font-bold text-gray-500 line-through">{{ money($this->productsSubtotal) }}</span>

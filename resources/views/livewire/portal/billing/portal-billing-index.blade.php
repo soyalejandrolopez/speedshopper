@@ -28,21 +28,21 @@
         </div>
     </div>
 
-    {{-- Official Rate Grid (3 Core Services) --}}
-    <div class="mb-8 grid gap-6 lg:grid-cols-3">
-        {{-- 1. Personal Shopper (Compras Físicas) --}}
-        <div class="flex flex-col rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-sm">
+    {{-- Official Rate Grid --}}
+    <div class="mb-8 grid gap-6 lg:grid-cols-2">
+        {{-- Personal Shopper Tiers --}}
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
             <div class="flex items-center gap-2.5 border-b border-gray-100 pb-3">
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-sm font-bold text-emerald-700">1</div>
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('Personal Shopper (Compras Físicas)') }}</h3>
-                    <p class="text-[11px] text-gray-500">{{ __('Compramos en tiendas físicas + comisión por tramos (20% - 15%)') }}</p>
+                    <p class="text-[11px] text-gray-500">{{ __('Porcentaje de comisión y beneficios según el rango de compra') }}</p>
                 </div>
             </div>
 
-            <div class="mt-4 flex-1 space-y-2.5">
+            <div class="mt-4 space-y-3">
                 @foreach ($rates['shopper_tiers'] ?? [] as $tier)
-                    <div class="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50/40 p-3">
+                    <div class="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50/40 p-3.5">
                         <div>
                             <p class="text-xs font-bold text-gray-900">
                                 @if (empty($tier['max']))
@@ -51,7 +51,7 @@
                                     ${{ number_format($tier['min']) }} – ${{ number_format($tier['max']) }}
                                 @endif
                             </p>
-                            <p class="text-[10.5px] text-gray-500">
+                            <p class="text-[11px] text-gray-500">
                                 {{ $tier['stores'] }} {{ __('tiendas') }} &bull; {{ $tier['hours'] }} {{ __('horas') }}
                             </p>
                         </div>
@@ -63,86 +63,50 @@
                     </div>
                 @endforeach
 
-                <div class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-2.5 text-xs text-gray-700">
+                <div class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3 text-xs text-gray-700">
                     <span>{{ __('Visitar una tienda adicional:') }}</span>
                     <strong class="font-bold text-gray-900">${{ number_format($rates['extra_store_fee'] ?? 20, 2) }} USD</strong>
                 </div>
             </div>
         </div>
 
-        {{-- 2. Compras Online (Reempaque / Almacén) --}}
-        <div class="flex flex-col rounded-2xl border border-blue-200/80 bg-white p-5 shadow-sm">
+        {{-- Repackaging & Storage --}}
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
             <div class="flex items-center gap-2.5 border-b border-gray-100 pb-3">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-sm font-bold text-blue-700">2</div>
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">2</div>
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Compras Online (Reempaque / Almacén)') }}</h3>
-                    <p class="text-[11px] text-gray-500">{{ __('Comisión 15% automática + traslado fijo $20 (no se cobra el producto)') }}</p>
+                    <h3 class="text-sm font-bold text-gray-900">{{ __('Reempaques y Almacén') }}</h3>
+                    <p class="text-[11px] text-gray-500">{{ __('Cajas Heavy Duty y tarifas de recepción') }}</p>
                 </div>
             </div>
 
-            <div class="mt-4 flex-1 space-y-3">
-                <div class="rounded-xl border border-blue-100 bg-blue-50/50 p-3 text-xs text-blue-950 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="font-semibold">{{ __('Comisión Almacén (Compras Online):') }}</span>
-                        <span class="rounded-lg bg-blue-600 px-2.5 py-0.5 text-xs font-extrabold text-white">{{ $rates['warehouse_percent'] ?? 15 }}%</span>
-                    </div>
-                    <div class="flex items-center justify-between pt-1 border-t border-blue-200/60">
-                        <span class="font-semibold">{{ __('Servicio de Traslado de Caja:') }}</span>
-                        <strong class="font-bold text-blue-900">${{ number_format($rates['warehouse_delivery_fee'] ?? 20, 2) }} {{ __('Fijo') }}</strong>
-                    </div>
+            <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Small') }}</p>
+                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_small_heavy_duty'] ?? 15) }}</p>
                 </div>
-
-                <div class="rounded-xl bg-gray-50 p-3 text-[11px] text-gray-600 leading-relaxed space-y-1.5">
-                    <p class="font-bold text-gray-800 flex items-center gap-1">
-                        <i class="fa-solid fa-circle-check text-blue-600"></i>
-                        {{ __('¿Cómo funciona?') }}
-                    </p>
-                    <p>{{ __('Realizas tu compra en cualquier página web (Amazon, Shein, etc.) y nosotros la recibimos en casa/almacén.') }}</p>
-                    <p class="text-emerald-700 font-semibold">{{ __('En la factura solo se cobran los servicios logísticos, lo que pagaste en internet no se suma.') }}</p>
+                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Mediana') }}</p>
+                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_medium_heavy_duty'] ?? 20) }}</p>
                 </div>
-            </div>
-        </div>
-
-        {{-- 3. Precios de los Reempaques (Cajas Heavy Duty) --}}
-        <div class="flex flex-col rounded-2xl border border-teal-200/80 bg-white p-5 shadow-sm">
-            <div class="flex items-center gap-2.5 border-b border-gray-100 pb-3">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">3</div>
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Precios de los Reempaques') }}</h3>
-                    <p class="text-[11px] text-gray-500">{{ __('Cajas Heavy Duty y Traslado al Almacén') }}</p>
+                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Larga') }}</p>
+                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_large_heavy_duty'] ?? 25) }}</p>
                 </div>
             </div>
 
-            <div class="mt-4 flex-1 space-y-3">
-                <div class="grid grid-cols-2 gap-2 text-center">
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-2.5">
-                        <p class="text-[10px] font-medium text-gray-500">{{ __('1 Caja Small Heavy Duty') }}</p>
-                        <p class="mt-0.5 text-base font-bold text-teal-700">${{ number_format($rates['box_small_heavy_duty'] ?? 15) }}</p>
-                    </div>
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-2.5">
-                        <p class="text-[10px] font-medium text-gray-500">{{ __('1 Caja Mediana Heavy Duty') }}</p>
-                        <p class="mt-0.5 text-base font-bold text-teal-700">${{ number_format($rates['box_medium_heavy_duty'] ?? 20) }}</p>
-                    </div>
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-2.5">
-                        <p class="text-[10px] font-medium text-gray-500">{{ __('1 Caja Larga Heavy Duty') }}</p>
-                        <p class="mt-0.5 text-base font-bold text-teal-700">${{ number_format($rates['box_large_heavy_duty'] ?? 25) }}</p>
-                    </div>
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-2.5">
-                        <p class="text-[10px] font-medium text-gray-500">{{ __('Llevar Caja al Almacén') }}</p>
-                        <p class="mt-0.5 text-base font-bold text-blue-700">${{ number_format($rates['warehouse_delivery_fee'] ?? 20) }}</p>
-                    </div>
+            <div class="mt-4 space-y-2 text-xs">
+                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
+                    <span class="text-gray-600">{{ __('Comisión por compras online recibidas:') }}</span>
+                    <strong class="font-bold text-gray-900">{{ $rates['warehouse_percent'] ?? 15 }}%</strong>
                 </div>
-
-                {{-- Explanatory Notes & Storage Policy --}}
-                <div class="space-y-2 text-[11px]">
-                    <div class="rounded-xl bg-teal-50/70 border border-teal-100 p-2.5 text-teal-900 leading-snug">
-                        <i class="fa-solid fa-box text-teal-600 mr-1"></i>
-                        {{ $rates['notes_es']['repackage_notice'] ?? __('Estos precios son del reempaque si ustedes realizan la compra por cualquier página online y yo recibo aquí en casa.') }}
-                    </div>
-                    <div class="rounded-xl bg-amber-50/70 border border-amber-100 p-2.5 text-amber-900 leading-snug">
-                        <i class="fa-solid fa-clock text-amber-600 mr-1"></i>
-                        {{ $rates['notes_es']['storage_notice'] ?? __('Si sus cajas permanecen un mes o más en nuestro almacén, tendrá un costo adicional de $15 por mes.') }}
-                    </div>
+                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
+                    <span class="text-gray-600">{{ __('Llevar caja al almacén:') }}</span>
+                    <strong class="font-bold text-gray-900">${{ number_format($rates['warehouse_delivery_fee'] ?? 20, 2) }}</strong>
+                </div>
+                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
+                    <span class="text-gray-600">{{ __('Almacenaje (más de 30 días):') }}</span>
+                    <strong class="font-bold text-gray-900">${{ number_format($rates['monthly_storage_fee'] ?? 15, 2) }}/mes</strong>
                 </div>
             </div>
         </div>

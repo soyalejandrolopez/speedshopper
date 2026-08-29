@@ -98,7 +98,7 @@
                     <a href="{{ route('admin.rates.index') }}" wire:navigate
                        class="sidebar-link {{ request()->routeIs('admin.rates.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
                         <i class="fa-solid fa-tags text-xl w-5 text-center"></i>
-                        {{ __('Tarifario Oficial') }}
+                        {{ __('Ajuste de Factura') }}
                     </a>
 
                     <a href="{{ route('admin.inquiries.index') }}" wire:navigate
