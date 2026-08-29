@@ -12,6 +12,7 @@ use App\Livewire\Admin\Packages\PackageShow;
 use App\Livewire\Admin\Packages\PackagesIndex;
 use App\Livewire\Admin\Payments\PaymentShow;
 use App\Livewire\Admin\Payments\PaymentsIndex;
+use App\Livewire\Admin\Rates\RatesIndex;
 use App\Livewire\Admin\Reports\ReportsIndex;
 use App\Livewire\Admin\Requests\RequestShow;
 use App\Livewire\Admin\Requests\RequestsIndex;
@@ -72,6 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/payments/{payment}', PaymentShow::class)->name('payments.show');
 
         Route::get('/facturacion', BillingIndex::class)->name('billing.index');
+        Route::get('/tarifario', RatesIndex::class)->name('rates.index');
 
         Route::get('/inquiries', InquiriesIndex::class)->name('inquiries.index');
 

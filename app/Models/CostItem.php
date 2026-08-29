@@ -12,6 +12,8 @@ class CostItem extends Model
     use HasFactory;
 
     protected $fillable = [
+        'costable_type',
+        'costable_id',
         'type',
         'description',
         'amount',
