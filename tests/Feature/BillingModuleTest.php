@@ -496,9 +496,20 @@ test('invoice pdf renders payment methods and instructions for pending and quote
     ])->render();
 
     expect($viewHtml)->toContain('Gomez.Lilibeth1977@gmail.com')
+        ->and($viewHtml)->toContain('@speedingshopper')
         ->and($viewHtml)->toContain('Zelle')
         ->and($viewHtml)->toContain('PayPal')
         ->and($viewHtml)->toContain('Cotización');
+
+    // Test print view rendering
+    app()->setLocale('es');
+    $printHtml = view('print.quote', [
+        'request' => $purchaseRequest->load(['customer', 'costItems']),
+    ])->render();
+
+    expect($printHtml)->toContain('Gomez.Lilibeth1977@gmail.com')
+        ->and($printHtml)->toContain('@speedingshopper')
+        ->and($printHtml)->toContain('MÉTODOS DE PAGO DISPONIBLES');
 });
 
 test('unauthenticated users are redirected from billing and rates routes', function () {

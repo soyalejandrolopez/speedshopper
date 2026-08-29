@@ -74,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td style="padding: 3px 0; font-weight: bold; width: 80px;">PayPal:</td>
-                                <td style="padding: 3px 0; font-family: monospace; font-weight: bold;">Gomez.Lilibeth1977@gmail.com</td>
+                                <td style="padding: 3px 0; font-family: monospace; font-weight: bold;">@speedingshopper</td>
                             </tr>
                         </table>
                         <p style="font-size: 11px; color: #166534; margin: 8px 0 0 0;">

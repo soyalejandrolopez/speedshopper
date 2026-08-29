@@ -671,7 +671,7 @@
                                             </div>
                                             <div class="min-w-0">
                                                 <p class="text-[10px] font-bold uppercase text-gray-500">PayPal</p>
-                                                <p class="text-xs font-extrabold text-indigo-950 font-mono select-all truncate">Gomez.Lilibeth1977@gmail.com</p>
+                                                <p class="text-xs font-extrabold text-indigo-950 font-mono select-all truncate">@speedingshopper</p>
                                             </div>
                                         </div>
                                     </div>
@@ -696,7 +696,7 @@
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Método de Pago') }}</label>
                             <select wire:model="invoiceForm.payment_method" class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs font-medium">
                                 <option value="zelle">Zelle (Gomez.Lilibeth1977@gmail.com)</option>
-                                <option value="paypal">PayPal (Gomez.Lilibeth1977@gmail.com)</option>
+                                <option value="paypal">PayPal (@speedingshopper)</option>
                                 <option value="bank_transfer">{{ __('Transferencia Bancaria') }}</option>
                                 <option value="card">{{ __('Tarjeta de Crédito / Débito') }}</option>
                                 <option value="cash">{{ __('Efectivo (Cash)') }}</option>

@@ -222,7 +222,7 @@
 
     @php
         $isQuoted = $request->status === \App\Enums\RequestStatus::Quoted;
-        $isPaid = ($balance <= 0 && ! $isQuoted) || $request->status === \App\Enums\RequestStatus::Purchased;
+        $isPaid = ($totalCost > 0 && $balance <= 0 && ! $isQuoted) || $request->status === \App\Enums\RequestStatus::Purchased;
         $isPending = ! $isPaid && ! $isQuoted;
     @endphp
 
@@ -421,7 +421,7 @@
                         </tr>
                         <tr>
                             <td style="width: 22%; font-weight: bold; color: #15803d; padding: 2px 0;">PayPal:</td>
-                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">Gomez.Lilibeth1977@gmail.com</td>
+                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">@speedingshopper</td>
                         </tr>
                     </table>
                     <div style="margin-top: 4px; font-size: 9px; color: #166534;">
