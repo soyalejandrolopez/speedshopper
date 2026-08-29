@@ -31,6 +31,7 @@ class PaymentsIndex extends Component
         'customer_search' => '',
         'billable_type' => '',
         'billable_id' => null,
+        'reference' => '',
         'invoice_total' => null,
         'amount_paid' => null,
         'payment_method' => '',
@@ -52,6 +53,18 @@ class PaymentsIndex extends Component
     {
         $this->form['billable_type'] = '';
         $this->form['billable_id'] = null;
+
+        // Pre-fill invoice_total with the customer's outstanding balance from their last payment.
+        if ($this->form['customer_id'] && ! $this->editingId) {
+            $lastPayment = Payment::query()
+                ->where('customer_id', $this->form['customer_id'])
+                ->latest()
+                ->first();
+
+            if ($lastPayment && $lastPayment->balance_due > 0) {
+                $this->form['invoice_total'] = number_format($lastPayment->balance_due, 2, '.', '');
+            }
+        }
     }
 
     public function openCreate(): void
@@ -67,7 +80,7 @@ class PaymentsIndex extends Component
         $this->resetValidation();
         $this->editingId = $payment->id;
         $this->form = $payment->only([
-            'customer_id', 'invoice_total', 'amount_paid', 'notes',
+            'customer_id', 'invoice_total', 'amount_paid', 'notes', 'reference',
         ]);
         $this->form['customer_search'] = $payment->customer?->name ?? '';
         $this->form['billable_type'] = $payment->billable_type ? class_basename($payment->billable_type) : '';
@@ -96,12 +109,14 @@ class PaymentsIndex extends Component
         // Campos opcionales: vacío → null/0 (evita error de cast a enum, morphTo o NOT NULL).
         $data['payment_method'] = $data['payment_method'] ?: null;
         $data['amount_paid'] = $data['amount_paid'] ?: 0;
+        $data['reference'] = $data['reference'] ?: null;
         if (empty($data['billable_type'])) {
             $data['billable_type'] = null;
             $data['billable_id'] = null;
         }
 
-        if ($data['billable_type']) {
+        // Convert short aliases to fully-qualified morph class names.
+        if ($data['billable_type'] && in_array($data['billable_type'], ['purchase_request', 'shipment'])) {
             $data['billable_type'] = match ($data['billable_type']) {
                 'shipment' => Shipment::class,
                 default => PurchaseRequest::class,

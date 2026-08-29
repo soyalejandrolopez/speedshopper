@@ -18,8 +18,9 @@ class StorePaymentRequest extends FormRequest
     {
         return [
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            'billable_type' => ['nullable', 'string', 'in:purchase_request,shipment'],
-            'billable_id' => ['nullable', 'integer', 'required_with:billable_type'],
+            'billable_type' => ['nullable', 'string', 'max:255'],
+            'billable_id' => ['nullable', 'integer'],
+            'reference' => ['nullable', 'string', 'max:255'],
             'invoice_total' => ['required', 'numeric', 'min:0'],
             'amount_paid' => ['nullable', 'numeric', 'min:0', 'lte:invoice_total'],
             'payment_method' => ['nullable', new Enum(PaymentMethod::class)],

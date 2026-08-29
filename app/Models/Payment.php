@@ -21,6 +21,7 @@ class Payment extends Model
         'customer_id',
         'billable_id',
         'billable_type',
+        'reference',
         'invoice_total',
         'amount_paid',
         'payment_method',

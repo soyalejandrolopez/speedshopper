@@ -56,6 +56,12 @@
                         <dt class="text-gray-500">{{ __('Paid at') }}</dt>
                         <dd class="font-medium text-gray-900">{{ $payment->paid_at?->format('Y-m-d H:i') ?? '—' }}</dd>
                     </div>
+                    @if ($payment->reference)
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-gray-500">{{ __('Reference') }}</dt>
+                            <dd class="font-medium text-gray-900">{{ $payment->reference }}</dd>
+                        </div>
+                    @endif
                 </dl>
 
                 @if ($payment->notes)

@@ -140,12 +140,10 @@
                                 <input id="paid_at-{{ $this->getId() }}" name="paid_at" type="date" wire:model="form.paid_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div>
-                                <label class="mb-1 block text-sm font-medium text-gray-700" for="billable_type-{{ $this->getId() }}">{{ __('Related to') }}</label>
-                                <select id="billable_type-{{ $this->getId() }}" name="billable_type" wire:model="form.billable_type" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
-                                    <option value="">—</option>
-                                    <option value="purchase_request">{{ __('Request') }}</option>
-                                    <option value="shipment">{{ __('Shipment') }}</option>
-                                </select>
+                                <label class="mb-1 block text-sm font-medium text-gray-700" for="reference-{{ $this->getId() }}">{{ __('Related to') }}</label>
+                                <input id="reference-{{ $this->getId() }}" name="reference" type="text" wire:model="form.reference"
+                                    placeholder="{{ __('e.g. Request #, invoice, shipment…') }}"
+                                    class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
