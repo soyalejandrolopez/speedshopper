@@ -28,6 +28,12 @@ class BillingIndex extends Component
 
     public bool $showCreateForm = false;
 
+    public bool $isEditing = false;
+
+    public ?int $editingRequestId = null;
+
+    public ?string $editingRequestNumber = null;
+
     public bool $showPaymentModal = false;
 
     public ?int $selectedRequestId = null;
@@ -111,6 +117,10 @@ class BillingIndex extends Component
         $this->resetValidation();
         $this->rates = app(PricingRateService::class)->getRates();
 
+        $this->isEditing = false;
+        $this->editingRequestId = null;
+        $this->editingRequestNumber = null;
+
         $this->guidedQuestions = [
             'apply_shopper_commission' => true,
             'extra_stores_count' => 0,
@@ -146,9 +156,122 @@ class BillingIndex extends Component
         $this->showCreateForm = true;
     }
 
+    public function editInvoice(int $requestId): void
+    {
+        $this->resetValidation();
+        $this->rates = app(PricingRateService::class)->getRates();
+
+        $request = PurchaseRequest::with(['customer', 'costItems'])->findOrFail($requestId);
+
+        $this->isEditing = true;
+        $this->editingRequestId = $request->id;
+        $this->editingRequestNumber = $request->number;
+
+        // Populate items
+        $productCosts = $request->costItems->where('type', CostType::ProductCost);
+        $items = [];
+
+        if ($productCosts->isNotEmpty()) {
+            foreach ($productCosts as $cost) {
+                $items[] = [
+                    'product_name' => $cost->description ?: $request->product_name,
+                    'store' => $request->store ?: '',
+                    'quantity' => 1,
+                    'unit_price' => (float) $cost->amount,
+                ];
+            }
+        } else {
+            $items[] = [
+                'product_name' => $request->product_name ?: '',
+                'store' => $request->store ?: '',
+                'quantity' => $request->quantity ?: 1,
+                'unit_price' => (float) ($request->unit_price ?: 0.0),
+            ];
+        }
+
+        // Initialize guided questions based on existing non-product cost items
+        $this->guidedQuestions = [
+            'apply_shopper_commission' => false,
+            'extra_stores_count' => 0,
+            'boxes_small_count' => 0,
+            'boxes_medium_count' => 0,
+            'boxes_large_count' => 0,
+            'apply_warehouse_commission' => false,
+            'warehouse_delivery_count' => 0,
+            'storage_months_count' => 0,
+        ];
+        $this->customCosts = [];
+
+        $nonProductCosts = $request->costItems->where('type', '!=', CostType::ProductCost);
+
+        foreach ($nonProductCosts as $cost) {
+            $desc = $cost->description ?? '';
+            $amount = (float) $cost->amount;
+
+            if (stripos($desc, 'Personal Shopper') !== false || $cost->type === CostType::ShopperFee && stripos($desc, 'Comisión') !== false) {
+                $this->guidedQuestions['apply_shopper_commission'] = true;
+            } elseif (stripos($desc, 'Tienda Adicional') !== false || stripos($desc, 'Additional Store') !== false) {
+                $unitFee = (float) ($this->rates['extra_store_fee'] ?? 20.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['extra_stores_count'] += max(1, $qty);
+            } elseif (stripos($desc, 'Small') !== false) {
+                $unitFee = (float) ($this->rates['box_small_heavy_duty'] ?? 15.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['boxes_small_count'] += max(1, $qty);
+            } elseif (stripos($desc, 'Mediana') !== false || stripos($desc, 'Medium') !== false) {
+                $unitFee = (float) ($this->rates['box_medium_heavy_duty'] ?? 20.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['boxes_medium_count'] += max(1, $qty);
+            } elseif (stripos($desc, 'Larga') !== false || stripos($desc, 'Large') !== false) {
+                $unitFee = (float) ($this->rates['box_large_heavy_duty'] ?? 25.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['boxes_large_count'] += max(1, $qty);
+            } elseif (stripos($desc, 'Comisión Almacén') !== false || stripos($desc, 'Warehouse Commission') !== false) {
+                $this->guidedQuestions['apply_warehouse_commission'] = true;
+            } elseif (stripos($desc, 'Llevar') !== false || stripos($desc, 'Drop-off') !== false) {
+                $unitFee = (float) ($this->rates['warehouse_delivery_fee'] ?? 20.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['warehouse_delivery_count'] += max(1, $qty);
+            } elseif (stripos($desc, 'Almacenaje') !== false || stripos($desc, 'Storage') !== false) {
+                $unitFee = (float) ($this->rates['monthly_storage_fee'] ?? 15.0);
+                $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
+                $this->guidedQuestions['storage_months_count'] += max(1, $qty);
+            } else {
+                $this->customCosts[] = [
+                    'type' => $cost->type->value ?? 'other',
+                    'description' => $desc,
+                    'amount' => $amount,
+                ];
+            }
+        }
+
+        // Get already paid amount for this request
+        $alreadyPaid = (float) Payment::where('billable_type', PurchaseRequest::class)
+            ->where('billable_id', $request->id)
+            ->sum('amount_paid');
+
+        $this->invoiceForm = [
+            'customer_id' => $request->customer_id,
+            'customer_search' => $request->customer?->name ?? '',
+            'notes' => $request->notes ?? '',
+            'items' => $items,
+            'costs' => [],
+            'amount_paid' => $alreadyPaid,
+            'payment_method' => 'zelle',
+            'payment_reference' => '',
+            'paid_at' => now()->toDateString(),
+        ];
+
+        $this->syncGuidedQuestionsToCosts();
+        $this->showCreateForm = true;
+    }
+
     public function closeCreateForm(): void
     {
         $this->showCreateForm = false;
+        $this->isEditing = false;
+        $this->editingRequestId = null;
+        $this->editingRequestNumber = null;
         $this->resetValidation();
     }
 
@@ -483,6 +606,64 @@ class BillingIndex extends Component
 
         $firstItem = $this->invoiceForm['items'][0];
         $allProductsSummary = collect($this->invoiceForm['items'])->pluck('product_name')->join(', ');
+
+        if ($this->isEditing && $this->editingRequestId) {
+            $purchaseRequest = PurchaseRequest::findOrFail($this->editingRequestId);
+
+            $purchaseRequest->update([
+                'customer_id' => $this->invoiceForm['customer_id'],
+                'product_name' => count($this->invoiceForm['items']) > 1 ? $allProductsSummary : $firstItem['product_name'],
+                'store' => $firstItem['store'] ?? null,
+                'quantity' => $firstItem['quantity'] ?? 1,
+                'unit_price' => $firstItem['unit_price'] ?? null,
+                'notes' => $this->invoiceForm['notes'] ?? null,
+            ]);
+
+            // Delete existing cost items and rebuild them
+            CostItem::where('costable_type', PurchaseRequest::class)
+                ->where('costable_id', $purchaseRequest->id)
+                ->delete();
+
+            // Re-add product cost items
+            foreach ($this->invoiceForm['items'] as $item) {
+                $qty = (int) ($item['quantity'] ?? 1);
+                $price = (float) ($item['unit_price'] ?? 0);
+                $subtotal = $qty * $price;
+
+                if ($subtotal > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $purchaseRequest->id,
+                        'type' => CostType::ProductCost,
+                        'description' => $item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($price, 2).')' : ''),
+                        'amount' => $subtotal,
+                    ]);
+                }
+            }
+
+            // Re-add additional cost items
+            foreach ($this->invoiceForm['costs'] as $cost) {
+                $amount = (float) ($cost['amount'] ?? 0);
+                if ($amount > 0) {
+                    $costType = CostType::tryFrom($cost['type'] ?? 'other') ?? CostType::Other;
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $purchaseRequest->id,
+                        'type' => $costType,
+                        'description' => $cost['description'] ?? $costType->label(),
+                        'amount' => $amount,
+                    ]);
+                }
+            }
+
+            $this->showCreateForm = false;
+            $this->isEditing = false;
+            $this->editingRequestId = null;
+            $this->editingRequestNumber = null;
+            $this->swalSuccess(__('Factura :number actualizada correctamente.', ['number' => $purchaseRequest->number]));
+
+            return;
+        }
 
         $purchaseRequest = PurchaseRequest::create([
             'customer_id' => $this->invoiceForm['customer_id'],

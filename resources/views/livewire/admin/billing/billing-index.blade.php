@@ -63,8 +63,12 @@
                         <i class="fa-solid fa-file-invoice text-base"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-gray-900">{{ __('Emitir Nueva Factura') }}</h2>
-                        <p class="text-xs text-gray-500">{{ __('Selecciona el cliente, ingresa los productos y responde las preguntas de tarifas.') }}</p>
+                        <h2 class="text-base font-bold text-gray-900">
+                            {{ $isEditing ? __('Modificar Factura :number', ['number' => $editingRequestNumber]) : __('Emitir Nueva Factura') }}
+                        </h2>
+                        <p class="text-xs text-gray-500">
+                            {{ $isEditing ? __('Actualiza los datos del cliente, productos o tarifas de esta factura.') : __('Selecciona el cliente, ingresa los productos y responde las preguntas de tarifas.') }}
+                        </p>
                     </div>
                 </div>
                 <button type="button" wire:click="closeCreateForm" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -481,7 +485,7 @@
                     <button type="submit"
                             class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700 shadow-sm transition-all">
                         <i class="fa-solid fa-floppy-disk"></i>
-                        <span>{{ __('Guardar y Emitir Factura') }}</span>
+                        <span>{{ $isEditing ? __('Actualizar Factura') : __('Guardar y Emitir Factura') }}</span>
                     </button>
                 </div>
             </form>
@@ -575,6 +579,11 @@
                                 {{ $request->created_at->format('Y-m-d') }}
                             </td>
                             <td class="px-4 py-3 text-end space-x-1">
+                                <button type="button" wire:click="editInvoice({{ $request->id }})" title="{{ __('Editar Factura') }}"
+                                        class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
+
                                 <a href="{{ route('admin.requests.print', $request) }}" target="_blank" title="{{ __('Imprimir Factura con QR') }}"
                                    class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300">
                                     <i class="fa-solid fa-print text-xs"></i>

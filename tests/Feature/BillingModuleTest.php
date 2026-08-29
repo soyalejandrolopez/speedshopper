@@ -129,6 +129,43 @@ test('admin can record an abono payment to an invoice from billing index', funct
         ->and((float) $payment->amount_paid)->toBe(150.0);
 });
 
+test('admin can edit and update an existing invoice from billing index', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'product_name' => 'iPad Air',
+        'store' => 'Apple',
+        'quantity' => 1,
+        'unit_price' => 600.0,
+    ]);
+
+    CostItem::create([
+        'costable_type' => PurchaseRequest::class,
+        'costable_id' => $request->id,
+        'type' => CostType::ProductCost,
+        'description' => 'iPad Air',
+        'amount' => 600.0,
+    ]);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('editInvoice', $request->id)
+        ->assertSet('isEditing', true)
+        ->assertSet('editingRequestId', $request->id)
+        ->set('invoiceForm.items.0.product_name', 'iPad Pro 13"')
+        ->set('invoiceForm.items.0.unit_price', 1100.0)
+        ->call('incrementQuestion', 'boxes_medium_count')
+        ->call('saveInvoice')
+        ->assertHasNoErrors()
+        ->assertSet('isEditing', false)
+        ->assertSet('showCreateForm', false);
+
+    $request->refresh();
+    expect($request->product_name)->toBe('iPad Pro 13"')
+        ->and((float) $request->total_cost)->toBeGreaterThan(1100.0);
+});
+
 test('admin can update rates from dedicated rates index component', function () {
     $admin = createAdmin();
     $rateService = app(PricingRateService::class);
