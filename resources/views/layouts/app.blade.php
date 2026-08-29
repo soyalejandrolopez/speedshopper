@@ -23,12 +23,12 @@
     <body class="font-sans antialiased bg-gray-50">
         <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
             <aside class="fixed inset-y-0 start-0 z-40 w-64 print:hidden border-e border-white/40 bg-white/80 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
-                <div class="flex h-16 items-center justify-between px-4">
-                    <a href="{{ route('dashboard') }}" class="group flex items-center gap-2.5 font-bold text-gray-900" wire:navigate>
+                <div class="flex h-16 items-center justify-between gap-2 px-4 border-b border-gray-100/80">
+                    <a href="{{ route('dashboard') }}" class="group flex items-center gap-2.5 font-bold text-gray-900 min-w-0 overflow-hidden" wire:navigate>
                         <x-brand-logo size="md" class="transition-transform duration-300 group-hover:scale-105" />
-                        <span class="text-sm">{{ config('app.name') }}</span>
+                        <span class="truncate text-sm font-bold text-gray-900">{{ \App\Models\Setting::get('company_name', config('app.name')) }}</span>
                     </a>
-                    <button @click="sidebarOpen = false" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 sm:hidden">
+                    <button @click="sidebarOpen = false" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 sm:hidden shrink-0">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
@@ -83,7 +83,7 @@
                     <a href="{{ route('admin.payments.index') }}" wire:navigate
                        class="sidebar-link {{ request()->routeIs('admin.payments.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
                         <i class="fa-solid fa-credit-card text-xl w-5 text-center"></i>
-                        {{ __('Payments') }}
+                        {{ __('Facturación') }}
                     </a>
 
                     <a href="{{ route('admin.inquiries.index') }}" wire:navigate
@@ -186,7 +186,7 @@
                 ['label' => __('Requests'), 'url' => route('admin.requests.index'), 'icon' => 'fa-solid fa-clipboard-list', 'active' => request()->routeIs('admin.requests.*'), 'navigate' => true],
                 ['label' => __('Packages'), 'url' => route('admin.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('admin.packages.*'), 'navigate' => true],
                 ['label' => __('Shipments'), 'url' => route('admin.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('admin.shipments.*'), 'navigate' => true],
-                ['label' => __('Payments'), 'url' => route('admin.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('admin.payments.*'), 'navigate' => true],
+                ['label' => __('Facturación'), 'url' => route('admin.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('admin.payments.*'), 'navigate' => true],
                 ['label' => __('Reports'), 'url' => route('admin.reports.index'), 'icon' => 'fa-solid fa-chart-simple', 'active' => request()->routeIs('admin.reports.*'), 'navigate' => true],
                 ['label' => __('Mail'), 'url' => route('admin.mail.index'), 'icon' => 'fa-solid fa-paper-plane', 'active' => request()->routeIs('admin.mail.*'), 'navigate' => true],
                 ['label' => __('Settings'), 'url' => route('admin.settings.index'), 'icon' => 'fa-solid fa-gear', 'active' => request()->routeIs('admin.settings.*'), 'navigate' => true],
