@@ -58,16 +58,15 @@ class PaymentsIndex extends Component
         $this->form['billable_id'] = null;
         $this->pendingBalance = null;
 
-        // Check if the customer has an outstanding balance from their last payment.
+        // Check if the customer has an outstanding balance.
         if ($this->form['customer_id'] && ! $this->editingId) {
-            $lastPayment = Payment::query()
-                ->where('customer_id', $this->form['customer_id'])
-                ->latest()
-                ->first();
+            $customer = Customer::find($this->form['customer_id']);
 
-            if ($lastPayment && $lastPayment->balance_due > 0) {
-                $this->pendingBalance = (float) $lastPayment->balance_due;
-                $this->form['invoice_total'] = number_format($lastPayment->balance_due, 2, '.', '');
+            if ($customer && $customer->balance_due > 0) {
+                $this->pendingBalance = (float) $customer->balance_due;
+                $this->form['invoice_total'] = number_format($customer->balance_due, 2, '.', '');
+            } else {
+                $this->form['invoice_total'] = '';
             }
         }
     }
@@ -100,6 +99,7 @@ class PaymentsIndex extends Component
     {
         $this->form['customer_id'] = $customerId;
         $this->form['customer_search'] = $name;
+        $this->updatedFormCustomerId();
     }
 
     public function closeForm(): void
@@ -110,10 +110,13 @@ class PaymentsIndex extends Component
 
     public function save(): void
     {
-        // If a pending balance was detected, enforce it as the invoice_total
-        // regardless of what the DOM sent — avoids hidden-input sync issues.
-        if ($this->pendingBalance !== null && ! $this->editingId) {
-            $this->form['invoice_total'] = number_format($this->pendingBalance, 2, '.', '');
+        // If customer has a pending balance, enforce it as the invoice_total
+        if (! $this->editingId && ! empty($this->form['customer_id'])) {
+            $customer = Customer::find($this->form['customer_id']);
+            if ($customer && $customer->balance_due > 0) {
+                $this->pendingBalance = (float) $customer->balance_due;
+                $this->form['invoice_total'] = number_format($customer->balance_due, 2, '.', '');
+            }
         }
 
         $data = $this->validatedData();

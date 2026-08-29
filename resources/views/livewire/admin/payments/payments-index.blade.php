@@ -124,23 +124,30 @@
                                     @endforeach
                                 </select>
                             </div>
+                            {{-- Invoice Total: only required for first-time payments --}}
                             @if ($pendingBalance)
-                                <div class="sm:col-span-2">
-                                    <div class="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
-                                            <i class="fa-solid fa-triangle-exclamation text-sm text-amber-600"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <p class="text-xs font-medium text-amber-800">{{ __('Pending balance') }}</p>
-                                            <p class="text-sm font-semibold text-amber-900">{{ money($pendingBalance) }}</p>
-                                        </div>
-                                        <span class="ms-auto shrink-0 rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
-                                            {{ __('Invoice Total assumed') }}
-                                        </span>
+                                {{-- Balance pendiente detectado: Invoice Total se asume automáticamente --}}
+                                {{-- Keep a sr-only input so Livewire keeps the binding; save() enforces the value before validating --}}
+                                <input type="number" step="0.01" wire:model="form.invoice_total"
+                                       class="sr-only" aria-hidden="true" tabindex="-1" readonly>
+
+                                {{-- Info strip --}}
+                                <div class="sm:col-span-2 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                                    <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                                        <i class="fa-solid fa-circle-info text-xs text-emerald-600"></i>
                                     </div>
-                                    {{-- Readonly input keeps wire:model in the DOM so Livewire never loses the value --}}
-                                    <input type="number" step="0.01" wire:model="form.invoice_total"
-                                           class="sr-only" aria-hidden="true" tabindex="-1" readonly>
+                                    <p class="text-sm text-emerald-800">
+                                        {{ __('Balance due') }}:
+                                        <span class="font-semibold">{{ money($pendingBalance) }}</span>
+                                    </p>
+                                </div>
+
+                                {{-- Amount Paid full-width --}}
+                                <div class="sm:col-span-2">
+                                    <label class="mb-1 block text-sm font-medium text-gray-700" for="amount_paid-{{ $this->getId() }}">{{ __('Amount Paid') }}</label>
+                                    <input id="amount_paid-{{ $this->getId() }}" name="amount_paid" type="number" step="0.01" min="0" wire:model="form.amount_paid"
+                                           class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                    @error('form.amount_paid') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                             @else
                                 <div>
@@ -148,12 +155,12 @@
                                     <input id="invoice_total-{{ $this->getId() }}" name="invoice_total" type="number" step="0.01" min="0" wire:model="form.invoice_total" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     @error('form.invoice_total') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
+                                <div>
+                                    <label class="mb-1 block text-sm font-medium text-gray-700" for="amount_paid-{{ $this->getId() }}">{{ __('Amount Paid') }}</label>
+                                    <input id="amount_paid-{{ $this->getId() }}" name="amount_paid" type="number" step="0.01" min="0" wire:model="form.amount_paid" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                    @error('form.amount_paid') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
                             @endif
-                            <div>
-                                <label class="mb-1 block text-sm font-medium text-gray-700" for="amount_paid-{{ $this->getId() }}">{{ __('Amount Paid') }}</label>
-                                <input id="amount_paid-{{ $this->getId() }}" name="amount_paid" type="number" step="0.01" min="0" wire:model="form.amount_paid" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
-                                @error('form.amount_paid') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                            </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="paid_at-{{ $this->getId() }}">{{ __('Paid At') }}</label>
                                 <input id="paid_at-{{ $this->getId() }}" name="paid_at" type="date" wire:model="form.paid_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">

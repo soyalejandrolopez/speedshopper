@@ -78,3 +78,32 @@ it('admin can create a payment with a method and related request', function () {
         ->and($payment->billable_type)->toBe(PurchaseRequest::class)
         ->and($payment->billable_id)->toBe($request->id);
 });
+
+it('auto-populates invoice total from pending balance when selecting customer for second payment', function () {
+    $this->actingAs(createAdmin());
+    $customer = Customer::factory()->create();
+
+    // First payment: invoice 1000, paid 500 => balance due 500
+    Payment::factory()->create([
+        'customer_id' => $customer->id,
+        'invoice_total' => 1000,
+        'amount_paid' => 500,
+    ]);
+
+    Livewire::test(PaymentsIndex::class)
+        ->call('openCreate')
+        ->call('selectCustomer', $customer->id, $customer->name)
+        ->assertSet('pendingBalance', 500.0)
+        ->assertSet('form.invoice_total', '500.00')
+        ->assertSee(__('Balance due'))
+        ->assertDontSee('Invoice Total *')
+        ->set('form.amount_paid', 500)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect(Payment::count())->toBe(2);
+
+    $secondPayment = Payment::latest('id')->first();
+    expect((float) $secondPayment->invoice_total)->toBe(500.0)
+        ->and((float) $secondPayment->amount_paid)->toBe(500.0);
+});
