@@ -76,7 +76,7 @@
                     <a href="{{ route('portal.payments.index') }}" wire:navigate
                        class="sidebar-link {{ request()->routeIs('portal.payments.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
                         <i class="fa-solid fa-credit-card text-xl w-5 text-center"></i>
-                        {{ __('Facturación') }}
+                        {{ __('My Payments') }}
                     </a>
                 </nav>
             </aside>
@@ -141,7 +141,7 @@
                 ['label' => __('Requests'), 'url' => route('portal.requests.index'), 'icon' => 'fa-solid fa-clipboard-list', 'active' => request()->routeIs('portal.requests.*'), 'navigate' => true],
                 ['label' => __('Packages'), 'url' => route('portal.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('portal.packages.*'), 'navigate' => true],
                 ['label' => __('Shipments'), 'url' => route('portal.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('portal.shipments.*'), 'navigate' => true],
-                ['label' => __('Facturación'), 'url' => route('portal.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('portal.payments.*'), 'navigate' => true],
+                ['label' => __('Payments'), 'url' => route('portal.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('portal.payments.*'), 'navigate' => true],
             ];
         @endphp
 
