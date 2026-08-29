@@ -22,18 +22,21 @@
     </head>
     <body class="font-sans antialiased bg-gray-50">
         <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
-            <aside class="fixed inset-y-0 start-0 z-40 w-64 print:hidden border-e border-white/40 bg-white/80 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
-                <div class="flex h-16 items-center justify-between gap-2 px-4 border-b border-gray-100/80">
-                    <a href="{{ route('dashboard') }}" class="group flex items-center gap-2.5 font-bold text-gray-900 min-w-0 overflow-hidden" wire:navigate>
-                        <x-brand-logo size="md" class="transition-transform duration-300 group-hover:scale-105" />
-                        <span class="truncate text-sm font-bold text-gray-900">{{ \App\Models\Setting::get('company_name', config('app.name')) }}</span>
+            <aside class="fixed inset-y-0 start-0 z-40 flex w-64 flex-col print:hidden border-e border-gray-200/80 bg-white/90 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
+                <div class="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-4 bg-white/60">
+                    <a href="{{ route('dashboard') }}" class="group flex min-w-0 items-center gap-2.5 overflow-hidden" wire:navigate>
+                        <x-brand-logo size="md" class="transition-transform duration-200 group-hover:scale-105" />
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-bold text-gray-900 leading-tight">{{ \App\Models\Setting::get('company_name', config('app.name')) }}</p>
+                            <p class="truncate text-[10px] font-semibold uppercase tracking-wider text-emerald-600 leading-none mt-0.5">{{ __('Admin Panel') }}</p>
+                        </div>
                     </a>
-                    <button @click="sidebarOpen = false" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 sm:hidden shrink-0">
-                        <i class="fa-solid fa-xmark text-xl"></i>
+                    <button @click="sidebarOpen = false" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 sm:hidden shrink-0" aria-label="{{ __('Close') }}">
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
 
-                <nav class="space-y-1 p-3">
+                <nav class="flex-1 space-y-1 overflow-y-auto p-3">
                     <p class="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">{{ __('Overview') }}</p>
 
                     <a href="{{ route('dashboard') }}" wire:navigate
