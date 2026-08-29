@@ -100,7 +100,7 @@ class PricingRateService
         $rates = $this->getRates();
 
         $companyName = Setting::get('company_name', 'Speed Shopper');
-        $warehouseAddress = Setting::get('warehouse_address', 'Miami, FL');
+        $warehouseAddress = Setting::get('warehouse_address', '7835 Wood Hollow Dr, Baytown, TX 77521, USA');
         $whatsappPhone = Setting::get('whatsapp_phone', '+1 (555) 000-0000');
         $logoPath = Setting::get('logo_path');
 

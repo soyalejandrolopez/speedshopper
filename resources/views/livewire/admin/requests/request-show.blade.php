@@ -40,6 +40,24 @@
                     </div>
                 @endif
 
+                @php
+                    $isPaidRequest = $purchaseRequest->status === \App\Enums\RequestStatus::Purchased;
+                @endphp
+                @if ($isPaidRequest)
+                    <div class="mt-4 rounded-xl border border-emerald-300 bg-emerald-50/90 p-3.5 shadow-2xs">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shrink-0 mt-0.5">
+                                <i class="fa-solid fa-location-dot text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-emerald-900">{{ __('Dirección de Entrega y Almacén (USA)') }}</p>
+                                <p class="text-sm font-black text-gray-900 mt-0.5 font-mono select-all">7835 Wood Hollow Dr Baytown Tx 77521</p>
+                                <p class="text-[11px] text-emerald-700 mt-0.5">{{ __('Dirección oficial configurada para la recepción y almacenaje de compras pagadas.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                     <div class="flex justify-between gap-2">
                         <dt class="text-gray-500">{{ __('Customer') }}</dt>

@@ -714,6 +714,33 @@
                         </div>
                     @endif
 
+                    {{-- Dirección de Almacén (Visible cuando la factura está Pagada o Pagado Total) --}}
+                    @if (($invoiceForm['invoice_type'] ?? $invoiceType) === 'pagado' || $this->pendingBalance <= 0)
+                        <div class="mt-4 rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50/80 p-4 shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs shrink-0">
+                                    <i class="fa-solid fa-location-dot text-base"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2.5 py-0.5 text-[10px] font-extrabold uppercase text-white">
+                                            ✓ {{ __('Factura Pagada') }}
+                                        </span>
+                                        <h4 class="text-xs font-bold text-emerald-950 uppercase tracking-wider">
+                                            {{ __('Dirección de Entrega y Almacén') }}
+                                        </h4>
+                                    </div>
+                                    <p class="text-sm font-black text-gray-900 mt-1 font-mono select-all">
+                                        7835 Wood Hollow Dr Baytown Tx 77521
+                                    </p>
+                                    <p class="text-[11px] text-emerald-800 mt-0.5">
+                                        {{ __('Esta dirección se adjunta automáticamente en el PDF, la vista de impresión y el correo de confirmación de pago.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="mt-4 grid gap-3 sm:grid-cols-3">
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Método de Pago') }}</label>
