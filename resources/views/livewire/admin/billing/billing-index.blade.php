@@ -500,8 +500,8 @@
             <div class="flex items-center gap-2">
                 @if (! $showCreateForm)
                     <button type="button" wire:click="openCreateForm"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all">
-                        <i class="fa-solid fa-plus text-xs"></i>
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 transition-all">
+                        <i class="fa-solid fa-plus text-base"></i>
                         <span>{{ __('Nueva Factura') }}</span>
                     </button>
                 @endif
