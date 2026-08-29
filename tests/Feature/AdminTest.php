@@ -137,6 +137,26 @@ test('admin can transition request status with history', function () {
         ->and($request->statusHistory()->first()->from)->toBe(RequestStatus::New->value);
 });
 
+test('admin can transition a cancelled request back to an active status', function () {
+    $this->actingAs(createAdmin());
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Cancelled->value,
+    ]);
+
+    Livewire::test(RequestShow::class, ['purchaseRequest' => $request])
+        ->set('newStatus', RequestStatus::Quoted->value)
+        ->set('transitionNote', 'Reabierto a solicitud del cliente')
+        ->call('transitionStatus')
+        ->assertHasNoErrors();
+
+    $request->refresh();
+    expect($request->status)->toBe(RequestStatus::Quoted)
+        ->and($request->statusHistory()->count())->toBe(1)
+        ->and($request->statusHistory()->first()->from)->toBe(RequestStatus::Cancelled->value);
+});
+
 test('admin can transition shipment and packages follow', function () {
     $this->actingAs(createAdmin());
     $customer = Customer::factory()->create();

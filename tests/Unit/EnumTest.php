@@ -18,9 +18,9 @@ test('all request statuses return a color', function () {
     }
 });
 
-test('cancelled and delivered request statuses have no next statuses', function () {
-    expect(RequestStatus::Cancelled->nextStatuses())->toBe([])
-        ->and(RequestStatus::Delivered->nextStatuses())->toBe([]);
+test('delivered request status has no next statuses and cancelled can transition to all active statuses', function () {
+    expect(RequestStatus::Delivered->nextStatuses())->toBe([])
+        ->and(RequestStatus::Cancelled->nextStatuses())->not->toBeEmpty();
 });
 
 test('all package statuses return a non-empty label', function () {
@@ -92,7 +92,7 @@ test('all cost types return a non-empty label', function () {
 });
 
 test('every request status except terminal ones have at least one transition', function () {
-    $terminal = [RequestStatus::Delivered, RequestStatus::Cancelled];
+    $terminal = [RequestStatus::Delivered];
 
     foreach (RequestStatus::cases() as $status) {
         if (in_array($status, $terminal, true)) {

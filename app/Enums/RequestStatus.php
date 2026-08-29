@@ -52,7 +52,18 @@ enum RequestStatus: string
             self::Ready->value => [self::Shipped->value, self::Cancelled->value],
             self::Shipped->value => [self::Delivered->value, self::Cancelled->value],
             self::Delivered->value => [],
-            self::Cancelled->value => [],
+            self::Cancelled->value => [
+                self::New->value,
+                self::Quoted->value,
+                self::AwaitingPayment->value,
+                self::Purchased->value,
+                self::InTransit->value,
+                self::Received->value,
+                self::Packing->value,
+                self::Ready->value,
+                self::Shipped->value,
+                self::Delivered->value,
+            ],
         ];
     }
 
