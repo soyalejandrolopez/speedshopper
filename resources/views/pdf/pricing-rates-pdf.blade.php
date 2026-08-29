@@ -182,12 +182,23 @@
                 </div>
             </td>
             <td class="header-contact" style="width: 45%; vertical-align: middle;">
-                <strong>{{ $companyName }}</strong><br>
-                {{ $warehouseAddress }}<br>
-                WhatsApp: {{ $whatsappPhone }}<br>
-                <span style="color: #059669; font-weight: 600;">
-                    {{ $locale === 'es' ? 'Válido para ' : 'Valid for ' }} {{ now()->translatedFormat('F Y') }}
-                </span>
+                <table style="width: 100%; border: none;" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="text-align: right; vertical-align: middle; border: none; padding: 0 10px 0 0;">
+                            <strong>{{ $companyName }}</strong><br>
+                            {{ $warehouseAddress }}<br>
+                            WhatsApp: {{ $whatsappPhone }}<br>
+                            <span style="color: #059669; font-weight: 600;">
+                                {{ $locale === 'es' ? 'Válido para ' : 'Valid for ' }} {{ now()->translatedFormat('F Y') }}
+                            </span>
+                        </td>
+                        @if (! empty($qrDataUri))
+                            <td style="width: 56px; text-align: right; vertical-align: middle; border: none; padding: 0;">
+                                <img src="{{ $qrDataUri }}" style="width: 54px; height: 54px; border: 1px solid #d1d5db; border-radius: 4px;" alt="QR Code">
+                            </td>
+                        @endif
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>

@@ -2,8 +2,11 @@
 
 use App\Livewire\Admin\Settings\SettingsIndex;
 use App\Mail\PricingRatesMail;
+use App\Models\Customer;
+use App\Models\PurchaseRequest;
 use App\Models\Setting;
 use App\Services\PricingRateService;
+use App\Services\QrCodeService;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
@@ -116,4 +119,29 @@ test('admin can send pricing rates PDF via email with automatic admin copy', fun
             && $mail->locale === 'es'
             && ! empty($mail->pdfOutput);
     });
+});
+
+test('qr code service generates valid svg and data uri', function () {
+    $service = app(QrCodeService::class);
+
+    $svg = $service->generateSvg('https://example.com/invoice/123', 120);
+    expect($svg)->toBeString()
+        ->toContain('<svg')
+        ->toContain('viewBox')
+        ->toContain('<rect');
+
+    $dataUri = $service->generateDataUri('https://example.com/invoice/123');
+    expect($dataUri)->toBeString()
+        ->toStartWith('data:image/svg+xml;base64,');
+});
+
+test('invoice print views render qr code and uploaded brand logo', function () {
+    $this->actingAs(createAdmin());
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create(['customer_id' => $customer->id]);
+
+    $response = $this->get(route('admin.requests.print', $request));
+    $response->assertOk()
+        ->assertSee('<svg', false)
+        ->assertSee(__('Scan to contact / verify'));
 });

@@ -111,6 +111,10 @@ class PricingRateService
             $logoBase64 = 'data:'.$mime.';base64,'.base64_encode($logoContent);
         }
 
+        $cleanWa = preg_replace('/[^0-9]/', '', (string) $whatsappPhone);
+        $qrData = $cleanWa ? "https://wa.me/{$cleanWa}?text=".urlencode('Hola Speed Shopper, deseo cotizar un servicio.') : url('/');
+        $qrDataUri = app(QrCodeService::class)->generateDataUri($qrData, 70);
+
         $pdf = Pdf::loadView('pdf.pricing-rates-pdf', [
             'rates' => $rates,
             'locale' => $locale,
@@ -118,6 +122,7 @@ class PricingRateService
             'warehouseAddress' => $warehouseAddress,
             'whatsappPhone' => $whatsappPhone,
             'logoBase64' => $logoBase64,
+            'qrDataUri' => $qrDataUri,
             'generatedAt' => now(),
         ]);
 

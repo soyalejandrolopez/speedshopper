@@ -2,19 +2,20 @@
 
 @php
     $sizes = [
-        'sm' => ['box' => 'h-8 w-8', 'icon' => 'h-4.5 w-4.5'],
-        'md' => ['box' => 'h-9 w-9', 'icon' => 'h-5 w-5'],
-        'lg' => ['box' => 'h-11 w-11', 'icon' => 'h-6 w-6'],
-        'xl' => ['box' => 'h-14 w-14', 'icon' => 'h-7 w-7'],
+        'sm' => ['box' => 'h-8 w-8', 'icon' => 'h-4.5 w-4.5', 'img' => 'max-h-8 max-w-[120px]'],
+        'md' => ['box' => 'h-9 w-9', 'icon' => 'h-5 w-5', 'img' => 'max-h-9 max-w-[140px]'],
+        'lg' => ['box' => 'h-11 w-11', 'icon' => 'h-6 w-6', 'img' => 'max-h-12 max-w-[180px]'],
+        'xl' => ['box' => 'h-14 w-14', 'icon' => 'h-7 w-7', 'img' => 'max-h-16 max-w-[220px]'],
     ];
     $box = $sizes[$size]['box'] ?? $sizes['md']['box'];
     $icon = $sizes[$size]['icon'] ?? $sizes['md']['icon'];
+    $img = $sizes[$size]['img'] ?? $sizes['md']['img'];
     $name = \App\Models\Setting::get('company_name', config('app.name'));
 @endphp
 
 @if ($logo = brand_logo_url())
-    <img src="{{ $logo }}" alt="{{ $name }}" width="36" height="36"
-         class="{{ $box }} w-auto rounded-lg object-contain {{ $class }}">
+    <img src="{{ $logo }}" alt="{{ $name }}"
+         class="{{ $img }} w-auto object-contain {{ $class }}">
 @else
     <span class="flex {{ $box }} items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-200 {{ $class }}">
         <svg class="{{ $icon }}" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">

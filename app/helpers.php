@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Services\QrCodeService;
 use Illuminate\Mail\Message;
 use Illuminate\Mail\TextMessage;
 use Illuminate\Support\Facades\Storage;
@@ -36,6 +37,20 @@ if (! function_exists('brand_logo_data_uri')) {
         $mime = $disk->mimeType($path) ?: 'image/png';
 
         return 'data:'.$mime.';base64,'.base64_encode($disk->get($path));
+    }
+}
+
+if (! function_exists('qr_code_svg')) {
+    function qr_code_svg(string $data, int $size = 120, string $color = '#1f2937', string $bgColor = '#ffffff'): string
+    {
+        return app(QrCodeService::class)->generateSvg($data, $size, $color, $bgColor);
+    }
+}
+
+if (! function_exists('qr_code_data_uri')) {
+    function qr_code_data_uri(string $data, int $size = 120, string $color = '#1f2937', string $bgColor = '#ffffff'): string
+    {
+        return app(QrCodeService::class)->generateDataUri($data, $size, $color, $bgColor);
     }
 }
 

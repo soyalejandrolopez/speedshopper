@@ -1,3 +1,11 @@
+@props([
+    'docTitle' => '',
+    'docNumber' => '',
+    'backUrl' => '#',
+    'autoPrint' => false,
+    'qrData' => null,
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -68,11 +76,25 @@
                     {{ $slot }}
                 </div>
 
-                <div class="border-t border-gray-100 px-8 py-5 text-center text-xs text-gray-400">
-                    {{ \App\Models\Setting::get('company_name', config('app.name')) }} — {{ \App\Models\Setting::get('warehouse_address') }}
-                    @if ($wa = \App\Models\Setting::get('whatsapp_phone'))
-                        · {{ __('WhatsApp') }} {{ $wa }}
-                    @endif
+                <div class="border-t border-gray-100 px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+                    <div class="text-center sm:text-left">
+                        <p class="font-semibold text-gray-800">{{ \App\Models\Setting::get('company_name', config('app.name')) }}</p>
+                        <p class="text-gray-400">{{ \App\Models\Setting::get('warehouse_address') }}</p>
+                        @if ($wa = \App\Models\Setting::get('whatsapp_phone'))
+                            <p class="text-emerald-700 font-medium mt-0.5">WhatsApp: {{ $wa }}</p>
+                        @endif
+                    </div>
+                    @php
+                        $cleanWa = preg_replace('/[^0-9]/', '', (string) \App\Models\Setting::get('whatsapp_phone', ''));
+                        $qrPayload = $qrData ?: ($cleanWa ? "https://wa.me/{$cleanWa}?text=" . urlencode("Hola, consulta sobre {$docTitle} {$docNumber}") : url()->current());
+                    @endphp
+                    <div class="flex items-center gap-3 shrink-0">
+                        <div class="text-end hidden sm:block">
+                            <p class="font-bold text-[10px] uppercase text-emerald-700 tracking-wider">{{ __('Scan to contact / verify') }}</p>
+                            <p class="text-[9px] text-gray-400 font-mono">{{ $docNumber }}</p>
+                        </div>
+                        <x-qr-code :data="$qrPayload" :size="64" />
+                    </div>
                 </div>
             </div>
         </div>
