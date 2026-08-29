@@ -212,6 +212,128 @@
                             </div>
                         </div>
 
+                        {{-- Sección de Embalaje y Cajas Heavy Duty --}}
+                        <div class="rounded-2xl border-2 border-teal-200 bg-gradient-to-br from-teal-50/90 via-emerald-50/50 to-white p-4 shadow-sm">
+                            <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white shadow-xs">
+                                        <i class="fa-solid fa-boxes-packing text-sm"></i>
+                                    </span>
+                                    <div>
+                                        <h4 class="text-xs font-bold uppercase tracking-wider text-teal-950">
+                                            {{ __('Servicio de Embalaje / Cajas Heavy Duty') }}
+                                        </h4>
+                                        <p class="text-[11px] text-teal-700">{{ __('Selecciona las cajas para empacar y enviar tus compras.') }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-1.5 rounded-full bg-teal-100 px-3 py-1 text-xs font-extrabold text-teal-900">
+                                    <i class="fa-solid fa-calculator text-teal-600"></i>
+                                    <span>{{ __('Total Embalaje:') }}</span>
+                                    <span class="text-sm font-black text-teal-700">{{ money($this->packagingTotal) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid gap-3 sm:grid-cols-3">
+                                {{-- 1. Caja Small --}}
+                                <div class="rounded-xl border {{ ($form['boxes_small'] ?? 0) > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-gray-900">{{ __('Caja Small') }}</span>
+                                        <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                                            ${{ number_format($this->rates['box_small_heavy_duty'] ?? 15, 2) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+
+                                    <div class="mt-3 flex items-center justify-between">
+                                        <button type="button" wire:click="decrementBox('small')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                            <i class="fa-solid fa-minus text-xs"></i>
+                                        </button>
+                                        <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                                            {{ $form['boxes_small'] ?? 0 }}
+                                        </span>
+                                        <button type="button" wire:click="incrementBox('small')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                    @if (($form['boxes_small'] ?? 0) > 0)
+                                        <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                                            = {{ money(($form['boxes_small'] ?? 0) * ($this->rates['box_small_heavy_duty'] ?? 15)) }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                {{-- 2. Caja Mediana --}}
+                                <div class="rounded-xl border {{ ($form['boxes_medium'] ?? 0) > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-gray-900">{{ __('Caja Mediana') }}</span>
+                                        <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                                            ${{ number_format($this->rates['box_medium_heavy_duty'] ?? 20, 2) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+
+                                    <div class="mt-3 flex items-center justify-between">
+                                        <button type="button" wire:click="decrementBox('medium')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                            <i class="fa-solid fa-minus text-xs"></i>
+                                        </button>
+                                        <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                                            {{ $form['boxes_medium'] ?? 0 }}
+                                        </span>
+                                        <button type="button" wire:click="incrementBox('medium')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                    @if (($form['boxes_medium'] ?? 0) > 0)
+                                        <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                                            = {{ money(($form['boxes_medium'] ?? 0) * ($this->rates['box_medium_heavy_duty'] ?? 20)) }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                {{-- 3. Caja Larga --}}
+                                <div class="rounded-xl border {{ ($form['boxes_large'] ?? 0) > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-gray-900">{{ __('Caja Larga') }}</span>
+                                        <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                                            ${{ number_format($this->rates['box_large_heavy_duty'] ?? 25, 2) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+
+                                    <div class="mt-3 flex items-center justify-between">
+                                        <button type="button" wire:click="decrementBox('large')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                            <i class="fa-solid fa-minus text-xs"></i>
+                                        </button>
+                                        <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                                            {{ $form['boxes_large'] ?? 0 }}
+                                        </span>
+                                        <button type="button" wire:click="incrementBox('large')"
+                                                class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                    @if (($form['boxes_large'] ?? 0) > 0)
+                                        <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                                            = {{ money(($form['boxes_large'] ?? 0) * ($this->rates['box_large_heavy_duty'] ?? 25)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if ($this->packagingTotal > 0)
+                                <div class="mt-3 rounded-lg bg-teal-100/80 p-2 text-center text-xs font-bold text-teal-950 flex items-center justify-between px-3">
+                                    <span>{{ __('Subtotal de Embalaje Seleccionado:') }}</span>
+                                    <span class="text-sm font-black text-teal-800">{{ money($this->packagingTotal) }}</span>
+                                </div>
+                            @endif
+                        </div>
+
                         <div>
                             <span class="label">{{ __('Do you have product links?') }}</span>
                             <div class="flex gap-4 text-sm text-gray-700">

@@ -275,3 +275,60 @@ it('requires a name, email and product on the request form', function () {
         ->call('submit')
         ->assertHasErrors(['form.name', 'form.email', 'items.0.product_name']);
 });
+
+it('calculates packaging sum and creates cost items in ClientRegistrationForm', function () {
+    $component = Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Laura Martínez')
+        ->set('form.whatsapp', '+50255551111')
+        ->set('form.email', 'laura@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.services', ['online_shopping'])
+        ->call('next')
+        ->set('form.products', 'Shein Clothes Pack')
+        ->call('incrementBox', 'small') // 1 small ($15)
+        ->call('incrementBox', 'medium') // 1 medium ($20)
+        ->call('incrementBox', 'medium') // 2 medium ($40)
+        ->call('incrementBox', 'large'); // 1 large ($25)
+
+    // Total: 15 + 40 + 25 = $80
+    expect($component->instance()->packagingTotal)->toBe(80.0);
+
+    $component->call('next')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $customer = Customer::where('email', 'laura@example.com')->first();
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+
+    expect($request)->not->toBeNull()
+        ->and($request->services)->toContain('packing')
+        ->and((float) $request->total_cost)->toBe(80.0)
+        ->and($request->costItems)->toHaveCount(3);
+});
+
+it('calculates packaging sum and creates cost items in PublicRequestForm', function () {
+    $component = Livewire::test(PublicRequestForm::class)
+        ->set('form.name', 'Pedro Morales')
+        ->set('form.email', 'pedro@example.com')
+        ->set('form.whatsapp', '+50255552222')
+        ->set('items.0.product_name', 'Amazon Echo Dot')
+        ->call('incrementBox', 'small') // 1 small ($15)
+        ->call('incrementBox', 'large'); // 1 large ($25)
+
+    // Total: 15 + 25 = $40
+    expect($component->instance()->packagingTotal)->toBe(40.0);
+
+    $component->call('submit')
+        ->assertHasNoErrors();
+
+    $customer = Customer::where('email', 'pedro@example.com')->first();
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+
+    expect($request)->not->toBeNull()
+        ->and($request->services)->toContain('packing')
+        ->and((float) $request->total_cost)->toBe(40.0)
+        ->and($request->costItems)->toHaveCount(2);
+});

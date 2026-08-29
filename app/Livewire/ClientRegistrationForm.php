@@ -2,8 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Enums\CostType;
+use App\Models\CostItem;
 use App\Models\Customer;
+use App\Models\PurchaseRequest;
 use App\Services\AdminNotifier;
+use App\Services\PricingRateService;
 use Livewire\Component;
 
 class ClientRegistrationForm extends Component
@@ -31,6 +35,9 @@ class ClientRegistrationForm extends Component
         'order_number' => '',
         'tracking_number' => '',
         'approx_packages' => '',
+        'boxes_small' => 0,
+        'boxes_medium' => 0,
+        'boxes_large' => 0,
         'courier' => 'no',
         'courier_name' => '',
         'need_shipping_coordination' => 'no',
@@ -54,6 +61,41 @@ class ClientRegistrationForm extends Component
         return collect(countries_served_list())
             ->mapWithKeys(fn ($code) => [$code => country_name($code)])
             ->all();
+    }
+
+    public function getRatesProperty(): array
+    {
+        return app(PricingRateService::class)->getRates();
+    }
+
+    public function getPackagingTotalProperty(): float
+    {
+        $rates = $this->rates;
+        $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
+        $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
+        $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+
+        $small = max(0, (int) ($this->form['boxes_small'] ?? 0));
+        $med = max(0, (int) ($this->form['boxes_medium'] ?? 0));
+        $large = max(0, (int) ($this->form['boxes_large'] ?? 0));
+
+        return ($small * $smallRate) + ($med * $mediumRate) + ($large * $largeRate);
+    }
+
+    public function incrementBox(string $type): void
+    {
+        $key = 'boxes_'.$type;
+        if (array_key_exists($key, $this->form)) {
+            $this->form[$key] = ((int) ($this->form[$key] ?? 0)) + 1;
+        }
+    }
+
+    public function decrementBox(string $type): void
+    {
+        $key = 'boxes_'.$type;
+        if (array_key_exists($key, $this->form)) {
+            $this->form[$key] = max(0, ((int) ($this->form[$key] ?? 0)) - 1);
+        }
     }
 
     public function next(): void
@@ -88,13 +130,57 @@ class ClientRegistrationForm extends Component
             ]
         );
 
+        $smallCount = max(0, (int) ($this->form['boxes_small'] ?? 0));
+        $mediumCount = max(0, (int) ($this->form['boxes_medium'] ?? 0));
+        $largeCount = max(0, (int) ($this->form['boxes_large'] ?? 0));
+
+        $services = $this->form['services'];
+        if (($smallCount > 0 || $mediumCount > 0 || $largeCount > 0) && ! in_array('packing', $services, true)) {
+            $services[] = 'packing';
+        }
+
         $request = $customer->purchaseRequests()->create([
             'product_name' => mb_substr($this->form['products'] ?: __('Service request'), 0, 255),
             'store' => $this->form['preferred_stores'] ?: null,
-            'services' => $this->form['services'],
+            'services' => $services,
             'description' => $this->buildDescription(),
             'status' => 'new',
         ]);
+
+        $rates = $this->rates;
+        $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
+        $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
+        $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+
+        if ($smallCount > 0) {
+            CostItem::create([
+                'costable_type' => PurchaseRequest::class,
+                'costable_id' => $request->id,
+                'type' => CostType::PackingFee,
+                'description' => "Caja Small Heavy Duty ({$smallCount} x $".number_format($smallRate, 2).')',
+                'amount' => $smallCount * $smallRate,
+            ]);
+        }
+
+        if ($mediumCount > 0) {
+            CostItem::create([
+                'costable_type' => PurchaseRequest::class,
+                'costable_id' => $request->id,
+                'type' => CostType::PackingFee,
+                'description' => "Caja Mediana Heavy Duty ({$mediumCount} x $".number_format($mediumRate, 2).')',
+                'amount' => $mediumCount * $mediumRate,
+            ]);
+        }
+
+        if ($largeCount > 0) {
+            CostItem::create([
+                'costable_type' => PurchaseRequest::class,
+                'costable_id' => $request->id,
+                'type' => CostType::PackingFee,
+                'description' => "Caja Larga Heavy Duty ({$largeCount} x $".number_format($largeRate, 2).')',
+                'amount' => $largeCount * $largeRate,
+            ]);
+        }
 
         $package = null;
 
@@ -150,6 +236,7 @@ class ClientRegistrationForm extends Component
                 'form.products', 'form.preferred_stores', 'form.budget', 'form.has_links',
                 'form.product_links', 'form.find_deals', 'form.already_purchased', 'form.store_name',
                 'form.order_number', 'form.tracking_number', 'form.approx_packages',
+                'form.boxes_small', 'form.boxes_medium', 'form.boxes_large',
             ],
             default => [
                 'form.courier', 'form.courier_name', 'form.need_shipping_coordination',
@@ -185,6 +272,9 @@ class ClientRegistrationForm extends Component
             'form.order_number' => ['nullable', 'string', 'max:255'],
             'form.tracking_number' => ['nullable', 'string', 'max:255'],
             'form.approx_packages' => ['nullable', 'numeric', 'min:0', 'max:999'],
+            'form.boxes_small' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'form.boxes_medium' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'form.boxes_large' => ['nullable', 'integer', 'min:0', 'max:99'],
             'form.courier' => ['nullable', 'in:yes,no'],
             'form.courier_name' => ['nullable', 'string', 'max:255'],
             'form.need_shipping_coordination' => ['nullable', 'in:yes,no'],
@@ -212,6 +302,23 @@ class ClientRegistrationForm extends Component
             $lines[] = __('Links').': '.$f['product_links'];
         }
         $lines[] = __('Find deals').': '.($f['find_deals'] === 'yes' ? __('Yes') : __('No'));
+
+        $smallCount = max(0, (int) ($f['boxes_small'] ?? 0));
+        $mediumCount = max(0, (int) ($f['boxes_medium'] ?? 0));
+        $largeCount = max(0, (int) ($f['boxes_large'] ?? 0));
+        if ($smallCount > 0 || $mediumCount > 0 || $largeCount > 0) {
+            $boxParts = [];
+            if ($smallCount > 0) {
+                $boxParts[] = "{$smallCount}x Small";
+            }
+            if ($mediumCount > 0) {
+                $boxParts[] = "{$mediumCount}x Mediana";
+            }
+            if ($largeCount > 0) {
+                $boxParts[] = "{$largeCount}x Larga";
+            }
+            $lines[] = __('Embalaje / Cajas').': '.implode(', ', $boxParts).' ('.__('Total').': '.money($this->packagingTotal).')';
+        }
 
         if ($f['already_purchased'] === 'yes') {
             $lines[] = __('Already purchased').': '.__('Yes');

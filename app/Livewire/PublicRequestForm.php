@@ -2,9 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Enums\CostType;
+use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
 use App\Services\AdminNotifier;
+use App\Services\PricingRateService;
 use Livewire\Component;
 
 class PublicRequestForm extends Component
@@ -18,6 +21,12 @@ class PublicRequestForm extends Component
     /** @var array<int, array{product_name: string, product_url: string, description: string, quantity: int}> */
     public array $items = [];
 
+    public int $boxes_small = 0;
+
+    public int $boxes_medium = 0;
+
+    public int $boxes_large = 0;
+
     public bool $sent = false;
 
     public int $createdCount = 0;
@@ -27,6 +36,37 @@ class PublicRequestForm extends Component
         $this->items = [
             $this->emptyItem(),
         ];
+    }
+
+    public function getRatesProperty(): array
+    {
+        return app(PricingRateService::class)->getRates();
+    }
+
+    public function getPackagingTotalProperty(): float
+    {
+        $rates = $this->rates;
+        $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
+        $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
+        $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+
+        return ($this->boxes_small * $smallRate) + ($this->boxes_medium * $mediumRate) + ($this->boxes_large * $largeRate);
+    }
+
+    public function incrementBox(string $type): void
+    {
+        $prop = 'boxes_'.$type;
+        if (property_exists($this, $prop)) {
+            $this->$prop++;
+        }
+    }
+
+    public function decrementBox(string $type): void
+    {
+        $prop = 'boxes_'.$type;
+        if (property_exists($this, $prop)) {
+            $this->$prop = max(0, $this->$prop - 1);
+        }
     }
 
     public function addItem(): void
@@ -63,6 +103,9 @@ class PublicRequestForm extends Component
             'items.*.product_url' => ['nullable', 'url:http,https', 'max:2048'],
             'items.*.description' => ['nullable', 'string', 'max:2000'],
             'items.*.quantity' => ['nullable', 'integer', 'min:1', 'max:999'],
+            'boxes_small' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'boxes_medium' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'boxes_large' => ['nullable', 'integer', 'min:0', 'max:99'],
         ];
     }
 
@@ -125,21 +168,67 @@ class PublicRequestForm extends Component
             ]
         );
 
+        $rates = $this->rates;
+        $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
+        $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
+        $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+
+        $services = ['personal_shopper'];
+        if ($this->boxes_small > 0 || $this->boxes_medium > 0 || $this->boxes_large > 0) {
+            $services[] = 'packing';
+        }
+
         $created = 0;
-        foreach ($validated['items'] as $item) {
+        foreach ($validated['items'] as $index => $item) {
             $req = PurchaseRequest::create([
                 'customer_id' => $customer->id,
                 'product_name' => $item['product_name'],
                 'product_url' => ! empty($item['product_url']) ? $item['product_url'] : null,
                 'description' => ! empty($item['description']) ? $item['description'] : null,
                 'quantity' => ! empty($item['quantity']) ? (int) $item['quantity'] : 1,
+                'services' => $services,
             ]);
+
+            // Add packing cost items to the first request if multiple items
+            if ($index === 0) {
+                if ($this->boxes_small > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::PackingFee,
+                        'description' => "Caja Small Heavy Duty ({$this->boxes_small} x $".number_format($smallRate, 2).')',
+                        'amount' => $this->boxes_small * $smallRate,
+                    ]);
+                }
+                if ($this->boxes_medium > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::PackingFee,
+                        'description' => "Caja Mediana Heavy Duty ({$this->boxes_medium} x $".number_format($mediumRate, 2).')',
+                        'amount' => $this->boxes_medium * $mediumRate,
+                    ]);
+                }
+                if ($this->boxes_large > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::PackingFee,
+                        'description' => "Caja Larga Heavy Duty ({$this->boxes_large} x $".number_format($largeRate, 2).')',
+                        'amount' => $this->boxes_large * $largeRate,
+                    ]);
+                }
+            }
+
             AdminNotifier::notifyNewPurchaseRequest($req);
             $created++;
         }
 
         $this->createdCount = $created;
         $this->reset('form');
+        $this->boxes_small = 0;
+        $this->boxes_medium = 0;
+        $this->boxes_large = 0;
         $this->items = [$this->emptyItem()];
         $this->sent = true;
     }
@@ -148,6 +237,9 @@ class PublicRequestForm extends Component
     {
         $this->sent = false;
         $this->createdCount = 0;
+        $this->boxes_small = 0;
+        $this->boxes_medium = 0;
+        $this->boxes_large = 0;
         $this->items = [$this->emptyItem()];
     }
 
