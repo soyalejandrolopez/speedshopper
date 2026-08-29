@@ -2,6 +2,14 @@
 
 use App\Enums\PaymentMethod;
 use App\Livewire\Admin\Payments\PaymentsIndex;
+
+test('payments index renders correctly for admin', function () {
+    $this->actingAs(createAdmin());
+
+    $response = $this->get(route('admin.payments.index'));
+    $response->assertOk();
+});
+
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
