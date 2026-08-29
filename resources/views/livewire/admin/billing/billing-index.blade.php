@@ -522,6 +522,7 @@
                         <th class="px-4 py-3">{{ __('Total Facturado') }}</th>
                         <th class="px-4 py-3">{{ __('Monto Pagado') }}</th>
                         <th class="px-4 py-3">{{ __('Saldo') }}</th>
+                        <th class="px-4 py-3">{{ __('Estado') }}</th>
                         <th class="px-4 py-3">{{ __('Fecha') }}</th>
                         <th class="px-4 py-3 text-end">{{ __('Acciones') }}</th>
                     </tr>
@@ -567,13 +568,21 @@
                             <td class="px-4 py-3">
                                 @if ($balance <= 0)
                                     <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
-                                        <i class="fa-solid fa-check text-[10px]"></i> Pagada
+                                        <i class="fa-solid fa-check text-[10px]"></i> {{ __('Pagada') }}
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-                                        {{ money($balance) }}
-                                    </span>
+                                    <div class="flex flex-col">
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+                                            {{ money($balance) }}
+                                        </span>
+                                        @if ($paidAmount > 0)
+                                            <span class="text-[10px] text-amber-600 font-medium mt-0.5">{{ __('Pendiente') }}</span>
+                                        @endif
+                                    </div>
                                 @endif
+                            </td>
+                            <td class="px-4 py-3">
+                                <x-status-badge :status="$request->status" />
                             </td>
                             <td class="px-4 py-3 text-gray-500">
                                 {{ $request->created_at->format('Y-m-d') }}
@@ -599,7 +608,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-12 text-center text-gray-400">
+                            <td colspan="9" class="py-12 text-center text-gray-400">
                                 <i class="fa-solid fa-file-invoice text-4xl mb-3 text-gray-300"></i>
                                 <p class="text-sm">{{ __('No se encontraron facturas registradas.') }}</p>
                                 <button type="button" wire:click="openCreateForm" class="btn-primary mt-3 text-xs">
@@ -638,11 +647,11 @@
 
                 <form wire:submit="savePayment" class="mt-4 space-y-4">
                     <div class="rounded-xl bg-gray-50 p-3 text-xs space-y-1">
-                        <p><strong>Factura:</strong> {{ $paymentForm['request_number'] ?? '' }}</p>
-                        <p><strong>Cliente:</strong> {{ $paymentForm['customer_name'] ?? '' }}</p>
-                        <p><strong>Total Factura:</strong> {{ money($paymentForm['invoice_total'] ?? 0) }}</p>
-                        <p><strong>Ya Pagado:</strong> {{ money($paymentForm['already_paid'] ?? 0) }}</p>
-                        <p class="text-amber-700 font-bold"><strong>Saldo Pendiente:</strong> {{ money($paymentForm['pending_balance'] ?? 0) }}</p>
+                        <p><strong>{{ __('Factura:') }}</strong> {{ $paymentForm['request_number'] ?? '' }}</p>
+                        <p><strong>{{ __('Cliente:') }}</strong> {{ $paymentForm['customer_name'] ?? '' }}</p>
+                        <p><strong>{{ __('Total Factura:') }}</strong> {{ money($paymentForm['invoice_total'] ?? 0) }}</p>
+                        <p><strong>{{ __('Ya Pagado:') }}</strong> {{ money($paymentForm['already_paid'] ?? 0) }}</p>
+                        <p class="text-amber-700 font-bold"><strong>{{ __('Saldo Pendiente:') }}</strong> {{ money($paymentForm['pending_balance'] ?? 0) }}</p>
                     </div>
 
                     <div>
@@ -655,10 +664,11 @@
                         <label class="mb-1 block text-xs font-semibold text-gray-700">{{ __('Método de Pago') }} *</label>
                         <select wire:model="paymentForm.payment_method" class="w-full rounded-xl border border-gray-300 p-2 text-xs">
                             <option value="zelle">Zelle</option>
-                            <option value="cash">Efectivo</option>
-                            <option value="card">Tarjeta</option>
-                            <option value="transfer">Transferencia</option>
-                            <option value="other">Otro</option>
+                            <option value="cash">{{ __('Efectivo (Cash)') }}</option>
+                            <option value="card">{{ __('Tarjeta de Crédito/Débito') }}</option>
+                            <option value="transfer">{{ __('Transferencia Bancaria') }}</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="other">{{ __('Otro') }}</option>
                         </select>
                     </div>
 

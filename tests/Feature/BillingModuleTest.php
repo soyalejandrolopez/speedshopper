@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\CostType;
+use App\Enums\RequestStatus;
 use App\Livewire\Admin\Billing\BillingIndex;
 use App\Livewire\Admin\Rates\RatesIndex;
 use App\Mail\PricingRatesMail;
@@ -225,13 +226,22 @@ test('client can view portal billing and pricing guide page', function () {
 test('billing and rates views render in english when locale is set to en', function () {
     app()->setLocale('en');
     $admin = createAdmin(['locale' => 'en']);
+    $customer = Customer::factory()->create();
+    PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'product_name' => 'AirPods Max',
+        'status' => RequestStatus::Quoted,
+    ]);
 
     $this->actingAs($admin)
         ->withSession(['locale' => 'en'])
         ->get(route('admin.billing.index'))
         ->assertOk()
         ->assertSee('Billing')
-        ->assertSee('New Invoice');
+        ->assertSee('New Invoice')
+        ->assertSee('Balance')
+        ->assertSee('Status')
+        ->assertSee('Quote sent');
 
     $this->actingAs($admin)
         ->withSession(['locale' => 'en'])
