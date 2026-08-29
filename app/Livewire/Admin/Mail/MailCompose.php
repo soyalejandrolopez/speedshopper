@@ -11,11 +11,14 @@ use Illuminate\Support\Testing\Fakes\MailFake;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 #[Title('Send Email')]
 class MailCompose extends Component
 {
+    use WithFileUploads;
+
     public string $customer_id = '';
 
     public string $recipient = '';
@@ -23,6 +26,9 @@ class MailCompose extends Component
     public string $subject = '';
 
     public string $message = '';
+
+    /** @var array<int, mixed> */
+    public array $attachments = [];
 
     public ?string $status = null;
 
@@ -34,7 +40,16 @@ class MailCompose extends Component
             'recipient' => ['required', 'email', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'max:10000'],
+            'attachments.*' => ['nullable', 'file', 'max:51200'], // Max 50MB per file (photos, videos, docs)
         ];
+    }
+
+    public function removeAttachment(int $index): void
+    {
+        if (isset($this->attachments[$index])) {
+            unset($this->attachments[$index]);
+            $this->attachments = array_values($this->attachments);
+        }
     }
 
     public function send(): void
@@ -45,15 +60,27 @@ class MailCompose extends Component
 
         $this->applyMailConfigFromSettings();
 
+        $attachmentFiles = [];
+        foreach ($this->attachments as $uploadedFile) {
+            if (is_object($uploadedFile) && method_exists($uploadedFile, 'getRealPath')) {
+                $attachmentFiles[] = [
+                    'path' => $uploadedFile->getRealPath(),
+                    'name' => $uploadedFile->getClientOriginalName(),
+                    'mime' => $uploadedFile->getMimeType(),
+                ];
+            }
+        }
+
         try {
             Mail::to($this->recipient)->send(new AdminMessageMail(
                 subject: $this->subject,
                 body: $this->message,
+                attachmentFiles: $attachmentFiles,
             ));
 
             $this->status = 'sent';
             $this->statusMessage = __('Email sent successfully').' ('.$this->recipient.')';
-            $this->reset('subject', 'message');
+            $this->reset('subject', 'message', 'attachments');
         } catch (\Throwable $e) {
             Log::error('Admin email send failed: '.$e->getMessage());
 

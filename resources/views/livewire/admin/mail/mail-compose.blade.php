@@ -62,6 +62,112 @@
                               class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
                     @error('message') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Sección de Adjuntos (Fotos, Videos, Documentos) --}}
+                <div class="rounded-xl border border-gray-200 bg-gray-50/70 p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-paperclip text-emerald-600 text-sm"></i>
+                            <span>{{ __('Adjuntar Archivos (Fotos, Videos, Documentos)') }}</span>
+                        </label>
+                        <span class="text-xs text-gray-500">
+                            {{ count($attachments) }} {{ __('archivo(s) seleccionado(s)') }}
+                        </span>
+                    </div>
+
+                    {{-- Dropzone / File Input --}}
+                    <div class="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white p-5 text-center transition-colors hover:border-emerald-400 hover:bg-emerald-50/30">
+                        <input type="file" wire:model="attachments" multiple
+                               accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.zip"
+                               class="absolute inset-0 h-full w-full cursor-pointer opacity-0" id="mail_attachments">
+                        
+                        <div class="flex flex-col items-center pointer-events-none">
+                            <div class="flex items-center gap-2 text-emerald-600 mb-1">
+                                <i class="fa-solid fa-image text-lg"></i>
+                                <i class="fa-solid fa-video text-lg"></i>
+                                <i class="fa-solid fa-file-lines text-lg"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700">
+                                <span class="text-emerald-700 underline">{{ __('Haz clic para seleccionar') }}</span> {{ __('o arrastra archivos aquí') }}
+                            </p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">
+                                {{ __('Soporta fotos (JPG, PNG), videos (MP4, MOV) y documentos (PDF, etc.)') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Uploading State --}}
+                    <div wire:loading wire:target="attachments" class="w-full">
+                        <div class="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 border border-emerald-200">
+                            <i class="fa-solid fa-circle-notch fa-spin text-sm"></i>
+                            <span>{{ __('Cargando archivos adjuntos...') }}</span>
+                        </div>
+                    </div>
+
+                    @error('attachments.*')
+                        <p class="text-xs text-red-600">{{ $message }}</p>
+                    @enderror
+
+                    {{-- Lista de Archivos Seleccionados --}}
+                    @if (count($attachments) > 0)
+                        <div class="grid gap-2.5 sm:grid-cols-2 pt-1">
+                            @foreach ($attachments as $index => $file)
+                                @php
+                                    $mime = is_object($file) && method_exists($file, 'getMimeType') ? $file->getMimeType() : '';
+                                    $name = is_object($file) && method_exists($file, 'getClientOriginalName') ? $file->getClientOriginalName() : 'Archivo';
+                                    $size = is_object($file) && method_exists($file, 'getSize') ? round($file->getSize() / 1024 / 1024, 2) : null;
+                                    $isImage = str_starts_with($mime, 'image/');
+                                    $isVideo = str_starts_with($mime, 'video/');
+                                @endphp
+                                <div wire:key="attachment-{{ $index }}" class="flex items-center justify-between gap-2.5 rounded-xl border border-gray-200 bg-white p-2.5 shadow-2xs">
+                                    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                        @if ($isImage)
+                                            <div class="h-10 w-10 shrink-0 rounded-lg overflow-hidden border border-emerald-200 bg-emerald-50 flex items-center justify-center">
+                                                @try
+                                                    <img src="{{ $file->temporaryUrl() }}" alt="{{ $name }}" class="h-full w-full object-cover">
+                                                @catch (\Throwable $e)
+                                                    <i class="fa-solid fa-image text-emerald-600 text-sm"></i>
+                                                @endtry
+                                            </div>
+                                        @elseif ($isVideo)
+                                            <div class="h-10 w-10 shrink-0 rounded-lg border border-purple-200 bg-purple-50 text-purple-600 flex items-center justify-center">
+                                                <i class="fa-solid fa-video text-base"></i>
+                                            </div>
+                                        @else
+                                            <div class="h-10 w-10 shrink-0 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 flex items-center justify-center">
+                                                <i class="fa-solid fa-file-lines text-base"></i>
+                                            </div>
+                                        @endif
+
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-xs font-semibold text-gray-800 truncate" title="{{ $name }}">
+                                                {{ $name }}
+                                            </p>
+                                            <div class="flex items-center gap-2 text-[10px] text-gray-500 mt-0.5">
+                                                @if ($isVideo)
+                                                    <span class="font-bold text-purple-700 uppercase">{{ __('Video') }}</span>
+                                                @elseif ($isImage)
+                                                    <span class="font-bold text-emerald-700 uppercase">{{ __('Foto') }}</span>
+                                                @else
+                                                    <span class="font-bold text-blue-700 uppercase">{{ __('Documento') }}</span>
+                                                @endif
+                                                @if ($size !== null)
+                                                    <span>&bull; {{ $size }} MB</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" wire:click="removeAttachment({{ $index }})"
+                                            class="h-7 w-7 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 flex items-center justify-center transition-colors shrink-0"
+                                            title="{{ __('Quitar archivo') }}">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
 
