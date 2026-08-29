@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Payments;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\StorePaymentRequest;
@@ -18,7 +19,7 @@ use Livewire\WithPagination;
 #[Title('Payments')]
 class PaymentsIndex extends Component
 {
-    use ValidatesWithFormRequest, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
     public string $search = '';
 
@@ -132,11 +133,11 @@ class PaymentsIndex extends Component
             $payment = Payment::findOrFail($this->editingId);
             $this->authorize('update', $payment);
             $payment->update($data);
-            session()->flash('success', __('Payment updated successfully.'));
+            $this->swalUpdated();
         } else {
             $this->authorize('create', Payment::class);
             Payment::create($data);
-            session()->flash('success', __('Payment created successfully.'));
+            $this->swalSaved();
         }
 
         $this->showForm = false;
@@ -146,7 +147,7 @@ class PaymentsIndex extends Component
     {
         $this->authorize('delete', $payment);
         $payment->delete();
-        session()->flash('success', __('Payment deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()

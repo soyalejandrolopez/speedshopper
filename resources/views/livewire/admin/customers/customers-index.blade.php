@@ -61,8 +61,7 @@
                                             class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600" title="{{ __('Edit') }}">
                                         <i class="fa-solid fa-pen-to-square text-base"></i>
                                     </button>
-                                    <button wire:click="delete({{ $customer->id }})"
-                                            wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
+                                    <button @click="swalConfirmDelete(() => $wire.delete({{ $customer->id }}))"
                                             class="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600" title="{{ __('Delete') }}">
                                         <i class="fa-solid fa-trash text-base"></i>
                                     </button>

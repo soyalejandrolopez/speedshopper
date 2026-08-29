@@ -21,6 +21,8 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
+        session()->flash('swal_auth', 'login');
+
         $this->redirectIntended(default: Auth::user()->dashboardRoute(), navigate: true);
     }
 }; ?>

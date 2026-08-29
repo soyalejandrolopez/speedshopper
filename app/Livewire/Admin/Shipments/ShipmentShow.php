@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Shipments;
 
+use App\Concerns\SwalNotifies;
 use App\Enums\CostType;
 use App\Models\Shipment;
 use Livewire\Attributes\Layout;
@@ -12,6 +13,8 @@ use Livewire\Component;
 #[Title('Shipment Details')]
 class ShipmentShow extends Component
 {
+    use SwalNotifies;
+
     public Shipment $shipment;
 
     public string $newStatus = '';
@@ -53,7 +56,7 @@ class ShipmentShow extends Component
         }
 
         $this->reset('newStatus', 'transitionNote');
-        session()->flash('success', __('Status updated successfully.'));
+        $this->swalUpdated();
     }
 
     public function addCost(): void
@@ -74,14 +77,14 @@ class ShipmentShow extends Component
 
         $this->reset('costForm');
         $this->costForm['type'] = CostType::InternationalShipping->value;
-        session()->flash('success', __('Cost added successfully.'));
+        $this->swalSaved();
     }
 
     public function removeCost(int $costItemId): void
     {
         $this->authorize('update', $this->shipment);
         $this->shipment->costItems()->where('id', $costItemId)->delete();
-        session()->flash('success', __('Deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()

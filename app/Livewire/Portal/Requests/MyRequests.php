@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Portal\Requests;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Http\Requests\StorePurchaseRequestRequest;
 use App\Models\PurchaseRequest;
@@ -15,7 +16,7 @@ use Livewire\WithPagination;
 #[Title('My Requests')]
 class MyRequests extends Component
 {
-    use ValidatesWithFormRequest, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
     public bool $showForm = false;
 
@@ -60,14 +61,14 @@ class MyRequests extends Component
         $data['customer_id'] = auth()->user()->customer?->id;
 
         if (! $data['customer_id']) {
-            session()->flash('error', __('You do not have a customer profile yet. Contact support.'));
+            $this->swalError();
 
             return;
         }
 
         PurchaseRequest::create($data);
         $this->showForm = false;
-        session()->flash('success', __('Purchase Request created successfully.'));
+        $this->swalSaved();
     }
 
     public function render()

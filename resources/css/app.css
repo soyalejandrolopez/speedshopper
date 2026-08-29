@@ -599,3 +599,81 @@ button[type="submit"].border[data-loading]::after {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* ─────────────────────────────────────────
+   SweetAlert2 custom theme
+───────────────────────────────────────── */
+
+/* Toast popup */
+.swal-toast-popup {
+    font-family: var(--font-sans) !important;
+    border-radius: 0.875rem !important;
+    padding: 0.75rem 1rem !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.07) !important;
+}
+
+/* Confirm dialog */
+.swal-confirm-popup {
+    font-family: var(--font-sans) !important;
+    border-radius: 1.25rem !important;
+    padding: 2rem 1.75rem !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
+}
+
+.swal2-title {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    padding-bottom: 0.25rem !important;
+}
+
+.swal2-html-container {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+}
+
+/* Buttons */
+.swal-btn-danger {
+    @apply inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/30 ml-2;
+}
+
+.swal-btn-cancel {
+    @apply inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200/50;
+}
+
+.swal-btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500/30;
+}
+
+/* Icon colors */
+.swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+
+.swal2-icon.swal2-success {
+    border-color: #10b981 !important;
+}
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: #10b981 !important;
+}
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: #a7f3d0 !important;
+}
+
+.swal2-icon.swal2-error {
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+.swal2-icon.swal2-info {
+    border-color: #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+/* Timer bar */
+.swal2-timer-progress-bar {
+    background: #10b981 !important;
+    height: 3px !important;
+}

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Customers;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Customer;
@@ -15,7 +16,7 @@ use Livewire\WithPagination;
 #[Title('Customers')]
 class CustomersIndex extends Component
 {
-    use ValidatesWithFormRequest, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
     public string $search = '';
 
@@ -72,7 +73,7 @@ class CustomersIndex extends Component
             $customer = Customer::findOrFail($this->editingId);
             $this->authorize('update', $customer);
             $customer->update($data);
-            session()->flash('success', __('Customer updated successfully.'));
+            $this->swalUpdated();
         } else {
             $this->authorize('create', Customer::class);
             $customer = Customer::create($data);
@@ -85,7 +86,7 @@ class CustomersIndex extends Component
                 }
             }
 
-            session()->flash('success', __('Customer created successfully.'));
+            $this->swalSaved();
         }
 
         $this->showForm = false;
@@ -95,7 +96,7 @@ class CustomersIndex extends Component
     {
         $this->authorize('delete', $customer);
         $customer->delete();
-        session()->flash('success', __('Customer deleted.'));
+        $this->swalDeleted();
     }
 
     public function closeForm(): void

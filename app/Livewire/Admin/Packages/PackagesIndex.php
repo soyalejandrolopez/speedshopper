@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Packages;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\PackageStatus;
 use App\Http\Requests\StorePackageRequest;
@@ -17,7 +18,7 @@ use Livewire\WithPagination;
 #[Title('Packages')]
 class PackagesIndex extends Component
 {
-    use ValidatesWithFormRequest, WithFileUploads, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithFileUploads, WithPagination;
 
     public string $search = '';
 
@@ -108,11 +109,11 @@ class PackagesIndex extends Component
             $package = Package::findOrFail($this->editingId);
             $this->authorize('update', $package);
             $package->update($data);
-            session()->flash('success', __('Package updated successfully.'));
+            $this->swalUpdated();
         } else {
             $this->authorize('create', Package::class);
             Package::create($data);
-            session()->flash('success', __('Package created successfully.'));
+            $this->swalSaved();
         }
 
         $this->photo = null;
@@ -123,7 +124,7 @@ class PackagesIndex extends Component
     {
         $this->authorize('delete', $package);
         $package->delete();
-        session()->flash('success', __('Package deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()

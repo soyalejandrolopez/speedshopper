@@ -38,7 +38,7 @@ class PackageShow extends Component
         );
 
         $this->reset('newStatus', 'transitionNote');
-        session()->flash('success', __('Status updated successfully.'));
+        $this->swalUpdated();
     }
 
     public function render()

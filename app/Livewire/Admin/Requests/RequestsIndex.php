@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Requests;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\RequestStatus;
 use App\Http\Requests\StorePurchaseRequestRequest;
@@ -17,7 +18,7 @@ use Livewire\WithPagination;
 #[Title('Purchase Requests')]
 class RequestsIndex extends Component
 {
-    use ValidatesWithFormRequest, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
     public string $search = '';
 
@@ -103,11 +104,11 @@ class RequestsIndex extends Component
             $purchaseRequest = PurchaseRequest::findOrFail($this->editingId);
             $this->authorize('update', $purchaseRequest);
             $purchaseRequest->update($data);
-            session()->flash('success', __('Purchase Request updated successfully.'));
+            $this->swalUpdated();
         } else {
             $this->authorize('create', PurchaseRequest::class);
             PurchaseRequest::create($data);
-            session()->flash('success', __('Purchase Request created successfully.'));
+            $this->swalSaved();
         }
 
         $this->showForm = false;
@@ -117,7 +118,7 @@ class RequestsIndex extends Component
     {
         $this->authorize('delete', $purchaseRequest);
         $purchaseRequest->delete();
-        session()->flash('success', __('Purchase Request deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()

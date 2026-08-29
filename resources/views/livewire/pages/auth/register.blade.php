@@ -34,6 +34,8 @@ new #[Layout('layouts.guest')] class extends Component
 
         Auth::login($user);
 
+        session()->flash('swal_auth', 'register');
+
         $this->redirect(route('portal.dashboard', absolute: false), navigate: true);
     }
 }; ?>

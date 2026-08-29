@@ -202,8 +202,8 @@
                                             <i class="fa-brands fa-whatsapp"></i>
                                         </a>
                                     @endif
-                                    <button type="button" wire:confirm="{{ __('¿Eliminar mensaje?') }}"
-                                            wire:click="deleteInquiry({{ $inquiry->id }})"
+                                    <button type="button"
+                                            @click="swalConfirmDelete(() => $wire.deleteInquiry({{ $inquiry->id }}))"
                                             class="rounded p-1 text-xs text-gray-400 hover:bg-red-50 hover:text-red-600"
                                             title="{{ __('Eliminar') }}">
                                         <i class="fa-solid fa-trash"></i>
@@ -258,8 +258,8 @@
                                 <i class="fa-brands fa-whatsapp"></i>
                             </a>
                         @endif
-                        <button type="button" wire:confirm="{{ __('¿Eliminar mensaje?') }}"
-                                wire:click="deleteInquiry({{ $inquiry->id }})"
+                        <button type="button"
+                                @click="swalConfirmDelete(() => $wire.deleteInquiry({{ $inquiry->id }}))"
                                 class="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600">
                             <i class="fa-solid fa-trash"></i>
                         </button>

@@ -93,8 +93,7 @@
                                     <td class="px-5 py-2.5 text-xs text-gray-500">{{ $cost->description }}</td>
                                     <td class="px-5 py-2.5 text-end font-medium">{{ money($cost->amount) }}</td>
                                     <td class="px-5 py-2.5 text-end">
-                                        <button wire:click="removeCost({{ $cost->id }})"
-                                                wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
+                                        <button @click="swalConfirmDelete(() => $wire.removeCost({{ $cost->id }}))"
                                                 class="text-gray-400 hover:text-red-600">
                                             <i class="fa-solid fa-xmark text-base"></i>
                                         </button>

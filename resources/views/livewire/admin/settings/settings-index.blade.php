@@ -122,7 +122,7 @@
                                    class="block w-full text-sm text-gray-500 file:me-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-emerald-700 hover:file:bg-emerald-100">
                             @error('logo') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                             @if (brand_logo_url())
-                                <button type="button" wire:click="removeLogo" wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
+                                <button type="button" @click="swalConfirmDelete(() => $wire.removeLogo())"
                                         class="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
                                     {{ __('Remove Logo') }}
                                 </button>
@@ -146,7 +146,7 @@
                                    class="block w-full text-sm text-gray-500 file:me-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-emerald-700 hover:file:bg-emerald-100">
                             @error('favicon') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                             @if (brand_favicon_url())
-                                <button type="button" wire:click="removeFavicon" wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
+                                <button type="button" @click="swalConfirmDelete(() => $wire.removeFavicon())"
                                         class="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
                                     {{ __('Remove Favicon') }}
                                 </button>

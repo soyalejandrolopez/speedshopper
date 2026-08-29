@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Requests;
 
+use App\Concerns\SwalNotifies;
 use App\Enums\CostType;
 use App\Enums\PackageStatus;
 use App\Enums\ShipmentStatus;
@@ -14,6 +15,8 @@ use Livewire\Component;
 #[Title('Request Details')]
 class RequestShow extends Component
 {
+    use SwalNotifies;
+
     public PurchaseRequest $purchaseRequest;
 
     public string $newStatus = '';
@@ -50,7 +53,7 @@ class RequestShow extends Component
         $this->syncChildren($validated['newStatus']);
 
         $this->reset('newStatus', 'transitionNote');
-        session()->flash('success', __('Status updated successfully.'));
+        $this->swalUpdated();
     }
 
     /**
@@ -118,14 +121,14 @@ class RequestShow extends Component
 
         $this->reset('costForm');
         $this->costForm['type'] = CostType::ProductCost->value;
-        session()->flash('success', __('Cost added successfully.'));
+        $this->swalSaved();
     }
 
     public function removeCost(int $costItemId): void
     {
         $this->authorize('update', $this->purchaseRequest);
         $this->purchaseRequest->costItems()->where('id', $costItemId)->delete();
-        session()->flash('success', __('Deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()

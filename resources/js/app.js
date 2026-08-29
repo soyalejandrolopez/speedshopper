@@ -1,4 +1,7 @@
+import './swal.js';
+
 /* ---------- Livewire progress bar ---------- */
+
 
 let progressBar;
 

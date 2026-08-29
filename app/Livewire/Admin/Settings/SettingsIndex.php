@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Settings;
 
+use App\Concerns\SwalNotifies;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Mail\TestMail;
 use App\Models\Setting;
@@ -18,7 +19,7 @@ use Livewire\WithFileUploads;
 #[Title('Settings')]
 class SettingsIndex extends Component
 {
-    use WithFileUploads;
+    use SwalNotifies, WithFileUploads;
 
     public array $settings = [];
 
@@ -103,7 +104,7 @@ class SettingsIndex extends Component
 
         app()->getProvider(MailConfigServiceProvider::class)?->apply();
 
-        session()->flash('success', __('Settings saved successfully.'));
+        $this->swalUpdated();
     }
 
     public function sendTestEmail(): void

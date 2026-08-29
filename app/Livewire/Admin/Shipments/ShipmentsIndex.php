@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Shipments;
 
+use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\ShipmentStatus;
 use App\Http\Requests\StoreShipmentRequest;
@@ -17,7 +18,7 @@ use Livewire\WithPagination;
 #[Title('Shipments')]
 class ShipmentsIndex extends Component
 {
-    use ValidatesWithFormRequest, WithPagination;
+    use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
     public string $search = '';
 
@@ -108,7 +109,7 @@ class ShipmentsIndex extends Component
             $this->authorize('update', $shipment);
             $shipment->update($data);
             $shipment->packages()->sync($packageIds);
-            session()->flash('success', __('Shipment updated successfully.'));
+            $this->swalUpdated();
         } else {
             $this->authorize('create', Shipment::class);
             $shipment = Shipment::create($data);
@@ -118,7 +119,7 @@ class ShipmentsIndex extends Component
                 Package::whereIn('id', $packageIds)->update(['status' => 'ready']);
             }
 
-            session()->flash('success', __('Shipment created successfully.'));
+            $this->swalSaved();
         }
 
         $this->showForm = false;
@@ -128,7 +129,7 @@ class ShipmentsIndex extends Component
     {
         $this->authorize('delete', $shipment);
         $shipment->delete();
-        session()->flash('success', __('Shipment deleted.'));
+        $this->swalDeleted();
     }
 
     public function render()
