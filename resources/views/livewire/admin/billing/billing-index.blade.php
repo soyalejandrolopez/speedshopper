@@ -173,7 +173,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" wire:click="closeCreateModal"></div>
 
-            <div class="relative w-full max-w-3xl my-8 rounded-2xl bg-white shadow-2xl overflow-hidden"
+            <div class="relative w-full max-w-4xl my-8 rounded-2xl bg-white shadow-2xl overflow-hidden"
                  x-on:keydown.escape.window="$wire.closeCreateModal()">
                 <div class="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-6 py-4">
                     <div class="flex items-center gap-3">
@@ -182,7 +182,7 @@
                         </div>
                         <div>
                             <h3 class="text-base font-bold text-gray-900">{{ __('Nueva Factura') }}</h3>
-                            <p class="text-xs text-gray-500">{{ __('Ingresa los datos del cliente, los productos y el pago inicial.') }}</p>
+                            <p class="text-xs text-gray-500">{{ __('Selecciona el cliente, ingresa los productos y aplica los cargos automáticos del tarifador.') }}</p>
                         </div>
                     </div>
                     <button type="button" wire:click="closeCreateModal" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -190,7 +190,7 @@
                     </button>
                 </div>
 
-                <form wire:submit="saveInvoice" class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+                <form wire:submit="saveInvoice" class="p-6 space-y-6 max-h-[78vh] overflow-y-auto">
                     {{-- 1. Datos del Cliente --}}
                     <div class="rounded-xl border border-gray-200/80 bg-gray-50/40 p-4">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
@@ -216,10 +216,13 @@
                     {{-- 2. Productos de la Factura --}}
                     <div class="rounded-xl border border-gray-200/80 bg-gray-50/40 p-4">
                         <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-2">
+                            <div class="flex items-center gap-2">
                                 <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">2</span>
-                                {{ __('Productos y Artículos') }}
-                            </h4>
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800">{{ __('Productos y Artículos') }}</h4>
+                                <span class="text-xs font-bold text-gray-900 bg-emerald-100/80 text-emerald-800 px-2 py-0.5 rounded-md">
+                                    Subtotal: {{ money($this->productsSubtotal) }}
+                                </span>
+                            </div>
                             <button type="button" wire:click="addItem"
                                     class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100">
                                 <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Producto') }}
@@ -231,24 +234,24 @@
                                 <div class="grid gap-2 rounded-xl border border-gray-200 bg-white p-3 sm:grid-cols-12 items-center">
                                     <div class="sm:col-span-5">
                                         <label class="block text-[11px] font-medium text-gray-500">{{ __('Producto / Descripción') }} *</label>
-                                        <input type="text" wire:model.live="invoiceForm.items.{{ $index }}.product_name" placeholder="ej. Zapatos Nike Air Max"
+                                        <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.product_name" placeholder="ej. Zapatos Nike Air Max"
                                                class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
                                     </div>
                                     <div class="sm:col-span-3">
                                         <label class="block text-[11px] font-medium text-gray-500">{{ __('Tienda / Proveedor') }}</label>
-                                        <input type="text" wire:model.live="invoiceForm.items.{{ $index }}.store" placeholder="ej. Amazon / Nike"
+                                        <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.store" placeholder="ej. Amazon / Nike"
                                                class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
                                     </div>
                                     <div class="sm:col-span-2">
                                         <label class="block text-[11px] font-medium text-gray-500">{{ __('Cant.') }}</label>
-                                        <input type="number" min="1" wire:model.live="invoiceForm.items.{{ $index }}.quantity"
+                                        <input type="number" min="1" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.quantity"
                                                class="mt-1 w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-center focus:border-emerald-500">
                                     </div>
                                     <div class="sm:col-span-2 relative">
                                         <label class="block text-[11px] font-medium text-gray-500">{{ __('Precio ($)') }}</label>
                                         <div class="flex items-center gap-1 mt-1">
-                                            <input type="number" step="0.01" min="0" wire:model.live="invoiceForm.items.{{ $index }}.unit_price"
-                                                   class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs focus:border-emerald-500">
+                                            <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.unit_price"
+                                                   class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs focus:border-emerald-500 font-semibold">
                                             @if (count($invoiceForm['items']) > 1)
                                                 <button type="button" wire:click="removeItem({{ $index }})" class="text-red-400 hover:text-red-600 p-1">
                                                     <i class="fa-solid fa-trash text-xs"></i>
@@ -259,50 +262,144 @@
                                 </div>
                             @endforeach
                         </div>
+                    </div>
 
-                        {{-- Additional Fees / Costs --}}
-                        <div class="mt-4 border-t border-gray-200 pt-3">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-semibold text-gray-700">{{ __('Cargos / Comisiones Adicionales') }}</span>
-                                <button type="button" wire:click="addCost" class="text-xs text-emerald-600 hover:underline">
-                                    + {{ __('Agregar Cargo') }}
+                    {{-- 3. Cargos / Comisiones Adicionales sincronizados con el Tarifador --}}
+                    <div class="rounded-xl border border-gray-200/80 bg-gray-50/40 p-4">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">3</span>
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800">{{ __('Cargos y Tarifas del Tarifador') }}</h4>
+                            </div>
+                            <button type="button" wire:click="addCost" class="text-xs font-semibold text-emerald-700 hover:underline inline-flex items-center gap-1">
+                                <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Cargo Libre') }}
+                            </button>
+                        </div>
+
+                        {{-- Quick Presets Chips from Rate Sheet --}}
+                        <div class="mb-3 rounded-xl border border-emerald-200/70 bg-white p-3 shadow-2xs">
+                            <p class="text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i>
+                                {{ __('Accesos Rápidos del Tarifario Oficial:') }}
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" wire:click="addQuickRateCost('shopper_commission')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50/80 px-2.5 py-1 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors">
+                                    <i class="fa-solid fa-cart-shopping text-[11px] text-emerald-600"></i>
+                                    Comisión Shopper ({{ $this->shopperCommissionCalculation['percent'] }}% = {{ money($this->shopperCommissionCalculation['amount']) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('box_small')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-box text-[11px] text-teal-600"></i>
+                                    Caja Small ({{ money($rates['box_small_heavy_duty'] ?? 15) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('box_medium')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-box text-[11px] text-teal-600"></i>
+                                    Caja Mediana ({{ money($rates['box_medium_heavy_duty'] ?? 20) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('box_large')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-box text-[11px] text-teal-600"></i>
+                                    Caja Larga ({{ money($rates['box_large_heavy_duty'] ?? 25) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('extra_store')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-store text-[11px] text-purple-600"></i>
+                                    Tienda Extra ({{ money($rates['extra_store_fee'] ?? 20) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('warehouse_delivery')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-truck-ramp-box text-[11px] text-blue-600"></i>
+                                    Llevar al Almacén ({{ money($rates['warehouse_delivery_fee'] ?? 20) }})
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('warehouse_commission')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-percent text-[11px] text-amber-600"></i>
+                                    Comisión Almacén ({{ $rates['warehouse_percent'] ?? 15 }}%)
+                                </button>
+                                <button type="button" wire:click="addQuickRateCost('monthly_storage')"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fa-solid fa-warehouse text-[11px] text-orange-600"></i>
+                                    Almacenaje ({{ money($rates['monthly_storage_fee'] ?? 15) }}/mes)
                                 </button>
                             </div>
+                        </div>
 
-                            <div class="space-y-2">
-                                @foreach ($invoiceForm['costs'] as $cIdx => $cost)
-                                    <div class="grid gap-2 grid-cols-12 items-center bg-white p-2 rounded-lg border border-gray-200">
-                                        <div class="col-span-4">
-                                            <select wire:model.live="invoiceForm.costs.{{ $cIdx }}.type" class="w-full rounded-lg border border-gray-300 p-1.5 text-xs">
-                                                <option value="personal_shopper">{{ __('Personal Shopper') }}</option>
-                                                <option value="repacking">{{ __('Reempaque / Caja') }}</option>
-                                                <option value="shipping">{{ __('Envío / Flete') }}</option>
-                                                <option value="storage">{{ __('Almacenaje') }}</option>
-                                                <option value="other">{{ __('Otro Cargo') }}</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-span-5">
-                                            <input type="text" wire:model.live="invoiceForm.costs.{{ $cIdx }}.description" placeholder="{{ __('Descripción') }}"
-                                                   class="w-full rounded-lg border border-gray-300 p-1.5 text-xs">
-                                        </div>
-                                        <div class="col-span-3 flex items-center gap-1">
-                                            <input type="number" step="0.01" min="0" wire:model.live="invoiceForm.costs.{{ $cIdx }}.amount" placeholder="$ 0.00"
-                                                   class="w-full rounded-lg border border-gray-300 p-1.5 text-xs text-end font-semibold">
+                        {{-- Costs List with Preset Selector --}}
+                        <div class="space-y-2.5">
+                            @forelse ($invoiceForm['costs'] as $cIdx => $cost)
+                                <div class="grid gap-2 grid-cols-12 items-center bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
+                                    {{-- Preset dropdown: automatically fills description & rate --}}
+                                    <div class="col-span-12 sm:col-span-4">
+                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">{{ __('Tarifa del Tarifador') }}</label>
+                                        <select wire:change="applyRatePreset({{ $cIdx }}, $event.target.value)"
+                                                class="mt-0.5 w-full rounded-lg border border-gray-300 bg-gray-50/50 p-1.5 text-xs font-medium text-gray-800">
+                                            <option value="shopper_commission" {{ ($cost['preset'] ?? '') === 'shopper_commission' ? 'selected' : '' }}>
+                                                🛒 Comisión Personal Shopper ({{ $this->shopperCommissionCalculation['percent'] }}%)
+                                            </option>
+                                            <option value="box_small" {{ ($cost['preset'] ?? '') === 'box_small' ? 'selected' : '' }}>
+                                                📦 1 Caja Small Heavy Duty ({{ money($rates['box_small_heavy_duty'] ?? 15) }})
+                                            </option>
+                                            <option value="box_medium" {{ ($cost['preset'] ?? '') === 'box_medium' ? 'selected' : '' }}>
+                                                📦 1 Caja Mediana Heavy Duty ({{ money($rates['box_medium_heavy_duty'] ?? 20) }})
+                                            </option>
+                                            <option value="box_large" {{ ($cost['preset'] ?? '') === 'box_large' ? 'selected' : '' }}>
+                                                📦 1 Caja Grande Heavy Duty ({{ money($rates['box_large_heavy_duty'] ?? 25) }})
+                                            </option>
+                                            <option value="extra_store" {{ ($cost['preset'] ?? '') === 'extra_store' ? 'selected' : '' }}>
+                                                🏬 Visita a Tienda Adicional ({{ money($rates['extra_store_fee'] ?? 20) }})
+                                            </option>
+                                            <option value="warehouse_delivery" {{ ($cost['preset'] ?? '') === 'warehouse_delivery' ? 'selected' : '' }}>
+                                                🚚 Llevar caja al Almacén ({{ money($rates['warehouse_delivery_fee'] ?? 20) }})
+                                            </option>
+                                            <option value="warehouse_commission" {{ ($cost['preset'] ?? '') === 'warehouse_commission' ? 'selected' : '' }}>
+                                                🏢 Comisión Almacén ({{ $rates['warehouse_percent'] ?? 15 }}%)
+                                            </option>
+                                            <option value="monthly_storage" {{ ($cost['preset'] ?? '') === 'monthly_storage' ? 'selected' : '' }}>
+                                                ⏱️ Almacenaje mensual ({{ money($rates['monthly_storage_fee'] ?? 15) }})
+                                            </option>
+                                            <option value="international_shipping" {{ ($cost['preset'] ?? '') === 'international_shipping' ? 'selected' : '' }}>
+                                                ✈️ Flete / Envío Internacional
+                                            </option>
+                                            <option value="custom" {{ ($cost['preset'] ?? '') === 'custom' ? 'selected' : '' }}>
+                                                ✏️ Otro Cargo Personalizado
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Description --}}
+                                    <div class="col-span-12 sm:col-span-5">
+                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">{{ __('Descripción en Factura') }}</label>
+                                        <input type="text" wire:model.live.debounce.300ms="invoiceForm.costs.{{ $cIdx }}.description"
+                                               class="mt-0.5 w-full rounded-lg border border-gray-300 p-1.5 text-xs">
+                                    </div>
+
+                                    {{-- Amount & Delete --}}
+                                    <div class="col-span-12 sm:col-span-3">
+                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase text-end">{{ __('Monto ($)') }}</label>
+                                        <div class="flex items-center gap-1 mt-0.5">
+                                            <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="invoiceForm.costs.{{ $cIdx }}.amount"
+                                                   class="w-full rounded-lg border border-gray-300 p-1.5 text-xs text-end font-bold text-gray-900">
                                             <button type="button" wire:click="removeCost({{ $cIdx }})" class="text-red-400 hover:text-red-600 p-1">
                                                 <i class="fa-solid fa-trash text-xs"></i>
                                             </button>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @empty
+                                <div class="p-3 text-center text-xs text-gray-400 border border-dashed border-gray-200 rounded-xl">
+                                    {{ __('No hay cargos adicionales. Selecciona un acceso rápido del tarifador arriba.') }}
+                                </div>
+                            @endforelse
                         </div>
                     </div>
 
-                    {{-- 3. Datos del Pago (Lo que paga) --}}
+                    {{-- 4. Datos del Pago (Lo que paga) --}}
                     <div class="rounded-xl border border-gray-200/80 bg-emerald-50/40 p-4">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
-                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">3</span>
-                            {{ __('Datos de Pago y Cobro') }}
+                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">4</span>
+                            {{ __('Datos de Cobro y Pago (Lo que paga el cliente)') }}
                         </h4>
 
                         <div class="grid gap-4 sm:grid-cols-3">
@@ -315,7 +412,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Monto Pagado ($)') }}</span>
                                     <button type="button" wire:click="payFullAmount" class="text-[11px] text-emerald-700 font-bold hover:underline">
-                                        {{ __('Total') }}
+                                        {{ __('Pagar Total') }}
                                     </button>
                                 </div>
                                 <input type="number" step="0.01" min="0" wire:model.live="invoiceForm.amount_paid"
@@ -333,7 +430,7 @@
                         <div class="mt-4 grid gap-3 sm:grid-cols-3">
                             <div>
                                 <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Método de Pago') }}</label>
-                                <select wire:model="invoiceForm.payment_method" class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs">
+                                <select wire:model="invoiceForm.payment_method" class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs font-medium">
                                     <option value="zelle">Zelle</option>
                                     <option value="cash">{{ __('Efectivo (Cash)') }}</option>
                                     <option value="card">{{ __('Tarjeta de Crédito/Débito') }}</option>

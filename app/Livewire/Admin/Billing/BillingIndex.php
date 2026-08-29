@@ -10,6 +10,7 @@ use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
+use App\Services\PricingRateService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -30,6 +31,8 @@ class BillingIndex extends Component
     public bool $showPaymentModal = false;
 
     public ?int $selectedRequestId = null;
+
+    public array $rates = [];
 
     public array $invoiceForm = [
         'customer_id' => null,
@@ -54,6 +57,12 @@ class BillingIndex extends Component
         'notes' => '',
     ];
 
+    public function mount(?PricingRateService $rateService = null): void
+    {
+        $rateService ??= app(PricingRateService::class);
+        $this->rates = $rateService->getRates();
+    }
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -67,6 +76,8 @@ class BillingIndex extends Component
     public function openCreateModal(): void
     {
         $this->resetValidation();
+        $this->rates = app(PricingRateService::class)->getRates();
+
         $this->invoiceForm = [
             'customer_id' => null,
             'customer_search' => '',
@@ -79,18 +90,16 @@ class BillingIndex extends Component
                     'unit_price' => 0.0,
                 ],
             ],
-            'costs' => [
-                [
-                    'type' => 'personal_shopper',
-                    'description' => 'Comisión Personal Shopper',
-                    'amount' => 0.0,
-                ],
-            ],
+            'costs' => [],
             'amount_paid' => 0.0,
             'payment_method' => 'zelle',
             'payment_reference' => '',
             'paid_at' => now()->toDateString(),
         ];
+
+        // Add default Shopper Commission from Rate Sheet
+        $this->addQuickRateCost('shopper_commission');
+
         $this->showCreateModal = true;
     }
 
@@ -120,11 +129,13 @@ class BillingIndex extends Component
     {
         unset($this->invoiceForm['items'][$index]);
         $this->invoiceForm['items'] = array_values($this->invoiceForm['items']);
+        $this->syncShopperCommissionRates();
     }
 
     public function addCost(): void
     {
         $this->invoiceForm['costs'][] = [
+            'preset' => 'custom',
             'type' => 'other',
             'description' => '',
             'amount' => 0.0,
@@ -137,15 +148,203 @@ class BillingIndex extends Component
         $this->invoiceForm['costs'] = array_values($this->invoiceForm['costs']);
     }
 
-    public function getInvoicedTotalProperty(): float
+    public function getProductsSubtotalProperty(): float
     {
-        $itemsTotal = 0.0;
+        $subtotal = 0.0;
         foreach ($this->invoiceForm['items'] as $item) {
             $qty = (int) ($item['quantity'] ?? 1);
             $price = (float) ($item['unit_price'] ?? 0);
-            $itemsTotal += ($qty * $price);
+            $subtotal += ($qty * $price);
         }
 
+        return (float) $subtotal;
+    }
+
+    public function getShopperCommissionCalculationProperty(): array
+    {
+        $subtotal = $this->productsSubtotal;
+        $tiers = $this->rates['shopper_tiers'] ?? [];
+
+        $matchedTier = null;
+        foreach ($tiers as $tier) {
+            $min = (float) ($tier['min'] ?? 0);
+            $max = $tier['max'] !== null && $tier['max'] !== '' ? (float) $tier['max'] : null;
+
+            if ($max !== null) {
+                if ($subtotal >= $min && $subtotal <= $max) {
+                    $matchedTier = $tier;
+                    break;
+                }
+            } else {
+                if ($subtotal >= $min) {
+                    $matchedTier = $tier;
+                    break;
+                }
+            }
+        }
+
+        // Fallback to first tier if subtotal < min or none matched
+        if (! $matchedTier && ! empty($tiers)) {
+            $matchedTier = $tiers[0];
+        }
+
+        $percent = (float) ($matchedTier['percent'] ?? 20.0);
+        $stores = (int) ($matchedTier['stores'] ?? 2);
+        $hours = (int) ($matchedTier['hours'] ?? 2);
+        $amount = round($subtotal * ($percent / 100), 2);
+
+        return [
+            'percent' => $percent,
+            'stores' => $stores,
+            'hours' => $hours,
+            'amount' => $amount,
+            'tier' => $matchedTier,
+        ];
+    }
+
+    public function applyRatePreset(int $index, string $presetKey): void
+    {
+        if (! isset($this->invoiceForm['costs'][$index])) {
+            return;
+        }
+
+        $subtotal = $this->productsSubtotal;
+        $calc = $this->shopperCommissionCalculation;
+
+        switch ($presetKey) {
+            case 'shopper_commission':
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'shopper_commission',
+                    'type' => 'shopper_fee',
+                    'description' => "Comisión Personal Shopper ({$calc['percent']}% - {$calc['stores']} tiendas / {$calc['hours']} hrs)",
+                    'amount' => $calc['amount'],
+                ];
+                break;
+
+            case 'box_small':
+                $rate = (float) ($this->rates['box_small_heavy_duty'] ?? 15.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'box_small',
+                    'type' => 'packing_fee',
+                    'description' => '1 Caja Small Heavy Duty',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'box_medium':
+                $rate = (float) ($this->rates['box_medium_heavy_duty'] ?? 20.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'box_medium',
+                    'type' => 'packing_fee',
+                    'description' => '1 Caja Mediana Heavy Duty',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'box_large':
+                $rate = (float) ($this->rates['box_large_heavy_duty'] ?? 25.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'box_large',
+                    'type' => 'packing_fee',
+                    'description' => '1 Caja Larga Heavy Duty',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'extra_store':
+                $rate = (float) ($this->rates['extra_store_fee'] ?? 20.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'extra_store',
+                    'type' => 'shopper_fee',
+                    'description' => 'Visita a Tienda Adicional',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'warehouse_commission':
+                $pct = (float) ($this->rates['warehouse_percent'] ?? 15.0);
+                $amt = round($subtotal * ($pct / 100), 2);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'warehouse_commission',
+                    'type' => 'receiving_fee',
+                    'description' => "Comisión Almacén / Compras Online ({$pct}%)",
+                    'amount' => $amt,
+                ];
+                break;
+
+            case 'warehouse_delivery':
+                $rate = (float) ($this->rates['warehouse_delivery_fee'] ?? 20.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'warehouse_delivery',
+                    'type' => 'receiving_fee',
+                    'description' => 'Llevar caja al Almacén',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'monthly_storage':
+                $rate = (float) ($this->rates['monthly_storage_fee'] ?? 15.0);
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'monthly_storage',
+                    'type' => 'other',
+                    'description' => 'Almacenaje (1 mes tras 30 días)',
+                    'amount' => $rate,
+                ];
+                break;
+
+            case 'international_shipping':
+                $this->invoiceForm['costs'][$index] = [
+                    'preset' => 'international_shipping',
+                    'type' => 'international_shipping',
+                    'description' => 'Flete / Envío Internacional',
+                    'amount' => 0.0,
+                ];
+                break;
+
+            default:
+                $this->invoiceForm['costs'][$index]['preset'] = 'custom';
+                break;
+        }
+    }
+
+    public function addQuickRateCost(string $presetKey): void
+    {
+        $this->invoiceForm['costs'][] = [
+            'preset' => $presetKey,
+            'type' => 'other',
+            'description' => '',
+            'amount' => 0.0,
+        ];
+
+        $newIndex = count($this->invoiceForm['costs']) - 1;
+        $this->applyRatePreset($newIndex, $presetKey);
+    }
+
+    public function syncShopperCommissionRates(): void
+    {
+        $calc = $this->shopperCommissionCalculation;
+        $subtotal = $this->productsSubtotal;
+
+        foreach ($this->invoiceForm['costs'] as $index => $cost) {
+            $preset = $cost['preset'] ?? '';
+            if ($preset === 'shopper_commission') {
+                $this->invoiceForm['costs'][$index]['description'] = "Comisión Personal Shopper ({$calc['percent']}% - {$calc['stores']} tiendas / {$calc['hours']} hrs)";
+                $this->invoiceForm['costs'][$index]['amount'] = $calc['amount'];
+            } elseif ($preset === 'warehouse_commission') {
+                $pct = (float) ($this->rates['warehouse_percent'] ?? 15.0);
+                $this->invoiceForm['costs'][$index]['amount'] = round($subtotal * ($pct / 100), 2);
+            }
+        }
+    }
+
+    public function updatedInvoiceFormItems(): void
+    {
+        $this->syncShopperCommissionRates();
+    }
+
+    public function getInvoicedTotalProperty(): float
+    {
+        $itemsTotal = $this->productsSubtotal;
         $costsTotal = 0.0;
         foreach ($this->invoiceForm['costs'] as $cost) {
             $costsTotal += (float) ($cost['amount'] ?? 0);
@@ -216,7 +415,7 @@ class BillingIndex extends Component
             }
         }
 
-        // Add additional cost items
+        // Add additional cost items (Personal shopper, boxes, fees from rate sheet)
         foreach ($this->invoiceForm['costs'] as $cost) {
             $amount = (float) ($cost['amount'] ?? 0);
             if ($amount > 0) {
@@ -250,7 +449,7 @@ class BillingIndex extends Component
         }
 
         $this->showCreateModal = false;
-        $this->swalSuccess(__('Factura :number creada correctamente con sus productos y pago.', ['number' => $purchaseRequest->number]));
+        $this->swalSuccess(__('Factura :number creada correctamente con sus productos y tarifas aplicadas.', ['number' => $purchaseRequest->number]));
     }
 
     public function openPaymentModal(int $requestId): void

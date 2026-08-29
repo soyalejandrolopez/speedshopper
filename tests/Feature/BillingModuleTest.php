@@ -73,6 +73,36 @@ test('admin can create a full invoice with customer, products, and initial payme
         ->and($payment->reference)->toBe('ZELLE-9988');
 });
 
+test('billing component automatically fetches charges and calculates commission from rate sheet', function () {
+    $admin = createAdmin();
+
+    $component = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        // Set product: 2 x $250 = $500 total (Falls in Tier 1: $100-$699 @ 20%)
+        ->set('invoiceForm.items.0.quantity', 2)
+        ->set('invoiceForm.items.0.unit_price', 250.0)
+        ->call('syncShopperCommissionRates');
+
+    // Commission should be 20% of 500 = $100
+    expect($component->get('productsSubtotal'))->toBe(500.0)
+        ->and((float) $component->get('invoiceForm.costs.0.amount'))->toBe(100.0);
+
+    // Quick add box small and extra store
+    $component->call('addQuickRateCost', 'box_small')
+        ->call('addQuickRateCost', 'extra_store');
+
+    $costs = $component->get('invoiceForm.costs');
+    expect($costs)->toHaveCount(3)
+        ->and((float) $costs[1]['amount'])->toBe(15.0)
+        ->and($costs[1]['description'])->toBe('1 Caja Small Heavy Duty')
+        ->and((float) $costs[2]['amount'])->toBe(20.0)
+        ->and($costs[2]['description'])->toBe('Visita a Tienda Adicional');
+
+    // Total invoiced should be 500 (products) + 100 (shopper) + 15 (box) + 20 (store) = 635.0
+    expect((float) $component->get('invoicedTotal'))->toBe(635.0);
+});
+
 test('admin can record an abono payment to an invoice from billing index', function () {
     $admin = createAdmin();
     $customer = Customer::factory()->create();
