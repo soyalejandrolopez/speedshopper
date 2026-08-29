@@ -6,8 +6,11 @@ use App\Enums\CostType;
 use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
+use App\Models\User;
 use App\Services\AdminNotifier;
 use App\Services\PricingRateService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class PublicRequestForm extends Component
@@ -16,6 +19,9 @@ class PublicRequestForm extends Component
         'name' => '',
         'email' => '',
         'whatsapp' => '',
+        'create_account' => false,
+        'password' => '',
+        'password_confirmation' => '',
     ];
 
     /** @var array<int, array{product_name: string, product_url: string, description: string, quantity: int}> */
@@ -82,6 +88,7 @@ class PublicRequestForm extends Component
         }
     }
 
+    /** @return array{product_name: string, product_url: string, description: string, quantity: int} */
     protected function emptyItem(): array
     {
         return [
@@ -94,10 +101,15 @@ class PublicRequestForm extends Component
 
     protected function rules(): array
     {
+        $hasAccountCreation = ! empty($this->form['create_account']);
+
         return [
             'form.name' => ['required', 'string', 'max:255'],
             'form.email' => ['required', 'email', 'max:255'],
             'form.whatsapp' => ['nullable', 'string', 'max:50'],
+            'form.create_account' => ['nullable', 'boolean'],
+            'form.password' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:8', 'same:form.password_confirmation'],
+            'form.password_confirmation' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:8'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_name' => ['required', 'string', 'max:255'],
             'items.*.product_url' => ['nullable', 'url:http,https', 'max:2048'],
@@ -115,6 +127,8 @@ class PublicRequestForm extends Component
             'form.name' => __('name'),
             'form.email' => __('email'),
             'form.whatsapp' => __('phone or WhatsApp'),
+            'form.password' => __('password'),
+            'form.password_confirmation' => __('confirm password'),
         ];
 
         foreach ($this->items as $index => $item) {
@@ -167,6 +181,28 @@ class PublicRequestForm extends Component
                 'registered_at' => today(),
             ]
         );
+
+        // Create User Account if requested
+        if (! empty($validated['form']['create_account']) && ! empty($validated['form']['password'])) {
+            $user = User::where('email', $validated['form']['email'])->first();
+            if (! $user) {
+                $user = User::create([
+                    'name' => $validated['form']['name'],
+                    'email' => $validated['form']['email'],
+                    'password' => Hash::make($validated['form']['password']),
+                    'phone' => $validated['form']['whatsapp'] ?? null,
+                    'whatsapp' => $validated['form']['whatsapp'] ?? null,
+                ]);
+                $user->assignRole('client');
+            }
+            $customer->update(['user_id' => $user->id]);
+
+            if (! Auth::check()) {
+                Auth::login($user);
+            }
+        } elseif (Auth::check()) {
+            $customer->update(['user_id' => Auth::id()]);
+        }
 
         $rates = $this->rates;
         $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);

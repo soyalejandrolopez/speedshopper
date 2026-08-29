@@ -6,8 +6,11 @@ use App\Enums\CostType;
 use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
+use App\Models\User;
 use App\Services\AdminNotifier;
 use App\Services\PricingRateService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class ClientRegistrationForm extends Component
@@ -23,6 +26,9 @@ class ClientRegistrationForm extends Component
         'country' => 'VE',
         'city' => '',
         'address' => '',
+        'create_account' => false,
+        'password' => '',
+        'password_confirmation' => '',
         'services' => [],
         'products' => '',
         'preferred_stores' => '',
@@ -130,6 +136,29 @@ class ClientRegistrationForm extends Component
             ]
         );
 
+        // Create User Account if requested
+        if (! empty($this->form['create_account']) && ! empty($this->form['password'])) {
+            $user = User::where('email', $this->form['email'])->first();
+            if (! $user) {
+                $user = User::create([
+                    'name' => $this->form['name'],
+                    'email' => $this->form['email'],
+                    'password' => Hash::make($this->form['password']),
+                    'phone' => $this->form['whatsapp'] ?: null,
+                    'whatsapp' => $this->form['whatsapp'] ?: null,
+                    'country' => $this->form['country'] ?: null,
+                ]);
+                $user->assignRole('client');
+            }
+            $customer->update(['user_id' => $user->id]);
+
+            if (! Auth::check()) {
+                Auth::login($user);
+            }
+        } elseif (Auth::check()) {
+            $customer->update(['user_id' => Auth::id()]);
+        }
+
         $smallCount = max(0, (int) ($this->form['boxes_small'] ?? 0));
         $mediumCount = max(0, (int) ($this->form['boxes_medium'] ?? 0));
         $largeCount = max(0, (int) ($this->form['boxes_large'] ?? 0));
@@ -231,7 +260,10 @@ class ClientRegistrationForm extends Component
     public function validateStep(int $step): void
     {
         $fields = match ($step) {
-            1 => ['form.name', 'form.whatsapp', 'form.email', 'form.country', 'form.city', 'form.address', 'form.services'],
+            1 => array_merge(
+                ['form.name', 'form.whatsapp', 'form.email', 'form.country', 'form.city', 'form.address', 'form.services', 'form.create_account'],
+                ! empty($this->form['create_account']) ? ['form.password', 'form.password_confirmation'] : []
+            ),
             2 => [
                 'form.products', 'form.preferred_stores', 'form.budget', 'form.has_links',
                 'form.product_links', 'form.find_deals', 'form.already_purchased', 'form.store_name',
@@ -252,6 +284,8 @@ class ClientRegistrationForm extends Component
     /** @return array<string, array<int, mixed>> */
     protected function rules(): array
     {
+        $hasAccountCreation = ! empty($this->form['create_account']);
+
         return [
             'form.name' => ['required', 'string', 'max:255'],
             'form.whatsapp' => ['required', 'string', 'max:50'],
@@ -259,6 +293,9 @@ class ClientRegistrationForm extends Component
             'form.country' => ['required', 'string', 'max:2'],
             'form.city' => ['nullable', 'string', 'max:255'],
             'form.address' => ['nullable', 'string', 'max:500'],
+            'form.create_account' => ['nullable', 'boolean'],
+            'form.password' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:8', 'same:form.password_confirmation'],
+            'form.password_confirmation' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:8'],
             'form.services' => ['required', 'array', 'min:1'],
             'form.services.*' => ['string'],
             'form.products' => ['required', 'string', 'max:2000'],

@@ -1,13 +1,29 @@
 <div wire:key="client-registration-form">
     @if ($sent)
-        <div class="flex flex-col items-center px-6 py-12 text-center">
-            <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+        <div class="flex flex-col items-center px-6 py-10 text-center">
+            <span class="relative flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 shadow-sm">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-200 opacity-60"></span>
                 <i class="fa-solid fa-check text-3xl relative text-emerald-600"></i>
             </span>
-            <h3 class="mt-4 text-lg font-bold text-gray-900">{{ __('Request sent successfully') }}</h3>
-            <p class="mt-1 max-w-xs text-sm text-gray-500">{{ __('We will contact you soon') }}</p>
-            <button type="button" wire:click="resetForm" class="btn-ghost mt-6">{{ __('Start over') }}</button>
+            <h3 class="mt-4 text-xl font-extrabold text-gray-900">{{ __('Request sent successfully') }}</h3>
+            <p class="mt-1 max-w-sm text-sm text-gray-600">
+                {{ __('Hemos recibido tu solicitud y te contactaremos en breve.') }}
+            </p>
+
+            @auth
+                <div class="mt-6 flex flex-col sm:flex-row items-center gap-3">
+                    <a href="{{ route('portal.dashboard') }}" wire:navigate class="btn-primary">
+                        <i class="fa-solid fa-gauge text-base"></i>
+                        {{ __('Ir a mi Portal de Clientes') }}
+                    </a>
+                    <button type="button" wire:click="resetForm" class="btn-ghost">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                        {{ __('Enviar otra solicitud') }}
+                    </button>
+                </div>
+            @else
+                <button type="button" wire:click="resetForm" class="btn-ghost mt-6">{{ __('Start over') }}</button>
+            @endauth
         </div>
     @else
         <div class="mb-5">
@@ -82,6 +98,54 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Sección opcional para crear cuenta de usuario --}}
+                @guest
+                    <div class="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-teal-50/40 p-4 shadow-xs">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" wire:model.live="form.create_account" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            <div>
+                                <span class="text-sm font-bold text-gray-900">{{ __('Crear mi cuenta de usuario para acceder al Portal') }}</span>
+                                <p class="text-xs text-gray-500 mt-0.5">{{ __('Podrás iniciar sesión en cualquier momento para ver tus compras, cotizaciones, paquetes y facturas.') }}</p>
+                            </div>
+                        </label>
+
+                        @if (! empty($form['create_account']))
+                            <div class="mt-4 grid gap-3 sm:grid-cols-2 pt-3 border-t border-emerald-100" x-data="{ showPass: false, showConfirm: false }">
+                                <div>
+                                    <label class="label flex items-center gap-1.5" for="form_password">
+                                        <i class="fa-solid fa-lock text-emerald-600 text-xs"></i>
+                                        <span>{{ __('Password') }} *</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input id="form_password" name="password" :type="showPass ? 'text' : 'password'" wire:model="form.password"
+                                               class="input pe-10" placeholder="••••••••">
+                                        <button type="button" @click="showPass = ! showPass" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-gray-600">
+                                            <i x-show="! showPass" class="fa-solid fa-eye text-xs"></i>
+                                            <i x-show="showPass" x-cloak class="fa-solid fa-eye-slash text-xs"></i>
+                                        </button>
+                                    </div>
+                                    @error('form.password') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label class="label flex items-center gap-1.5" for="form_password_confirmation">
+                                        <i class="fa-solid fa-shield text-emerald-600 text-xs"></i>
+                                        <span>{{ __('Confirm Password') }} *</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input id="form_password_confirmation" name="password_confirmation" :type="showConfirm ? 'text' : 'password'" wire:model="form.password_confirmation"
+                                               class="input pe-10" placeholder="••••••••">
+                                        <button type="button" @click="showConfirm = ! showConfirm" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-gray-600">
+                                            <i x-show="! showConfirm" class="fa-solid fa-eye text-xs"></i>
+                                            <i x-show="showConfirm" x-cloak class="fa-solid fa-eye-slash text-xs"></i>
+                                        </button>
+                                    </div>
+                                    @error('form.password_confirmation') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @endguest
 
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('What service do you need?') }} *</h3>

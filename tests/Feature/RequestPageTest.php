@@ -5,6 +5,7 @@ use App\Livewire\ClientRegistrationForm;
 use App\Livewire\PublicRequestForm;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
+use App\Models\User;
 use Livewire\Livewire;
 
 it('renders the request page with header, footer and the registration form', function () {
@@ -331,4 +332,69 @@ it('calculates packaging sum and creates cost items in PublicRequestForm', funct
         ->and($request->services)->toContain('packing')
         ->and((float) $request->total_cost)->toBe(40.0)
         ->and($request->costItems)->toHaveCount(2);
+});
+
+it('allows customer to create a user account during ClientRegistrationForm submission', function () {
+    seedRoles();
+
+    expect(auth()->check())->toBeFalse();
+
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Carlos Mendoza')
+        ->set('form.whatsapp', '+50255553333')
+        ->set('form.email', 'carlos.mendoza@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.services', ['personal_shopper'])
+        ->set('form.create_account', true)
+        ->set('form.password', 'secret1234')
+        ->set('form.password_confirmation', 'secret1234')
+        ->call('next')
+        ->set('form.products', 'MacBook Air M2')
+        ->call('next')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('sent', true);
+
+    expect(auth()->check())->toBeTrue();
+
+    $user = User::where('email', 'carlos.mendoza@example.com')->first();
+    expect($user)->not->toBeNull()
+        ->and($user->hasRole('client'))->toBeTrue()
+        ->and(auth()->id())->toBe($user->id);
+
+    $customer = Customer::where('email', 'carlos.mendoza@example.com')->first();
+    expect($customer)->not->toBeNull()
+        ->and($customer->user_id)->toBe($user->id);
+});
+
+it('allows customer to create a user account during PublicRequestForm submission', function () {
+    seedRoles();
+
+    expect(auth()->check())->toBeFalse();
+
+    Livewire::test(PublicRequestForm::class)
+        ->set('form.name', 'Elena Rojas')
+        ->set('form.email', 'elena.rojas@example.com')
+        ->set('form.whatsapp', '+50255554444')
+        ->set('form.create_account', true)
+        ->set('form.password', 'secret1234')
+        ->set('form.password_confirmation', 'secret1234')
+        ->set('items.0.product_name', 'Kindle Paperwhite')
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('sent', true);
+
+    expect(auth()->check())->toBeTrue();
+
+    $user = User::where('email', 'elena.rojas@example.com')->first();
+    expect($user)->not->toBeNull()
+        ->and($user->hasRole('client'))->toBeTrue()
+        ->and(auth()->id())->toBe($user->id);
+
+    $customer = Customer::where('email', 'elena.rojas@example.com')->first();
+    expect($customer)->not->toBeNull()
+        ->and($customer->user_id)->toBe($user->id);
 });
