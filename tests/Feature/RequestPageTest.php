@@ -398,3 +398,31 @@ it('allows customer to create a user account during PublicRequestForm submission
     expect($customer)->not->toBeNull()
         ->and($customer->user_id)->toBe($user->id);
 });
+
+it('accepts 4 character minimum password in registration form and rejects less than 4', function () {
+    seedRoles();
+
+    // Less than 4 characters should fail validation
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Mario Bros')
+        ->set('form.whatsapp', '+50255551111')
+        ->set('form.email', 'mario@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.create_account', true)
+        ->set('form.password', '123')
+        ->set('form.password_confirmation', '123')
+        ->call('next')
+        ->assertHasErrors(['form.password' => 'min']);
+
+    // 4 characters should pass validation
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Mario Bros')
+        ->set('form.whatsapp', '+50255551111')
+        ->set('form.email', 'mario@example.com')
+        ->set('form.country', 'GT')
+        ->set('form.create_account', true)
+        ->set('form.password', '1234')
+        ->set('form.password_confirmation', '1234')
+        ->call('next')
+        ->assertHasNoErrors(['form.password', 'form.password_confirmation']);
+});
