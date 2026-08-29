@@ -89,6 +89,12 @@
                         {{ __('Payments') }}
                     </a>
 
+                    <a href="{{ route('admin.billing.index') }}" wire:navigate
+                       class="sidebar-link {{ request()->routeIs('admin.billing.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
+                        <i class="fa-solid fa-file-invoice-dollar text-xl w-5 text-center"></i>
+                        {{ __('Facturación') }}
+                    </a>
+
                     <a href="{{ route('admin.inquiries.index') }}" wire:navigate
                        class="sidebar-link {{ request()->routeIs('admin.inquiries.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
                         <i class="fa-solid fa-envelope text-xl w-5 text-center"></i>
@@ -190,6 +196,7 @@
                 ['label' => __('Packages'), 'url' => route('admin.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('admin.packages.*'), 'navigate' => true],
                 ['label' => __('Shipments'), 'url' => route('admin.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('admin.shipments.*'), 'navigate' => true],
                 ['label' => __('Payments'), 'url' => route('admin.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('admin.payments.*'), 'navigate' => true],
+                ['label' => __('Facturación'), 'url' => route('admin.billing.index'), 'icon' => 'fa-solid fa-file-invoice-dollar', 'active' => request()->routeIs('admin.billing.*'), 'navigate' => true],
                 ['label' => __('Reports'), 'url' => route('admin.reports.index'), 'icon' => 'fa-solid fa-chart-simple', 'active' => request()->routeIs('admin.reports.*'), 'navigate' => true],
                 ['label' => __('Mail'), 'url' => route('admin.mail.index'), 'icon' => 'fa-solid fa-paper-plane', 'active' => request()->routeIs('admin.mail.*'), 'navigate' => true],
                 ['label' => __('Settings'), 'url' => route('admin.settings.index'), 'icon' => 'fa-solid fa-gear', 'active' => request()->routeIs('admin.settings.*'), 'navigate' => true],

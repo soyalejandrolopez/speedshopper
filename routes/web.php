@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PricingPdfController;
 use App\Http\Controllers\PrintController;
+use App\Livewire\Admin\Billing\BillingIndex;
 use App\Livewire\Admin\Customers\CustomerShow;
 use App\Livewire\Admin\Customers\CustomersIndex;
 use App\Livewire\Admin\Dashboard;
@@ -17,6 +18,7 @@ use App\Livewire\Admin\Requests\RequestsIndex;
 use App\Livewire\Admin\Settings\SettingsIndex;
 use App\Livewire\Admin\Shipments\ShipmentShow;
 use App\Livewire\Admin\Shipments\ShipmentsIndex;
+use App\Livewire\Portal\Billing\PortalBillingIndex;
 use App\Livewire\Portal\Packages\MyPackages;
 use App\Livewire\Portal\Payments\MyPayments;
 use App\Livewire\Portal\PortalDashboard;
@@ -69,6 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/payments', PaymentsIndex::class)->name('payments.index');
         Route::get('/payments/{payment}', PaymentShow::class)->name('payments.show');
 
+        Route::get('/facturacion', BillingIndex::class)->name('billing.index');
+
         Route::get('/inquiries', InquiriesIndex::class)->name('inquiries.index');
 
         Route::get('/mail', MailCompose::class)->name('mail.index');
@@ -87,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/packages', MyPackages::class)->name('packages.index');
         Route::get('/shipments', MyShipments::class)->name('shipments.index');
         Route::get('/payments', MyPayments::class)->name('payments.index');
+        Route::get('/facturacion', PortalBillingIndex::class)->name('billing.index');
     });
 });
 

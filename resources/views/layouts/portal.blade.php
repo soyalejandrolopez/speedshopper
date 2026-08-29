@@ -78,6 +78,12 @@
                         <i class="fa-solid fa-credit-card text-xl w-5 text-center"></i>
                         {{ __('My Payments') }}
                     </a>
+
+                    <a href="{{ route('portal.billing.index') }}" wire:navigate
+                       class="sidebar-link {{ request()->routeIs('portal.billing.*') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
+                        <i class="fa-solid fa-file-invoice-dollar text-xl w-5 text-center"></i>
+                        {{ __('Facturación') }}
+                    </a>
                 </nav>
             </aside>
 
@@ -142,6 +148,7 @@
                 ['label' => __('Packages'), 'url' => route('portal.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('portal.packages.*'), 'navigate' => true],
                 ['label' => __('Shipments'), 'url' => route('portal.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('portal.shipments.*'), 'navigate' => true],
                 ['label' => __('Payments'), 'url' => route('portal.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('portal.payments.*'), 'navigate' => true],
+                ['label' => __('Facturación'), 'url' => route('portal.billing.index'), 'icon' => 'fa-solid fa-file-invoice-dollar', 'active' => request()->routeIs('portal.billing.*'), 'navigate' => true],
             ];
         @endphp
 
