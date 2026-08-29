@@ -136,8 +136,8 @@ class ClientRegistrationForm extends Component
             ]
         );
 
-        // Create User Account if requested
-        if (! empty($this->form['create_account']) && ! empty($this->form['password'])) {
+        // Create User Account if password provided
+        if (! empty($this->form['password'])) {
             $user = User::where('email', $this->form['email'])->first();
             if (! $user) {
                 $user = User::create([
@@ -274,10 +274,10 @@ class ClientRegistrationForm extends Component
     public function validateStep(int $step): void
     {
         $fields = match ($step) {
-            1 => array_merge(
-                ['form.name', 'form.whatsapp', 'form.email', 'form.country', 'form.city', 'form.address', 'form.services', 'form.create_account'],
-                ! empty($this->form['create_account']) ? ['form.password', 'form.password_confirmation'] : []
-            ),
+            1 => [
+                'form.name', 'form.whatsapp', 'form.email', 'form.country', 'form.city', 'form.address', 'form.services', 'form.create_account',
+                'form.password', 'form.password_confirmation',
+            ],
             2 => [
                 'form.products', 'form.preferred_stores', 'form.budget', 'form.has_links',
                 'form.product_links', 'form.find_deals', 'form.already_purchased', 'form.store_name',
@@ -298,7 +298,7 @@ class ClientRegistrationForm extends Component
     /** @return array<string, array<int, mixed>> */
     protected function rules(): array
     {
-        $hasAccountCreation = ! empty($this->form['create_account']);
+        $hasPassword = ! empty($this->form['password']);
 
         return [
             'form.name' => ['required', 'string', 'max:255'],
@@ -308,8 +308,8 @@ class ClientRegistrationForm extends Component
             'form.city' => ['nullable', 'string', 'max:255'],
             'form.address' => ['nullable', 'string', 'max:500'],
             'form.create_account' => ['nullable', 'boolean'],
-            'form.password' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:4', 'same:form.password_confirmation'],
-            'form.password_confirmation' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:4'],
+            'form.password' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4', 'same:form.password_confirmation'],
+            'form.password_confirmation' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4'],
             'form.services' => ['required', 'array', 'min:1'],
             'form.services.*' => ['string'],
             'form.products' => ['required', 'string', 'max:2000'],

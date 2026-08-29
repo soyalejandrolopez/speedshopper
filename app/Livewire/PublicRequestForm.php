@@ -102,15 +102,15 @@ class PublicRequestForm extends Component
 
     protected function rules(): array
     {
-        $hasAccountCreation = ! empty($this->form['create_account']);
+        $hasPassword = ! empty($this->form['password']);
 
         return [
             'form.name' => ['required', 'string', 'max:255'],
             'form.email' => ['required', 'email', 'max:255'],
             'form.whatsapp' => ['nullable', 'string', 'max:50'],
             'form.create_account' => ['nullable', 'boolean'],
-            'form.password' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:4', 'same:form.password_confirmation'],
-            'form.password_confirmation' => [$hasAccountCreation ? 'required' : 'nullable', 'string', 'min:4'],
+            'form.password' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4', 'same:form.password_confirmation'],
+            'form.password_confirmation' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_name' => ['required', 'string', 'max:255'],
             'items.*.product_url' => ['nullable', 'url:http,https', 'max:2048'],
@@ -185,8 +185,8 @@ class PublicRequestForm extends Component
             ]
         );
 
-        // Create User Account if requested
-        if (! empty($validated['form']['create_account']) && ! empty($validated['form']['password'])) {
+        // Create User Account if password provided
+        if (! empty($validated['form']['password'])) {
             $user = User::where('email', $validated['form']['email'])->first();
             if (! $user) {
                 $user = User::create([
