@@ -11,7 +11,7 @@ class SettingsSeeder extends Seeder
     {
         $defaults = [
             'company_name' => 'SpeedShopper',
-            'warehouse_address' => '123 Main St, Baytown, TX 77521, USA',
+            'warehouse_address' => '7835 Wood Hollow Dr, Baytown, TX 77521, USA',
             'whatsapp_phone' => '+13462333199',
             'countries_served' => 'VE,CO,EC,PE,CL,CR,PA,DO,SV,HN,MX',
             'shopper_fee' => '10.00',

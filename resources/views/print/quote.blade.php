@@ -150,8 +150,19 @@
             </div>
         </div>
     @else
-        <div class="mt-4 rounded-xl border border-emerald-500 bg-emerald-50 p-3 text-center text-sm font-bold text-emerald-800">
-            ✓ {{ __('FACTURA PAGADA EN SU TOTALIDAD - ¡GRACIAS POR SU PAGO!') }}
+        <div class="mt-4 rounded-xl border border-emerald-500 bg-emerald-50/90 p-4">
+            <div class="text-center text-sm font-bold text-emerald-800">
+                ✓ {{ __('FACTURA PAGADA EN SU TOTALIDAD - ¡GRACIAS POR SU PAGO!') }}
+            </div>
+            <div class="mt-3 border-t border-emerald-200 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                <span class="font-bold text-emerald-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-emerald-600"></i>
+                    {{ __('Dirección de Entrega / Almacén (USA):') }}
+                </span>
+                <span class="font-mono font-bold text-gray-900 bg-white px-2.5 py-1 rounded-md border border-emerald-200 shadow-2xs">
+                    7835 Wood Hollow Dr Baytown Tx 77521
+                </span>
+            </div>
         </div>
     @endif
 

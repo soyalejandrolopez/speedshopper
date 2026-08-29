@@ -273,7 +273,7 @@
                 <div class="info-card">
                     <div class="info-card-title">{{ $locale === 'es' ? 'Emisor (Empresa)' : 'Issued By' }}</div>
                     <strong>{{ $companyName }}</strong><br>
-                    {{ $warehouseAddress }}<br>
+                    {{ $isPaid ? '7835 Wood Hollow Dr Baytown Tx 77521' : $warehouseAddress }}<br>
                     @if ($companyEmail)
                         {{ $companyEmail }}<br>
                     @endif
@@ -438,11 +438,21 @@
             </tr>
         </table>
     @else
-        <!-- Paid in full banner -->
-        <div style="margin-top: 10px; background-color: #ecfdf5; border: 1px solid #059669; border-radius: 6px; padding: 8px 12px; text-align: center;">
-            <span style="font-size: 12px; font-weight: bold; color: #047857; letter-spacing: 0.5px;">
+        <!-- Paid in full banner with address -->
+        <div style="margin-top: 10px; background-color: #ecfdf5; border: 1.5px solid #059669; border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11.5px; font-weight: bold; color: #047857; letter-spacing: 0.5px; text-align: center; margin-bottom: 6px;">
                 ✓ {{ $locale === 'es' ? 'FACTURA PAGADA EN SU TOTALIDAD - ¡GRACIAS POR SU PAGO!' : 'INVOICE PAID IN FULL - THANK YOU!' }}
-            </span>
+            </div>
+            <table style="width: 100%; border-top: 1px dashed #a7f3d0; padding-top: 6px; margin-top: 4px; font-size: 10.5px;">
+                <tr>
+                    <td style="font-weight: bold; color: #065f46; width: 42%;">
+                        📍 {{ $locale === 'es' ? 'Dirección de Entrega / Almacén:' : 'Delivery / Warehouse Address:' }}
+                    </td>
+                    <td style="font-weight: bold; color: #111827; width: 58%;">
+                        7835 Wood Hollow Dr Baytown Tx 77521
+                    </td>
+                </tr>
+            </table>
         </div>
     @endif
 

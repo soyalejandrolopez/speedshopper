@@ -510,6 +510,52 @@ test('invoice pdf renders payment methods and instructions for pending and quote
     expect($printHtml)->toContain('Gomez.Lilibeth1977@gmail.com')
         ->and($printHtml)->toContain('@speedingshopper')
         ->and($printHtml)->toContain('MÉTODOS DE PAGO DISPONIBLES');
+
+    // Test paid invoice rendering includes 7835 Wood Hollow Dr Baytown Tx 77521
+    $paidRequest = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Purchased,
+        'unit_price' => 200.0,
+        'quantity' => 1,
+    ]);
+
+    $paidPdfHtml = view('pdf.invoice-pdf', [
+        'request' => $paidRequest,
+        'locale' => 'es',
+        'companyName' => 'Speed Shopper',
+        'companyEmail' => 'info@speedshopper.com',
+        'warehouseAddress' => '7835 Wood Hollow Dr, Baytown, TX 77521, USA',
+        'whatsappPhone' => '+1 (555) 000-0000',
+        'logoBase64' => null,
+        'qrDataUri' => null,
+        'paymentImageBase64' => null,
+        'totalCost' => 200.0,
+        'paidAmount' => 200.0,
+        'balance' => 0.0,
+        'generatedAt' => now(),
+    ])->render();
+
+    expect($paidPdfHtml)->toContain('7835 Wood Hollow Dr Baytown Tx 77521')
+        ->and($paidPdfHtml)->toContain('FACTURA PAGADA EN SU TOTALIDAD');
+
+    $paidPrintHtml = view('print.quote', [
+        'request' => $paidRequest->load(['customer', 'costItems']),
+    ])->render();
+
+    expect($paidPrintHtml)->toContain('7835 Wood Hollow Dr Baytown Tx 77521')
+        ->and($paidPrintHtml)->toContain('FACTURA PAGADA EN SU TOTALIDAD');
+
+    $paidMailHtml = view('mail.invoice-created-mail', [
+        'purchaseRequest' => $paidRequest,
+        'locale' => 'es',
+        'companyName' => 'Speed Shopper',
+        'totalCost' => 200.0,
+        'paidAmount' => 200.0,
+        'balance' => 0.0,
+        'isUpdate' => false,
+    ])->render();
+
+    expect($paidMailHtml)->toContain('7835 Wood Hollow Dr Baytown Tx 77521');
 });
 
 test('updating an invoice automatically sends updated email to customer and admin', function () {

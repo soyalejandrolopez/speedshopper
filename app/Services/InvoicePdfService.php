@@ -20,7 +20,7 @@ class InvoicePdfService
         $request = $purchaseRequest->load(['customer', 'costItems']);
 
         $companyName = Setting::get('company_name', 'Speed Shopper');
-        $warehouseAddress = Setting::get('warehouse_address', 'Miami, FL');
+        $warehouseAddress = Setting::get('warehouse_address', '7835 Wood Hollow Dr, Baytown, TX 77521, USA');
         $whatsappPhone = Setting::get('whatsapp_phone', '+1 (555) 000-0000');
         $companyEmail = Setting::get('company_email', config('mail.from.address'));
         $logoPath = Setting::get('logo_path');

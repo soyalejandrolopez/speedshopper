@@ -135,6 +135,23 @@
                     </div>
                 @endif
 
+                {{-- Warehouse Address Box (When Paid) --}}
+                @if ($isPaid)
+                    <div style="background-color: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 8px; padding: 14px 16px; margin: 20px 0;">
+                        <p style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #065f46; margin: 0 0 6px 0; letter-spacing: 0.5px;">
+                            📍 {{ $locale === 'es' ? 'Dirección de Entrega y Almacén (USA):' : 'USA Delivery & Warehouse Address:' }}
+                        </p>
+                        <p style="font-size: 14px; font-weight: bold; color: #111827; margin: 0 0 4px 0;">
+                            7835 Wood Hollow Dr Baytown Tx 77521
+                        </p>
+                        <p style="font-size: 12px; color: #065f46; margin: 0;">
+                            {{ $locale === 'es'
+                                ? 'Tus compras y paquetes son recibidos y procesados en nuestra dirección principal.'
+                                : 'Your purchases and packages are received and processed at our main warehouse address.' }}
+                        </p>
+                    </div>
+                @endif
+
                 {{-- PDF Attachment Reminder Box --}}
                 <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 14px 16px; margin: 20px 0;">
                     <p style="font-size: 13px; color: #065f46; margin: 0; line-height: 1.5;">
