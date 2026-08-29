@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Admin\Settings\SettingsIndex;
+use App\Livewire\Admin\Billing\BillingIndex;
 use App\Mail\PricingRatesMail;
 use App\Models\Customer;
 use App\Models\PurchaseRequest;
@@ -82,10 +82,10 @@ test('guest cannot download pricing rates PDF', function () {
     $response->assertRedirect(route('login'));
 });
 
-test('admin can update pricing rate sheet settings in SettingsIndex', function () {
+test('admin can update pricing rate sheet settings in BillingIndex', function () {
     $this->actingAs(createAdmin());
 
-    $component = Livewire::test(SettingsIndex::class)
+    $component = Livewire::test(BillingIndex::class)
         ->set('rates.extra_store_fee', 30)
         ->set('rates.box_small_heavy_duty', 16)
         ->call('save')
@@ -102,7 +102,7 @@ test('admin can send pricing rates PDF via email with automatic admin copy', fun
 
     Setting::set('admin_notification_email', 'admin@speedshopper.com');
 
-    $component = Livewire::test(SettingsIndex::class)
+    $component = Livewire::test(BillingIndex::class)
         ->call('openSendModal')
         ->assertSet('showSendModal', true)
         ->set('recipientEmail', 'cliente@example.com')
