@@ -4,6 +4,7 @@ use App\Enums\CostType;
 use App\Enums\RequestStatus;
 use App\Livewire\Admin\Billing\BillingIndex;
 use App\Livewire\Admin\Rates\RatesIndex;
+use App\Mail\InvoiceCreatedMail;
 use App\Mail\PricingRatesMail;
 use App\Models\CostItem;
 use App\Models\Customer;
@@ -33,9 +34,12 @@ test('admin can view billing invoice management page', function () {
         ->assertSee('Nueva Factura');
 });
 
-test('admin can create a full invoice with customer, products, and initial payment', function () {
+test('admin can create a full invoice with customer, products, and initial payment and sends email in active locale', function () {
+    Mail::fake();
+    Setting::set('admin_notification_email', 'admin@speedingshopper.com');
+
     $admin = createAdmin();
-    $customer = Customer::factory()->create();
+    $customer = Customer::factory()->create(['email' => 'customer@example.com']);
 
     Livewire::actingAs($admin)
         ->test(BillingIndex::class)
@@ -51,7 +55,7 @@ test('admin can create a full invoice with customer, products, and initial payme
         ])
         ->set('invoiceForm.costs', [
             [
-                'type' => 'personal_shopper',
+                'type' => 'shopper_fee',
                 'description' => 'Comisión Shopper',
                 'amount' => 40.0,
             ],
@@ -72,6 +76,43 @@ test('admin can create a full invoice with customer, products, and initial payme
         ->and((float) $payment->amount_paid)->toBe(140.0)
         ->and((float) $payment->invoice_total)->toBe(240.0)
         ->and($payment->reference)->toBe('ZELLE-9988');
+
+    Mail::assertSent(InvoiceCreatedMail::class, function ($mail) {
+        return $mail->hasTo('customer@example.com')
+            && $mail->hasBcc('admin@speedingshopper.com')
+            && $mail->locale === 'es'
+            && ! empty($mail->pdfOutput);
+    });
+});
+
+test('admin creating invoice when locale is english sends email and pdf in english', function () {
+    Mail::fake();
+    Setting::set('admin_notification_email', 'admin@speedingshopper.com');
+    app()->setLocale('en');
+
+    $admin = createAdmin(['locale' => 'en']);
+    $customer = Customer::factory()->create(['email' => 'client.en@example.com']);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Sony Headphones',
+                'store' => 'Best Buy',
+                'quantity' => 1,
+                'unit_price' => 350.0,
+            ],
+        ])
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    Mail::assertSent(InvoiceCreatedMail::class, function ($mail) {
+        return $mail->hasTo('client.en@example.com')
+            && $mail->locale === 'en'
+            && ! empty($mail->pdfOutput);
+    });
 });
 
 test('billing component automatically fetches charges and calculates commission from rate sheet', function () {

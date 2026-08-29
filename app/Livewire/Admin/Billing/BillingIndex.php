@@ -6,11 +6,16 @@ use App\Concerns\SwalNotifies;
 use App\Enums\CostType;
 use App\Enums\PaymentMethod;
 use App\Enums\RequestStatus;
+use App\Mail\InvoiceCreatedMail;
 use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
+use App\Models\Setting;
+use App\Services\InvoicePdfService;
 use App\Services\PricingRateService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -723,6 +728,37 @@ class BillingIndex extends Component
                 'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
                 'notes' => 'Pago registrado al emitir factura '.$purchaseRequest->number,
             ]);
+        }
+
+        // Automatically send email to customer and administrator with attached PDF in active locale
+        $currentLocale = in_array(app()->getLocale(), ['es', 'en'], true) ? app()->getLocale() : 'es';
+
+        try {
+            $pdfInstance = app(InvoicePdfService::class)->generatePdf($purchaseRequest, $currentLocale);
+            $pdfOutput = $pdfInstance->output();
+            $pdfFilename = "SpeedShopper_Factura_{$purchaseRequest->number}_{$currentLocale}.pdf";
+
+            $mail = new InvoiceCreatedMail(
+                purchaseRequest: $purchaseRequest,
+                locale: $currentLocale,
+                pdfOutput: $pdfOutput,
+                pdfFilename: $pdfFilename,
+            );
+
+            $adminEmail = Setting::get('admin_notification_email') ?: config('mail.from.address');
+            $customerEmail = $purchaseRequest->customer?->email;
+
+            if ($customerEmail) {
+                $pendingMail = Mail::to($customerEmail);
+                if ($adminEmail && strtolower((string) $adminEmail) !== strtolower((string) $customerEmail)) {
+                    $pendingMail->bcc($adminEmail);
+                }
+                $pendingMail->send($mail);
+            } elseif ($adminEmail) {
+                Mail::to($adminEmail)->send($mail);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Could not send automated invoice email: '.$e->getMessage());
         }
 
         $this->showCreateForm = false;
