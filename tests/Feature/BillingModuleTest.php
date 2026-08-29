@@ -634,3 +634,58 @@ test('unauthenticated users are redirected from billing and rates routes', funct
     $this->get(route('admin.rates.index'))->assertRedirect(route('login'));
     $this->get(route('portal.billing.index'))->assertRedirect(route('login'));
 });
+
+test('service_definitions returns the 3 main services: Personal Shopper, Comprar Online, and Reempaque', function () {
+    $services = service_definitions();
+
+    expect($services)->toHaveKeys(['personal_shopper', 'online_shopping', 'repack'])
+        ->and($services['personal_shopper']['title'])->toBe('Personal Shopper')
+        ->and($services['personal_shopper']['subtitle'])->toContain('20% - 15%')
+        ->and($services['online_shopping']['title'])->toBe('Comprar Online')
+        ->and($services['online_shopping']['subtitle'])->toContain('15%')
+        ->and($services['online_shopping']['subtitle'])->toContain('$20')
+        ->and($services['repack']['title'])->toBe('Reempaque')
+        ->and($services['repack']['subtitle'])->toContain('$15')
+        ->and($services['repack']['subtitle'])->toContain('$20')
+        ->and($services['repack']['subtitle'])->toContain('$25');
+});
+
+test('billing index correctly computes online shopping and repack service invoices', function () {
+    $admin = createAdmin();
+
+    $customer = Customer::create([
+        'name' => 'Ana Morales',
+        'email' => 'ana@example.com',
+    ]);
+
+    // Test Comprar Online mode: $1000 online product -> 15% comm ($150) + $20 delivery = $170 total
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateForm')
+        ->call('setServiceType', 'online')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items.0.product_name', 'Laptop Dell')
+        ->set('invoiceForm.items.0.unit_price', 1000.0)
+        ->call('syncGuidedQuestionsToCosts')
+        ->assertSet('serviceType', 'online')
+        ->assertSet('productsSubtotal', 1000.0)
+        ->assertSet('invoicedTotal', 170.0) // $150 (15%) + $20 delivery
+        ->assertSet('invoicedEarnings', 170.0);
+
+    // Test Reempaque mode: 1 Small ($15), 1 Med ($20), 1 Large ($25) + $20 delivery = $80 total
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateForm')
+        ->call('setServiceType', 'repack')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items.0.product_name', 'Paquetes de Ropa')
+        ->set('invoiceForm.items.0.unit_price', 0.0)
+        ->set('guidedQuestions.boxes_small_count', 1)
+        ->set('guidedQuestions.boxes_medium_count', 1)
+        ->set('guidedQuestions.boxes_large_count', 1)
+        ->set('guidedQuestions.warehouse_delivery_count', 1)
+        ->call('syncGuidedQuestionsToCosts')
+        ->assertSet('serviceType', 'repack')
+        ->assertSet('invoicedTotal', 80.0) // $15 + $20 + $25 + $20 = $80
+        ->assertSet('invoicedEarnings', 80.0);
+});

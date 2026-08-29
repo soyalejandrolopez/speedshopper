@@ -29,11 +29,11 @@
 
                 @if (! empty($purchaseRequest->services))
                     <div class="mt-4 flex flex-wrap items-center gap-2">
-                        @foreach (service_options() as $key => $label)
+                        @foreach (service_definitions() as $key => $svc)
                             @if (in_array($key, $purchaseRequest->services, true))
                                 <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
-                                    <i class="fa-solid fa-check text-sm"></i>
-                                    {{ $label }}
+                                    <i class="fa-solid {{ $svc['icon'] }} text-xs"></i>
+                                    {{ $svc['title'] }}
                                 </span>
                             @endif
                         @endforeach

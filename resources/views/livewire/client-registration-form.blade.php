@@ -145,16 +145,24 @@
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('What service do you need?') }} *</h3>
                     <p class="mt-1 text-xs text-gray-500">{{ __('Select one or more options.') }}</p>
-                    <div class="mt-3 grid gap-2 sm:grid-cols-2">
-                        @foreach ($this->serviceOptions() as $key => $label)
-                            <label class="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 hover:bg-emerald-50/40">
-                                <input type="checkbox" value="{{ $key }}" wire:model="form.services"
-                                       class="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                <span>{{ $label }}</span>
+                    <div class="mt-3 grid gap-3 sm:grid-cols-3">
+                        @foreach ($this->serviceDefinitions() as $key => $svc)
+                            <label class="relative flex flex-col justify-between rounded-2xl border-2 p-3.5 cursor-pointer transition-all duration-200 hover:shadow-sm {{ in_array($key, $form['services'], true) ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-500' : 'border-gray-200 bg-white hover:border-emerald-300' }}">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-xl {{ in_array($key, $form['services'], true) ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+                                        <i class="fa-solid {{ $svc['icon'] }} text-sm"></i>
+                                    </div>
+                                    <input type="checkbox" value="{{ $key }}" wire:model.live="form.services"
+                                           class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-sm font-bold text-gray-900">{{ $svc['title'] }}</p>
+                                    <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $svc['subtitle'] }}</p>
+                                </div>
                             </label>
                         @endforeach
                     </div>
-                    @error('form.services') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    @error('form.services') <p class="mt-1.5 text-xs text-red-600 font-semibold">{{ $message }}</p> @enderror
                 </div>
             @endif
 

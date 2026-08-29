@@ -23,6 +23,19 @@
                     <x-status-badge :status="$purchaseRequest->status" />
                 </div>
 
+                @if (! empty($purchaseRequest->services))
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                        @foreach (service_definitions() as $key => $svc)
+                            @if (in_array($key, $purchaseRequest->services, true))
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                                    <i class="fa-solid {{ $svc['icon'] }} text-xs"></i>
+                                    {{ $svc['title'] }}
+                                </span>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
                 @php
                     $isPaid = ($purchaseRequest->total_cost > 0 && ($purchaseRequest->total_cost - (float) $purchaseRequest->costItems()->sum('amount')) <= 0 && $purchaseRequest->status === \App\Enums\RequestStatus::Purchased) || $purchaseRequest->status === \App\Enums\RequestStatus::Purchased;
                 @endphp

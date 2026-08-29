@@ -214,6 +214,7 @@ class PublicRequestForm extends Component
 
         $services = ['personal_shopper'];
         if ($this->boxes_small > 0 || $this->boxes_medium > 0 || $this->boxes_large > 0) {
+            $services[] = 'repack';
             $services[] = 'packing';
         }
 

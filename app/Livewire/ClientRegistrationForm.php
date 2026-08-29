@@ -55,6 +55,12 @@ class ClientRegistrationForm extends Component
 
     public const TOTAL_STEPS = 3;
 
+    /** @return array<string, array{key: string, title: string, subtitle: string, icon: string}> */
+    public function serviceDefinitions(): array
+    {
+        return service_definitions();
+    }
+
     /** @return array<int, string> */
     public function serviceOptions(): array
     {
@@ -107,17 +113,12 @@ class ClientRegistrationForm extends Component
     public function next(): void
     {
         $this->validateStep($this->step);
-
-        if ($this->step < self::TOTAL_STEPS) {
-            $this->step++;
-        }
+        $this->step = min(self::TOTAL_STEPS, $this->step + 1);
     }
 
     public function back(): void
     {
-        if ($this->step > 1) {
-            $this->step--;
-        }
+        $this->step = max(1, $this->step - 1);
     }
 
     public function submit(): void
@@ -164,7 +165,8 @@ class ClientRegistrationForm extends Component
         $largeCount = max(0, (int) ($this->form['boxes_large'] ?? 0));
 
         $services = $this->form['services'];
-        if (($smallCount > 0 || $mediumCount > 0 || $largeCount > 0) && ! in_array('packing', $services, true)) {
+        if (($smallCount > 0 || $mediumCount > 0 || $largeCount > 0) && ! in_array('repack', $services, true) && ! in_array('packing', $services, true)) {
+            $services[] = 'repack';
             $services[] = 'packing';
         }
 
@@ -180,27 +182,89 @@ class ClientRegistrationForm extends Component
             'unit_price' => $budget,
         ]);
 
-        if ($budget !== null && $budget > 0) {
-            CostItem::create([
-                'costable_type' => PurchaseRequest::class,
-                'costable_id' => $request->id,
-                'type' => CostType::ProductCost,
-                'description' => 'Valor de Productos / Presupuesto Cliente',
-                'amount' => $budget,
-            ]);
-        }
-
         $rates = $this->rates;
         $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
         $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
         $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+        $deliveryRate = (float) ($rates['warehouse_delivery_fee'] ?? 20.0);
 
+        // 1. Personal Shopper Cost Items
+        if (in_array('personal_shopper', $services, true) || empty($services)) {
+            if ($budget !== null && $budget > 0) {
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $request->id,
+                    'type' => CostType::ProductCost,
+                    'description' => 'Valor de Productos / Presupuesto Cliente',
+                    'amount' => $budget,
+                ]);
+
+                // Calculate commission percent based on tiers (20% for < $700, 15% for >= $700)
+                $percent = $budget >= 700 ? 15.0 : 20.0;
+                $commAmount = round($budget * ($percent / 100), 2);
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $request->id,
+                    'type' => CostType::ShopperFee,
+                    'description' => "Comisión Personal Shopper ({$percent}%)",
+                    'amount' => $commAmount,
+                ]);
+            }
+        }
+
+        // 2. Comprar Online Cost Items
+        if (in_array('online_shopping', $services, true)) {
+            if ($budget !== null && $budget > 0) {
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $request->id,
+                    'type' => CostType::ProductCost,
+                    'description' => 'Valor Pagado en Internet: $'.number_format($budget, 2).' (No se cobra en factura)',
+                    'amount' => $budget,
+                ]);
+
+                $onlinePercent = (float) ($rates['warehouse_percent'] ?? 15.0);
+                $commAmount = round($budget * ($onlinePercent / 100), 2);
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $request->id,
+                    'type' => CostType::ReceivingFee,
+                    'description' => "Comisión Almacén / Compras Online ({$onlinePercent}% sobre $".number_format($budget, 2).')',
+                    'amount' => $commAmount,
+                ]);
+            }
+
+            // Traslado fijo $20
+            CostItem::create([
+                'costable_type' => PurchaseRequest::class,
+                'costable_id' => $request->id,
+                'type' => CostType::ReceivingFee,
+                'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($deliveryRate, 2).')',
+                'amount' => $deliveryRate,
+            ]);
+        }
+
+        // 3. Reempaque Cost Items
+        if (in_array('repack', $services, true)) {
+            // Traslado fijo $20 si no se agregó ya por compras online
+            if (! in_array('online_shopping', $services, true)) {
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $request->id,
+                    'type' => CostType::ReceivingFee,
+                    'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($deliveryRate, 2).')',
+                    'amount' => $deliveryRate,
+                ]);
+            }
+        }
+
+        // Cajas Heavy Duty (Small $15, Med $20, Larga $25)
         if ($smallCount > 0) {
             CostItem::create([
                 'costable_type' => PurchaseRequest::class,
                 'costable_id' => $request->id,
                 'type' => CostType::PackingFee,
-                'description' => "Caja Small Heavy Duty ({$smallCount} x $".number_format($smallRate, 2).')',
+                'description' => "1 Caja Small Heavy Duty ({$smallCount} x $".number_format($smallRate, 2).')',
                 'amount' => $smallCount * $smallRate,
             ]);
         }
@@ -210,7 +274,7 @@ class ClientRegistrationForm extends Component
                 'costable_type' => PurchaseRequest::class,
                 'costable_id' => $request->id,
                 'type' => CostType::PackingFee,
-                'description' => "Caja Mediana Heavy Duty ({$mediumCount} x $".number_format($mediumRate, 2).')',
+                'description' => "1 Caja Mediana Heavy Duty ({$mediumCount} x $".number_format($mediumRate, 2).')',
                 'amount' => $mediumCount * $mediumRate,
             ]);
         }
@@ -220,7 +284,7 @@ class ClientRegistrationForm extends Component
                 'costable_type' => PurchaseRequest::class,
                 'costable_id' => $request->id,
                 'type' => CostType::PackingFee,
-                'description' => "Caja Larga Heavy Duty ({$largeCount} x $".number_format($largeRate, 2).')',
+                'description' => "1 Caja Larga Heavy Duty ({$largeCount} x $".number_format($largeRate, 2).')',
                 'amount' => $largeCount * $largeRate,
             ]);
         }

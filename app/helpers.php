@@ -190,6 +190,35 @@ if (! function_exists('countries_served_list')) {
     }
 }
 
+if (! function_exists('service_definitions')) {
+    /**
+     * @return array<string, array{key: string, title: string, subtitle: string, icon: string}>
+     */
+    function service_definitions(): array
+    {
+        return [
+            'personal_shopper' => [
+                'key' => 'personal_shopper',
+                'title' => 'Personal Shopper',
+                'subtitle' => 'Compras físicas + comisión por tramos (20% - 15%)',
+                'icon' => 'fa-bag-shopping',
+            ],
+            'online_shopping' => [
+                'key' => 'online_shopping',
+                'title' => 'Comprar Online',
+                'subtitle' => 'Comisión 15% + traslado fijo $20 (no se cobra el producto)',
+                'icon' => 'fa-globe',
+            ],
+            'repack' => [
+                'key' => 'repack',
+                'title' => 'Reempaque',
+                'subtitle' => 'Cajas Small $15, Med $20, Larga $25 + traslado $20',
+                'icon' => 'fa-boxes-packing',
+            ],
+        ];
+    }
+}
+
 if (! function_exists('service_options')) {
     /**
      * @return array<string, string>
@@ -197,12 +226,13 @@ if (! function_exists('service_options')) {
     function service_options(): array
     {
         return [
-            'personal_shopper' => __('In-store shopping'),
-            'online_shopping' => __('Online shopping'),
-            'package_reception' => __('Package reception'),
-            'consolidation' => __('Package consolidation'),
-            'packing' => __('Packing service'),
-            'delivery_to_courier' => __('Delivery to shipping company'),
+            'personal_shopper' => 'Personal Shopper (Compras físicas + comisión 20% - 15%)',
+            'online_shopping' => 'Comprar Online (Comisión 15% + traslado fijo $20)',
+            'repack' => 'Reempaque (Cajas Small $15, Med $20, Larga $25 + traslado $20)',
+            'package_reception' => 'Recepción de Paquetes',
+            'consolidation' => 'Consolidación de Paquetes',
+            'packing' => 'Reempaque y Cajas',
+            'delivery_to_courier' => 'Traslado a Empresa de Envío',
         ];
     }
 }
