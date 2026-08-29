@@ -77,6 +77,43 @@
             </div>
 
             <form wire:submit="saveInvoice" class="space-y-6">
+                {{-- Selector de Modalidad / Tipo de Servicio --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button type="button" wire:click="setServiceType('shopper')"
+                            class="flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'shopper' ? 'border-emerald-600 bg-emerald-50/80 text-emerald-950 shadow-xs' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'shopper' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                            <i class="fa-solid fa-cart-shopping text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-900">{{ __('Personal Shopper (Compras Físicas)') }}</p>
+                            <p class="text-[11px] text-gray-500">{{ __('Compramos en tiendas físicas + comisión por tramos (20% - 15%)') }}</p>
+                        </div>
+                    </button>
+
+                    <button type="button" wire:click="setServiceType('online')"
+                            class="flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'online' ? 'border-blue-600 bg-blue-50/80 text-blue-950 shadow-xs' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'online' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                            <i class="fa-solid fa-globe text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-900">{{ __('Compras Online (Reempaque / Almacén)') }}</p>
+                            <p class="text-[11px] text-gray-500">{{ __('Comisión 15% automática + traslado fijo $20 (no se cobra el producto)') }}</p>
+                        </div>
+                    </button>
+                </div>
+
+                @if ($serviceType === 'online')
+                    <div class="rounded-xl border border-blue-200 bg-blue-50/90 p-3.5 flex items-start gap-2.5 text-xs text-blue-900 shadow-2xs">
+                        <i class="fa-solid fa-circle-info text-blue-600 mt-0.5 text-sm shrink-0"></i>
+                        <div>
+                            <p class="font-bold">{{ __('Modo Online Activo') }}:</p>
+                            <p class="mt-0.5 leading-relaxed text-blue-800 text-[11.5px]">
+                                {{ __('El cliente pagó el valor de los productos en internet. Dicho valor NO se sumará a la factura. La factura cobrará automáticamente la comisión de almacén (15% = ') }}<strong>{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>{{ __(') y el servicio de traslado fijo de la caja ($20.00).') }}
+                            </p>
+                        </div>
+                    </div>
+                @endif
+
                 {{-- 1. Datos del Cliente --}}
                 <div class="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
@@ -104,10 +141,18 @@
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
                             <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">2</span>
-                            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800">{{ __('Productos y Artículos') }}</h3>
-                            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-lg">
-                                Subtotal Productos: {{ money($this->productsSubtotal) }}
-                            </span>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800">
+                                {{ $serviceType === 'online' ? __('Artículos / Compras por Internet') : __('Productos y Artículos') }}
+                            </h3>
+                            @if ($serviceType === 'online')
+                                <span class="text-xs font-bold bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-lg">
+                                    {{ __('Valor Online: :amount (Pagado en internet)', ['amount' => money($this->productsSubtotal)]) }}
+                                </span>
+                            @else
+                                <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-lg">
+                                    {{ __('Subtotal Productos: :amount', ['amount' => money($this->productsSubtotal)]) }}
+                                </span>
+                            @endif
                         </div>
                         <button type="button" wire:click="addItem"
                                 class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-white px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 shadow-2xs">
@@ -134,7 +179,9 @@
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-center focus:border-emerald-500">
                                 </div>
                                 <div class="sm:col-span-2 relative">
-                                    <label class="block text-[11px] font-medium text-gray-500">{{ __('Precio ($)') }}</label>
+                                    <label class="block text-[11px] font-medium text-gray-500">
+                                        {{ $serviceType === 'online' ? __('Valor en Internet ($)') : __('Precio ($)') }}
+                                    </label>
                                     <div class="flex items-center gap-1 mt-1">
                                         <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.unit_price"
                                                class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs focus:border-emerald-500 font-semibold">
@@ -158,54 +205,56 @@
                     </div>
 
                     <div class="space-y-4">
-                        {{-- Pregunta 1: Personal Shopper --}}
-                        <div class="rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xs">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div class="flex items-start gap-3">
-                                    <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 shrink-0">
-                                        <i class="fa-solid fa-cart-shopping text-xs"></i>
+                        {{-- Pregunta 1: Personal Shopper (Solo modo Shopper) --}}
+                        @if ($serviceType === 'shopper')
+                            <div class="rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xs">
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 shrink-0">
+                                            <i class="fa-solid fa-cart-shopping text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs font-bold text-gray-900">{{ __('¿Aplica Servicio de Personal Shopper?') }}</h4>
+                                            <p class="text-[11px] text-gray-500">
+                                                {{ __('Calcula automáticamente según el tarifario oficial:') }}
+                                                <span class="font-bold text-emerald-700">
+                                                    {{ $this->shopperCommissionCalculation['percent'] }}% de {{ money($this->productsSubtotal) }} = {{ money($this->shopperCommissionCalculation['amount']) }}
+                                                </span>
+                                                ({{ $this->shopperCommissionCalculation['stores'] }} tiendas / {{ $this->shopperCommissionCalculation['hours'] }} hrs)
+                                            </p>
+                                        </div>
                                     </div>
+
+                                    <button type="button" wire:click="toggleQuestion('apply_shopper_commission')"
+                                            class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all {{ $guidedQuestions['apply_shopper_commission'] ? 'bg-emerald-600 text-white shadow-xs' : 'border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100' }}">
+                                        <i class="fa-solid {{ $guidedQuestions['apply_shopper_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
+                                        <span>{{ $guidedQuestions['apply_shopper_commission'] ? __('Comisión Aplicada') : __('No Aplicar') }}</span>
+                                    </button>
+                                </div>
+
+                                {{-- Tiendas adicionales --}}
+                                <div class="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <h4 class="text-xs font-bold text-gray-900">{{ __('¿Aplica Servicio de Personal Shopper?') }}</h4>
-                                        <p class="text-[11px] text-gray-500">
-                                            {{ __('Calcula automáticamente según el tarifario oficial:') }}
-                                            <span class="font-bold text-emerald-700">
-                                                {{ $this->shopperCommissionCalculation['percent'] }}% de {{ money($this->productsSubtotal) }} = {{ money($this->shopperCommissionCalculation['amount']) }}
-                                            </span>
-                                            ({{ $this->shopperCommissionCalculation['stores'] }} tiendas / {{ $this->shopperCommissionCalculation['hours'] }} hrs)
-                                        </p>
+                                        <p class="text-xs font-semibold text-gray-800">{{ __('¿Se visitaron tiendas adicionales?') }}</p>
+                                        <p class="text-[11px] text-gray-500">{{ money($rates['extra_store_fee'] ?? 20) }} por cada tienda adicional</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" wire:click="decrementQuestion('extra_stores_count')"
+                                                class="h-7 w-7 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100">
+                                            <i class="fa-solid fa-minus text-[10px]"></i>
+                                        </button>
+                                        <span class="w-8 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['extra_stores_count'] }}</span>
+                                        <button type="button" wire:click="incrementQuestion('extra_stores_count')"
+                                                class="h-7 w-7 rounded-lg border border-emerald-300 bg-emerald-50 flex items-center justify-center text-emerald-700 hover:bg-emerald-100">
+                                            <i class="fa-solid fa-plus text-[10px]"></i>
+                                        </button>
+                                        <span class="text-xs font-bold text-emerald-700 min-w-[70px] text-end">
+                                            {{ money($guidedQuestions['extra_stores_count'] * ($rates['extra_store_fee'] ?? 20)) }}
+                                        </span>
                                     </div>
                                 </div>
-
-                                <button type="button" wire:click="toggleQuestion('apply_shopper_commission')"
-                                        class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all {{ $guidedQuestions['apply_shopper_commission'] ? 'bg-emerald-600 text-white shadow-xs' : 'border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100' }}">
-                                    <i class="fa-solid {{ $guidedQuestions['apply_shopper_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
-                                    <span>{{ $guidedQuestions['apply_shopper_commission'] ? __('Comisión Aplicada') : __('No Aplicar') }}</span>
-                                </button>
                             </div>
-
-                            {{-- Tiendas adicionales --}}
-                            <div class="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                <div>
-                                    <p class="text-xs font-semibold text-gray-800">{{ __('¿Se visitaron tiendas adicionales?') }}</p>
-                                    <p class="text-[11px] text-gray-500">{{ money($rates['extra_store_fee'] ?? 20) }} por cada tienda adicional</p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <button type="button" wire:click="decrementQuestion('extra_stores_count')"
-                                            class="h-7 w-7 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                    </button>
-                                    <span class="w-8 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['extra_stores_count'] }}</span>
-                                    <button type="button" wire:click="incrementQuestion('extra_stores_count')"
-                                            class="h-7 w-7 rounded-lg border border-emerald-300 bg-emerald-50 flex items-center justify-center text-emerald-700 hover:bg-emerald-100">
-                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                    </button>
-                                    <span class="text-xs font-bold text-emerald-700 min-w-[70px] text-end">
-                                        {{ money($guidedQuestions['extra_stores_count'] * ($rates['extra_store_fee'] ?? 20)) }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
 
                         {{-- Pregunta 2: Reempaque en Cajas Heavy Duty --}}
                         <div class="rounded-2xl border border-teal-100 bg-white p-4 shadow-2xs">
@@ -295,8 +344,8 @@
                                     <i class="fa-solid fa-warehouse text-xs"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-gray-900">{{ __('¿Servicios de Almacén o Compras Online?') }}</h4>
-                                    <p class="text-[11px] text-gray-500">{{ __('Recepción en casa/almacén, traslado de cajas y almacenaje prolongado') }}</p>
+                                    <h4 class="text-xs font-bold text-gray-900">{{ __('Servicios de Almacén y Compras Online') }}</h4>
+                                    <p class="text-[11px] text-gray-500">{{ __('Recepción en casa/almacén, traslado fijo de cajas y almacenaje prolongado') }}</p>
                                 </div>
                             </div>
 
@@ -304,24 +353,40 @@
                                 {{-- Comisión Almacén Compras Online --}}
                                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
                                     <div>
-                                        <p class="text-xs font-bold text-gray-800">{{ __('¿Es compra online recibida en casa/almacén?') }}</p>
+                                        <p class="text-xs font-bold text-gray-800">
+                                            {{ __('Comisión de almacén (15% sobre compras online)') }}
+                                        </p>
                                         <p class="text-[11px] text-gray-500">
-                                            {{ __('Comisión de almacén') }}: {{ $rates['warehouse_percent'] ?? 15 }}% de {{ money($this->productsSubtotal) }} =
+                                            {{ $rates['warehouse_percent'] ?? 15 }}% de {{ money($this->productsSubtotal) }} =
                                             <strong class="text-blue-700 font-bold">{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>
+                                            @if ($serviceType === 'online')
+                                                <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Automática en compras online') }})</span>
+                                            @endif
                                         </p>
                                     </div>
-                                    <button type="button" wire:click="toggleQuestion('apply_warehouse_commission')"
-                                            class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold transition-all {{ $guidedQuestions['apply_warehouse_commission'] ? 'bg-blue-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-100' }}">
-                                        <i class="fa-solid {{ $guidedQuestions['apply_warehouse_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
-                                        <span>{{ $guidedQuestions['apply_warehouse_commission'] ? __('Comisión 15% Aplicada') : __('No Aplicar') }}</span>
-                                    </button>
+                                    @if ($serviceType === 'online')
+                                        <span class="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-3 py-1 text-xs font-bold text-white">
+                                            <i class="fa-solid fa-check text-xs"></i> {{ __('Activada (15%)') }}
+                                        </span>
+                                    @else
+                                        <button type="button" wire:click="toggleQuestion('apply_warehouse_commission')"
+                                                class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold transition-all {{ $guidedQuestions['apply_warehouse_commission'] ? 'bg-blue-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-100' }}">
+                                            <i class="fa-solid {{ $guidedQuestions['apply_warehouse_commission'] ? 'fa-check' : 'fa-xmark' }} text-xs"></i>
+                                            <span>{{ $guidedQuestions['apply_warehouse_commission'] ? __('Comisión 15% Aplicada') : __('No Aplicar') }}</span>
+                                        </button>
+                                    @endif
                                 </div>
 
-                                {{-- Llevar caja al almacén --}}
+                                {{-- Traslado fijo de caja al almacén --}}
                                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
                                     <div>
-                                        <p class="text-xs font-bold text-gray-800">{{ __('¿Llevar / Traslado de caja al Almacén?') }}</p>
-                                        <p class="text-[11px] text-gray-500">{{ money($rates['warehouse_delivery_fee'] ?? 20) }} por cada entrega</p>
+                                        <p class="text-xs font-bold text-gray-800">{{ __('Servicio de Traslado de Caja al Almacén') }}</p>
+                                        <p class="text-[11px] text-gray-500">
+                                            <strong class="text-gray-900">{{ money($rates['warehouse_delivery_fee'] ?? 20) }} {{ __('fijo por caja') }}</strong>
+                                            @if ($serviceType === 'online')
+                                                <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Fijo automático en compras online') }})</span>
+                                            @endif
+                                        </p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" wire:click="decrementQuestion('warehouse_delivery_count')"
@@ -420,6 +485,16 @@
                         <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">4</span>
                         {{ __('Datos de Cobro y Pago (Lo que paga el cliente)') }}
                     </h3>
+
+                    @if ($serviceType === 'online')
+                        <div class="mb-4 rounded-xl border border-blue-200 bg-white p-3 text-xs text-blue-900 flex items-center justify-between shadow-2xs">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-globe text-blue-600"></i>
+                                <span>{{ __('Valor Pagado por el Cliente en Internet (No se cobra en esta factura):') }}</span>
+                            </div>
+                            <span class="font-bold text-gray-500 line-through">{{ money($this->productsSubtotal) }}</span>
+                        </div>
+                    @endif
 
                     <div class="grid gap-4 sm:grid-cols-3">
                         <div class="rounded-xl bg-white border border-emerald-200 p-3 shadow-2xs">

@@ -45,6 +45,8 @@ class BillingIndex extends Component
 
     public array $rates = [];
 
+    public string $serviceType = 'shopper'; // 'shopper' or 'online'
+
     public array $guidedQuestions = [
         'apply_shopper_commission' => true,
         'extra_stores_count' => 0,
@@ -125,6 +127,7 @@ class BillingIndex extends Component
         $this->isEditing = false;
         $this->editingRequestId = null;
         $this->editingRequestNumber = null;
+        $this->serviceType = 'shopper';
 
         $this->guidedQuestions = [
             'apply_shopper_commission' => true,
@@ -161,6 +164,22 @@ class BillingIndex extends Component
         $this->showCreateForm = true;
     }
 
+    public function setServiceType(string $type): void
+    {
+        $this->serviceType = in_array($type, ['shopper', 'online'], true) ? $type : 'shopper';
+
+        if ($this->serviceType === 'online') {
+            $this->guidedQuestions['apply_shopper_commission'] = false;
+            $this->guidedQuestions['apply_warehouse_commission'] = true;
+            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
+        } else {
+            $this->guidedQuestions['apply_shopper_commission'] = true;
+            $this->guidedQuestions['apply_warehouse_commission'] = false;
+        }
+
+        $this->syncGuidedQuestionsToCosts();
+    }
+
     public function editInvoice(int $requestId): void
     {
         $this->resetValidation();
@@ -172,17 +191,35 @@ class BillingIndex extends Component
         $this->editingRequestId = $request->id;
         $this->editingRequestNumber = $request->number;
 
-        // Populate items
+        // Detect service type based on cost items
+        $hasReceiving = $request->costItems->where('type', CostType::ReceivingFee)->isNotEmpty();
+        $hasShopperFee = $request->costItems->where('type', CostType::ShopperFee)->isNotEmpty();
         $productCosts = $request->costItems->where('type', CostType::ProductCost);
-        $items = [];
+        $productTotal = (float) $productCosts->sum('amount');
 
+        if ($hasReceiving && ($productTotal === 0.0 || ! $hasShopperFee)) {
+            $this->serviceType = 'online';
+        } else {
+            $this->serviceType = 'shopper';
+        }
+
+        // Populate items
+        $items = [];
         if ($productCosts->isNotEmpty()) {
             foreach ($productCosts as $cost) {
+                // Extract price if format contains "(Comprado online - Pagado en internet: $XX.XX)"
+                $unitPrice = (float) $cost->amount;
+                if ($this->serviceType === 'online' && preg_match('/Pagado en internet:\s*\$([0-9\.,]+)/i', $cost->description ?? '', $m)) {
+                    $unitPrice = (float) str_replace(',', '', $m[1]);
+                }
+
+                $cleanName = preg_replace('/\s*\(.*?\)\s*/', '', (string) ($cost->description ?: $request->product_name));
+
                 $items[] = [
-                    'product_name' => $cost->description ?: $request->product_name,
+                    'product_name' => $cleanName ?: ($request->product_name ?: 'Producto'),
                     'store' => $request->store ?: '',
                     'quantity' => 1,
-                    'unit_price' => (float) $cost->amount,
+                    'unit_price' => $unitPrice,
                 ];
             }
         } else {
@@ -196,13 +233,13 @@ class BillingIndex extends Component
 
         // Initialize guided questions based on existing non-product cost items
         $this->guidedQuestions = [
-            'apply_shopper_commission' => false,
+            'apply_shopper_commission' => $this->serviceType === 'shopper',
             'extra_stores_count' => 0,
             'boxes_small_count' => 0,
             'boxes_medium_count' => 0,
             'boxes_large_count' => 0,
-            'apply_warehouse_commission' => false,
-            'warehouse_delivery_count' => 0,
+            'apply_warehouse_commission' => $this->serviceType === 'online',
+            'warehouse_delivery_count' => $this->serviceType === 'online' ? 1 : 0,
             'storage_months_count' => 0,
         ];
         $this->customCosts = [];
@@ -233,10 +270,10 @@ class BillingIndex extends Component
                 $this->guidedQuestions['boxes_large_count'] += max(1, $qty);
             } elseif (stripos($desc, 'Comisión Almacén') !== false || stripos($desc, 'Warehouse Commission') !== false) {
                 $this->guidedQuestions['apply_warehouse_commission'] = true;
-            } elseif (stripos($desc, 'Llevar') !== false || stripos($desc, 'Drop-off') !== false) {
+            } elseif (stripos($desc, 'Llevar') !== false || stripos($desc, 'Traslado') !== false || stripos($desc, 'Drop-off') !== false) {
                 $unitFee = (float) ($this->rates['warehouse_delivery_fee'] ?? 20.0);
                 $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
-                $this->guidedQuestions['warehouse_delivery_count'] += max(1, $qty);
+                $this->guidedQuestions['warehouse_delivery_count'] = max(1, $qty);
             } elseif (stripos($desc, 'Almacenaje') !== false || stripos($desc, 'Storage') !== false) {
                 $unitFee = (float) ($this->rates['monthly_storage_fee'] ?? 15.0);
                 $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
@@ -413,8 +450,8 @@ class BillingIndex extends Component
         $subtotal = $this->productsSubtotal;
         $calc = $this->shopperCommissionCalculation;
 
-        // 1. Comisión Personal Shopper
-        if (! empty($this->guidedQuestions['apply_shopper_commission'])) {
+        // 1. Comisión Personal Shopper (solo compras físicas)
+        if ($this->serviceType === 'shopper' && ! empty($this->guidedQuestions['apply_shopper_commission'])) {
             $costs[] = [
                 'preset' => 'shopper_commission',
                 'type' => 'shopper_fee',
@@ -423,9 +460,9 @@ class BillingIndex extends Component
             ];
         }
 
-        // 2. Tiendas adicionales
+        // 2. Tiendas adicionales (solo compras físicas)
         $extraStores = (int) ($this->guidedQuestions['extra_stores_count'] ?? 0);
-        if ($extraStores > 0) {
+        if ($this->serviceType === 'shopper' && $extraStores > 0) {
             $rate = (float) ($this->rates['extra_store_fee'] ?? 20.0);
             $costs[] = [
                 'preset' => 'extra_store',
@@ -435,7 +472,7 @@ class BillingIndex extends Component
             ];
         }
 
-        // 3. Cajas Heavy Duty
+        // 3. Cajas Heavy Duty (aplica a cualquier servicio de reempaque)
         $boxSmall = (int) ($this->guidedQuestions['boxes_small_count'] ?? 0);
         if ($boxSmall > 0) {
             $rate = (float) ($this->rates['box_small_heavy_duty'] ?? 15.0);
@@ -469,28 +506,35 @@ class BillingIndex extends Component
             ];
         }
 
-        // 4. Almacén / Compras Online
-        if (! empty($this->guidedQuestions['apply_warehouse_commission'])) {
+        // 4. Comisión Almacén / Compras Online (15% sobre el valor del pedido online)
+        if ($this->serviceType === 'online' || ! empty($this->guidedQuestions['apply_warehouse_commission'])) {
             $pct = (float) ($this->rates['warehouse_percent'] ?? 15.0);
             $costs[] = [
                 'preset' => 'warehouse_commission',
                 'type' => 'receiving_fee',
-                'description' => "Comisión Almacén / Compras Online ({$pct}%)",
+                'description' => "Comisión Almacén / Compras Online ({$pct}% sobre $".number_format($subtotal, 2).')',
                 'amount' => round($subtotal * ($pct / 100), 2),
             ];
         }
 
+        // 5. Traslado de caja al Almacén (Fijo $20 en compras online)
         $delivery = (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0);
+        if ($this->serviceType === 'online' && $delivery === 0) {
+            $delivery = 1;
+            $this->guidedQuestions['warehouse_delivery_count'] = 1;
+        }
+
         if ($delivery > 0) {
             $rate = (float) ($this->rates['warehouse_delivery_fee'] ?? 20.0);
             $costs[] = [
                 'preset' => 'warehouse_delivery',
                 'type' => 'receiving_fee',
-                'description' => "Llevar caja al Almacén ({$delivery} x $".number_format($rate, 2).')',
+                'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($rate, 2).($delivery > 1 ? " x {$delivery}" : '').')',
                 'amount' => round($delivery * $rate, 2),
             ];
         }
 
+        // 6. Almacenaje tras 30 días
         $storageMonths = (int) ($this->guidedQuestions['storage_months_count'] ?? 0);
         if ($storageMonths > 0) {
             $rate = (float) ($this->rates['monthly_storage_fee'] ?? 15.0);
@@ -566,7 +610,8 @@ class BillingIndex extends Component
 
     public function getInvoicedTotalProperty(): float
     {
-        $itemsTotal = $this->productsSubtotal;
+        // En compras online, lo que el cliente pagó en internet no se suma al total a cobrar en la factura
+        $itemsTotal = $this->serviceType === 'shopper' ? $this->productsSubtotal : 0.0;
         $costsTotal = 0.0;
         foreach ($this->invoiceForm['costs'] as $cost) {
             $costsTotal += (float) ($cost['amount'] ?? 0);
@@ -620,7 +665,7 @@ class BillingIndex extends Component
                 'product_name' => count($this->invoiceForm['items']) > 1 ? $allProductsSummary : $firstItem['product_name'],
                 'store' => $firstItem['store'] ?? null,
                 'quantity' => $firstItem['quantity'] ?? 1,
-                'unit_price' => $firstItem['unit_price'] ?? null,
+                'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
                 'notes' => $this->invoiceForm['notes'] ?? null,
             ]);
 
@@ -635,13 +680,24 @@ class BillingIndex extends Component
                 $price = (float) ($item['unit_price'] ?? 0);
                 $subtotal = $qty * $price;
 
-                if ($subtotal > 0) {
+                if ($this->serviceType === 'shopper') {
+                    if ($subtotal > 0) {
+                        CostItem::create([
+                            'costable_type' => PurchaseRequest::class,
+                            'costable_id' => $purchaseRequest->id,
+                            'type' => CostType::ProductCost,
+                            'description' => $item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($price, 2).')' : ''),
+                            'amount' => $subtotal,
+                        ]);
+                    }
+                } else {
+                    // Online purchase: $0 billable amount
                     CostItem::create([
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $purchaseRequest->id,
                         'type' => CostType::ProductCost,
-                        'description' => $item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($price, 2).')' : ''),
-                        'amount' => $subtotal,
+                        'description' => $item['product_name'].' (Comprado online - Pagado en internet: $'.number_format($subtotal, 2).')',
+                        'amount' => 0.0,
                     ]);
                 }
             }
@@ -675,7 +731,7 @@ class BillingIndex extends Component
             'product_name' => count($this->invoiceForm['items']) > 1 ? $allProductsSummary : $firstItem['product_name'],
             'store' => $firstItem['store'] ?? null,
             'quantity' => $firstItem['quantity'] ?? 1,
-            'unit_price' => $firstItem['unit_price'] ?? null,
+            'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
             'status' => RequestStatus::Quoted,
             'notes' => $this->invoiceForm['notes'] ?? null,
         ]);
@@ -686,13 +742,24 @@ class BillingIndex extends Component
             $price = (float) ($item['unit_price'] ?? 0);
             $subtotal = $qty * $price;
 
-            if ($subtotal > 0) {
+            if ($this->serviceType === 'shopper') {
+                if ($subtotal > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $purchaseRequest->id,
+                        'type' => CostType::ProductCost,
+                        'description' => $item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($price, 2).')' : ''),
+                        'amount' => $subtotal,
+                    ]);
+                }
+            } else {
+                // Online purchase: $0 billable amount
                 CostItem::create([
                     'costable_type' => PurchaseRequest::class,
                     'costable_id' => $purchaseRequest->id,
                     'type' => CostType::ProductCost,
-                    'description' => $item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($price, 2).')' : ''),
-                    'amount' => $subtotal,
+                    'description' => $item['product_name'].' (Comprado online - Pagado en internet: $'.number_format($subtotal, 2).')',
+                    'amount' => 0.0,
                 ]);
             }
         }

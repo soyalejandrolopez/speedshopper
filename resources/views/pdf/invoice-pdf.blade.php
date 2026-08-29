@@ -269,7 +269,13 @@
                         </td>
                         <td style="color: #6b7280; font-size: 10px;">{{ $locale === 'es' ? 'Producto' : 'Product' }}</td>
                         <td class="text-right">{{ $request->quantity > 1 ? $request->quantity : 1 }}</td>
-                        <td class="text-right" style="font-weight: 600;">${{ number_format($pCost->amount, 2) }}</td>
+                        <td class="text-right" style="font-weight: 600;">
+                            @if ($pCost->amount > 0)
+                                ${{ number_format($pCost->amount, 2) }}
+                            @else
+                                <span style="color: #0284c7; font-size: 9.5px; font-weight: normal;">{{ $locale === 'es' ? 'Pagado en internet ($0.00)' : 'Paid online ($0.00)' }}</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             @else

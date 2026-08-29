@@ -292,6 +292,58 @@ test('billing and rates views render in english when locale is set to en', funct
         ->assertSee('Personal Shopper Tiers');
 });
 
+test('online purchase mode automatically enables 15 percent commission, fixed 20 dollar transfer, and excludes product price from invoice total', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['email' => 'online.client@example.com']);
+
+    $component = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->call('setServiceType', 'online')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Amazon Kindle Oasis',
+                'store' => 'Amazon US',
+                'quantity' => 1,
+                'unit_price' => 300.0,
+            ],
+        ])
+        ->call('syncGuidedQuestionsToCosts');
+
+    // Commission: 15% of $300 = $45.00
+    // Fixed Box Transfer: $20.00
+    // Product Price ($300) should NOT be billed in invoice total
+    expect($component->get('serviceType'))->toBe('online')
+        ->and($component->get('guidedQuestions.apply_warehouse_commission'))->toBeTrue()
+        ->and($component->get('guidedQuestions.warehouse_delivery_count'))->toBe(1)
+        ->and($component->get('guidedQuestions.apply_shopper_commission'))->toBeFalse()
+        ->and($component->get('productsSubtotal'))->toBe(300.0)
+        ->and((float) $component->get('invoicedTotal'))->toBe(65.0); // $45 commission + $20 delivery = $65
+
+    // Save online invoice
+    $component->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $createdRequest = PurchaseRequest::where('customer_id', $customer->id)->latest()->first();
+    expect($createdRequest)->not->toBeNull()
+        ->and((float) $createdRequest->total_cost)->toBe(65.0);
+
+    // Verify cost items: product cost is 0.0 with "(Comprado online - Pagado en internet: $300.00)"
+    $productCost = CostItem::where('costable_id', $createdRequest->id)
+        ->where('type', CostType::ProductCost)
+        ->first();
+    expect($productCost)->not->toBeNull()
+        ->and((float) $productCost->amount)->toBe(0.0)
+        ->and($productCost->description)->toContain('Comprado online');
+
+    $receivingCosts = CostItem::where('costable_id', $createdRequest->id)
+        ->where('type', CostType::ReceivingFee)
+        ->get();
+    expect($receivingCosts)->toHaveCount(2)
+        ->and((float) $receivingCosts->sum('amount'))->toBe(65.0);
+});
+
 test('unauthenticated users are redirected from billing and rates routes', function () {
     $this->get(route('admin.billing.index'))->assertRedirect(route('login'));
     $this->get(route('admin.rates.index'))->assertRedirect(route('login'));
