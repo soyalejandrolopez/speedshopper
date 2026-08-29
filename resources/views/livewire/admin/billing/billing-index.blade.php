@@ -624,39 +624,36 @@
                         </div>
                     @endif
 
-                    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Total Facturado') }}</span>
-                            <p class="text-xl font-bold text-gray-900 mt-0.5">{{ money($this->invoicedTotal) }}</p>
-                            <span class="text-[10px] text-gray-400 font-medium">{{ __('Total a cobrar al cliente') }}</span>
-                        </div>
-
-                        <div class="rounded-xl bg-white border border-emerald-200 p-3 shadow-2xs">
-                            <span class="text-[11px] font-bold text-emerald-800 uppercase flex items-center gap-1">
-                                <i class="fa-solid fa-sack-dollar text-emerald-600 text-xs"></i>
-                                {{ __('Ganancia por esta Venta') }}
-                            </span>
-                            <p class="text-xl font-black text-emerald-700 mt-0.5">{{ money($this->invoicedEarnings) }}</p>
-                            <span class="text-[10px] text-emerald-600 font-semibold">{{ __('Ingreso por comisiones y tarifas') }}</span>
-                        </div>
-
-                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Monto Pagado ($)') }}</span>
-                                <button type="button" wire:click="payFullAmount" class="text-[11px] text-emerald-700 font-bold hover:underline">
-                                    {{ __('Pagar Total') }}
-                                </button>
+                    {{-- Total a Pagar --}}
+                    <div class="rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50/60 p-5 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-widest text-emerald-700">{{ __('Total a Pagar') }}</p>
+                                <p class="mt-1 text-3xl font-extrabold text-gray-900 tracking-tight">{{ money($this->invoicedTotal) }}</p>
+                                <p class="mt-0.5 text-[11px] text-emerald-700 font-medium">
+                                    💰 {{ __('Ganancia por esta venta:') }}
+                                    <strong>{{ money($this->invoicedEarnings) }}</strong>
+                                </p>
                             </div>
-                            <input type="number" step="0.01" min="0" wire:model.live="invoiceForm.amount_paid"
-                                   class="mt-1 w-full rounded-lg border border-emerald-400 px-2 py-1 text-sm font-bold text-emerald-700 focus:ring-emerald-500">
-                        </div>
-
-                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Saldo Restante') }}</span>
-                            <p class="text-xl font-bold mt-0.5 {{ $this->pendingBalance > 0 ? 'text-amber-600' : 'text-emerald-700' }}">
-                                {{ money($this->pendingBalance) }}
-                            </p>
-                            <span class="text-[10px] text-gray-400 font-medium">{{ $this->pendingBalance > 0 ? __('Pendiente de pago') : __('Totalmente pagado') }}</span>
+                            <div class="flex flex-col gap-2 sm:items-end">
+                                <div class="flex items-center gap-2">
+                                    <label class="text-xs font-semibold text-gray-600 whitespace-nowrap">{{ __('Monto Pagado') }}</label>
+                                    <button type="button" wire:click="payFullAmount" class="text-[11px] text-emerald-700 font-bold hover:underline">
+                                        {{ __('Pagar Total') }}
+                                    </button>
+                                </div>
+                                <input type="number" step="0.01" min="0" wire:model.live="invoiceForm.amount_paid"
+                                       class="w-full sm:w-40 rounded-xl border border-emerald-400 px-3 py-2 text-sm font-bold text-emerald-700 focus:ring-emerald-500 bg-white">
+                                @if ($this->pendingBalance > 0)
+                                    <p class="text-xs font-semibold text-amber-600">
+                                        {{ __('Saldo pendiente:') }} {{ money($this->pendingBalance) }}
+                                    </p>
+                                @else
+                                    <p class="text-xs font-bold text-emerald-700">
+                                        ✓ {{ __('Totalmente pagado') }}
+                                    </p>
+                                @endif
+                            </div>
                         </div>
                     </div>
 

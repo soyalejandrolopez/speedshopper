@@ -625,7 +625,7 @@ test('billing automatically links budget value to unit price and calculates earn
         ->assertSet('invoiceForm.items.0.unit_price', 250.0)
         ->assertSet('productsSubtotal', 250.0)
         ->assertSet('invoicedEarnings', 50.0)
-        ->assertSee('Ganancia por esta Venta')
+        ->assertSee('Ganancia por esta venta')
         ->assertSee('50.00');
 });
 
