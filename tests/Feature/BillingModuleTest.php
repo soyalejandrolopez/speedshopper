@@ -29,7 +29,7 @@ test('admin can view billing invoice management page', function () {
         ->get(route('admin.billing.index'))
         ->assertOk()
         ->assertSee('Facturación')
-        ->assertSee('Crear Factura');
+        ->assertSee('Nueva Factura');
 });
 
 test('admin can create a full invoice with customer, products, and initial payment', function () {
@@ -194,8 +194,7 @@ test('billing and rates views render in english when locale is set to en', funct
         ->get(route('admin.billing.index'))
         ->assertOk()
         ->assertSee('Billing')
-        ->assertSee('Create Invoice')
-        ->assertSee('Rate Sheet PDF');
+        ->assertSee('New Invoice');
 
     $this->actingAs($admin)
         ->withSession(['locale' => 'en'])

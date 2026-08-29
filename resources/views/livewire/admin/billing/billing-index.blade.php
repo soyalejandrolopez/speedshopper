@@ -1,20 +1,6 @@
 <div>
     <x-slot name="header">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h1 class="text-xl font-bold text-gray-900">{{ __('Facturación') }}</h1>
-            <div class="flex items-center gap-2">
-                <a href="{{ route('admin.rates.index') }}" wire:navigate
-                   class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 transition-colors">
-                    <i class="fa-solid fa-tags text-emerald-600"></i>
-                    <span>{{ __('Tarifario PDF') }}</span>
-                </a>
-                <button type="button" wire:click="toggleCreateForm"
-                        class="inline-flex items-center gap-1.5 rounded-xl {{ $showCreateForm ? 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm' }} px-3.5 py-1.5 text-xs font-semibold transition-all">
-                    <i class="fa-solid {{ $showCreateForm ? 'fa-xmark' : 'fa-plus' }} text-xs"></i>
-                    <span>{{ $showCreateForm ? __('Cerrar Formulario') : __('Crear Factura') }}</span>
-                </button>
-            </div>
-        </div>
+        <h1 class="text-xl font-bold text-gray-900">{{ __('Facturación') }}</h1>
     </x-slot>
 
     {{-- Financial KPI Cards --}}
