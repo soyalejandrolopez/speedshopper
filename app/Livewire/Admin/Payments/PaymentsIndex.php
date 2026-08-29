@@ -26,6 +26,8 @@ class PaymentsIndex extends Component
 
     public ?int $editingId = null;
 
+    public ?float $pendingBalance = null;
+
     public array $form = [
         'customer_id' => null,
         'customer_search' => '',
@@ -53,8 +55,9 @@ class PaymentsIndex extends Component
     {
         $this->form['billable_type'] = '';
         $this->form['billable_id'] = null;
+        $this->pendingBalance = null;
 
-        // Pre-fill invoice_total with the customer's outstanding balance from their last payment.
+        // Check if the customer has an outstanding balance from their last payment.
         if ($this->form['customer_id'] && ! $this->editingId) {
             $lastPayment = Payment::query()
                 ->where('customer_id', $this->form['customer_id'])
@@ -62,6 +65,7 @@ class PaymentsIndex extends Component
                 ->first();
 
             if ($lastPayment && $lastPayment->balance_due > 0) {
+                $this->pendingBalance = (float) $lastPayment->balance_due;
                 $this->form['invoice_total'] = number_format($lastPayment->balance_due, 2, '.', '');
             }
         }
@@ -70,7 +74,7 @@ class PaymentsIndex extends Component
     public function openCreate(): void
     {
         $this->resetValidation();
-        $this->reset('form', 'editingId');
+        $this->reset('form', 'editingId', 'pendingBalance');
         $this->form['paid_at'] = now()->toDateString();
         $this->showForm = true;
     }
@@ -78,6 +82,7 @@ class PaymentsIndex extends Component
     public function edit(Payment $payment): void
     {
         $this->resetValidation();
+        $this->pendingBalance = null;
         $this->editingId = $payment->id;
         $this->form = $payment->only([
             'customer_id', 'invoice_total', 'amount_paid', 'notes', 'reference',
