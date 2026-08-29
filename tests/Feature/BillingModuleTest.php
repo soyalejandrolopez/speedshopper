@@ -29,7 +29,7 @@ test('admin can view billing invoice management page', function () {
         ->get(route('admin.billing.index'))
         ->assertOk()
         ->assertSee('Facturación')
-        ->assertSee('Crear Nueva Factura');
+        ->assertSee('Crear Factura');
 });
 
 test('admin can create a full invoice with customer, products, and initial payment', function () {

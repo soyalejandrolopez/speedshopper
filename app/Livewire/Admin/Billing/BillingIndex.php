@@ -26,7 +26,7 @@ class BillingIndex extends Component
 
     public string $paymentFilter = 'all';
 
-    public bool $showCreateModal = false;
+    public bool $showCreateForm = false;
 
     public bool $showPaymentModal = false;
 
@@ -57,6 +57,17 @@ class BillingIndex extends Component
         'notes' => '',
     ];
 
+    // Keep $showCreateModal as alias for backward compatibility with tests
+    public function getShowCreateModalProperty(): bool
+    {
+        return $this->showCreateForm;
+    }
+
+    public function setShowCreateModalProperty(bool $value): void
+    {
+        $this->showCreateForm = $value;
+    }
+
     public function mount(?PricingRateService $rateService = null): void
     {
         $rateService ??= app(PricingRateService::class);
@@ -73,7 +84,16 @@ class BillingIndex extends Component
         $this->resetPage();
     }
 
-    public function openCreateModal(): void
+    public function toggleCreateForm(): void
+    {
+        if ($this->showCreateForm) {
+            $this->closeCreateForm();
+        } else {
+            $this->openCreateForm();
+        }
+    }
+
+    public function openCreateForm(): void
     {
         $this->resetValidation();
         $this->rates = app(PricingRateService::class)->getRates();
@@ -100,13 +120,24 @@ class BillingIndex extends Component
         // Add default Shopper Commission from Rate Sheet
         $this->addQuickRateCost('shopper_commission');
 
-        $this->showCreateModal = true;
+        $this->showCreateForm = true;
+    }
+
+    public function closeCreateForm(): void
+    {
+        $this->showCreateForm = false;
+        $this->resetValidation();
+    }
+
+    // Alias methods for compatibility
+    public function openCreateModal(): void
+    {
+        $this->openCreateForm();
     }
 
     public function closeCreateModal(): void
     {
-        $this->showCreateModal = false;
-        $this->resetValidation();
+        $this->closeCreateForm();
     }
 
     public function selectCustomer(?int $customerId, string $name): void
@@ -448,7 +479,7 @@ class BillingIndex extends Component
             ]);
         }
 
-        $this->showCreateModal = false;
+        $this->showCreateForm = false;
         $this->swalSuccess(__('Factura :number creada correctamente con sus productos y tarifas aplicadas.', ['number' => $purchaseRequest->number]));
     }
 
