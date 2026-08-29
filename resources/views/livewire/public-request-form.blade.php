@@ -162,7 +162,7 @@
                             </div>
 
                             <div class="space-y-3">
-                                <div class="grid gap-3 sm:grid-cols-4">
+                                <div class="grid gap-3 sm:grid-cols-6">
                                     <div class="sm:col-span-3">
                                         <label class="label text-xs flex items-center gap-1.5" for="product_name-{{ $index }}">
                                             <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs"></i>
@@ -172,7 +172,19 @@
                                                class="input text-sm" placeholder="Ej. Nike Air Max 270, Zapatos Zara...">
                                         @error("items.{$index}.product_name") <p class="helper-error">{{ $message }}</p> @enderror
                                     </div>
-                                    <div>
+                                    <div class="sm:col-span-2">
+                                        <label class="label text-xs flex items-center gap-1.5" for="unit_price-{{ $index }}">
+                                            <i class="fa-solid fa-dollar-sign text-emerald-600 text-xs"></i>
+                                            <span>{{ __('Precio / Presupuesto ($)') }}</span>
+                                        </label>
+                                        <div class="flex">
+                                            <span class="inline-flex items-center px-3 text-xs font-bold text-gray-500 bg-gray-100 border border-e-0 border-gray-300 rounded-s-lg">$</span>
+                                            <input id="unit_price-{{ $index }}" name="unit_price_{{ $index }}" autocomplete="off" type="number" step="0.01" min="0" wire:model="items.{{ $index }}.unit_price"
+                                                   class="input rounded-none rounded-e-lg text-sm" placeholder="0.00">
+                                        </div>
+                                        @error("items.{$index}.unit_price") <p class="helper-error">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div class="sm:col-span-1">
                                         <label class="label text-xs flex items-center gap-1.5" for="quantity-{{ $index }}">
                                             <i class="fa-solid fa-hashtag text-emerald-600 text-xs"></i>
                                             <span>{{ __('Quantity') }}</span>

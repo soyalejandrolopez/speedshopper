@@ -4,7 +4,7 @@
     </x-slot>
 
     {{-- Financial KPI Cards --}}
-    <div class="mb-6 grid gap-4 grid-cols-2 lg:grid-cols-4">
+    <div class="mb-6 grid gap-4 grid-cols-2 lg:grid-cols-5">
         <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs">
             <div class="flex items-center justify-between">
                 <div>
@@ -17,11 +17,23 @@
             </div>
         </div>
 
+        <div class="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/90 to-teal-50/50 p-4 shadow-2xs">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">{{ __('Ganancia Servicios') }}</p>
+                    <p class="mt-0.5 text-xl font-extrabold text-emerald-800">{{ money($totalEarnings) }}</p>
+                </div>
+                <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
+                    <i class="fa-solid fa-sack-dollar text-sm"></i>
+                </div>
+            </div>
+        </div>
+
         <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Total Cobrado') }}</p>
-                    <p class="mt-0.5 text-xl font-bold text-emerald-700">{{ money($totalCollected) }}</p>
+                    <p class="mt-0.5 text-xl font-bold text-teal-700">{{ money($totalCollected) }}</p>
                 </div>
                 <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
                     <i class="fa-solid fa-circle-check text-sm"></i>
@@ -41,7 +53,7 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs">
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs col-span-2 lg:col-span-1">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Facturas Emitidas') }}</p>
@@ -612,13 +624,23 @@
                         </div>
                     @endif
 
-                    <div class="grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-xl bg-white border border-emerald-200 p-3 shadow-2xs">
+                    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
                             <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Total Facturado') }}</span>
                             <p class="text-xl font-bold text-gray-900 mt-0.5">{{ money($this->invoicedTotal) }}</p>
+                            <span class="text-[10px] text-gray-400 font-medium">{{ __('Total a cobrar al cliente') }}</span>
                         </div>
 
                         <div class="rounded-xl bg-white border border-emerald-200 p-3 shadow-2xs">
+                            <span class="text-[11px] font-bold text-emerald-800 uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-sack-dollar text-emerald-600 text-xs"></i>
+                                {{ __('Ganancia por esta Venta') }}
+                            </span>
+                            <p class="text-xl font-black text-emerald-700 mt-0.5">{{ money($this->invoicedEarnings) }}</p>
+                            <span class="text-[10px] text-emerald-600 font-semibold">{{ __('Ingreso por comisiones y tarifas') }}</span>
+                        </div>
+
+                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Monto Pagado ($)') }}</span>
                                 <button type="button" wire:click="payFullAmount" class="text-[11px] text-emerald-700 font-bold hover:underline">
@@ -629,11 +651,12 @@
                                    class="mt-1 w-full rounded-lg border border-emerald-400 px-2 py-1 text-sm font-bold text-emerald-700 focus:ring-emerald-500">
                         </div>
 
-                        <div class="rounded-xl bg-white border border-emerald-200 p-3 shadow-2xs">
+                        <div class="rounded-xl bg-white border border-gray-200 p-3 shadow-2xs">
                             <span class="text-[11px] font-semibold text-gray-500 uppercase">{{ __('Saldo Restante') }}</span>
                             <p class="text-xl font-bold mt-0.5 {{ $this->pendingBalance > 0 ? 'text-amber-600' : 'text-emerald-700' }}">
                                 {{ money($this->pendingBalance) }}
                             </p>
+                            <span class="text-[10px] text-gray-400 font-medium">{{ $this->pendingBalance > 0 ? __('Pendiente de pago') : __('Totalmente pagado') }}</span>
                         </div>
                     </div>
 
@@ -764,7 +787,9 @@
                         <th class="px-4 py-3">{{ __('N° Factura') }}</th>
                         <th class="px-4 py-3">{{ __('Cliente') }}</th>
                         <th class="px-4 py-3">{{ __('Productos / Resumen') }}</th>
+                        <th class="px-4 py-3">{{ __('Presupuesto / Producto') }}</th>
                         <th class="px-4 py-3">{{ __('Total Facturado') }}</th>
+                        <th class="px-4 py-3">{{ __('Ganancia (Comisión)') }}</th>
                         <th class="px-4 py-3">{{ __('Monto Pagado') }}</th>
                         <th class="px-4 py-3">{{ __('Saldo') }}</th>
                         <th class="px-4 py-3">{{ __('Estado') }}</th>
@@ -776,6 +801,11 @@
                     @forelse ($requests as $request)
                         @php
                             $totalCost = (float) $request->total_cost;
+                            $productCost = (float) $request->costItems->where('type', \App\Enums\CostType::ProductCost)->sum('amount');
+                            if ($productCost == 0.0 && $request->unit_price) {
+                                $productCost = (float) $request->unit_price * max(1, $request->quantity);
+                            }
+                            $earnings = (float) $request->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
                             $payments = $paymentsByRequest->get($request->id) ?? collect();
                             $paidAmount = (float) $payments->sum('amount_paid');
                             $balance = max(0.0, $totalCost - $paidAmount);
@@ -804,10 +834,18 @@
                                     <span class="text-gray-400 font-normal">({{ $request->quantity }} uds)</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 font-semibold text-gray-900">
+                            <td class="px-4 py-3 font-medium text-gray-600">
+                                {{ $productCost > 0 ? money($productCost) : '—' }}
+                            </td>
+                            <td class="px-4 py-3 font-bold text-gray-900">
                                 {{ money($totalCost) }}
                             </td>
-                            <td class="px-4 py-3 font-semibold text-emerald-600">
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 shadow-2xs" title="{{ __('Ganancia neta estimada de la empresa') }}">
+                                    💰 {{ money($earnings) }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 font-semibold text-teal-700">
                                 {{ money($paidAmount) }}
                             </td>
                             <td class="px-4 py-3">

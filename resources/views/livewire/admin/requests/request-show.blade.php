@@ -62,8 +62,14 @@
                         <dd class="font-medium text-gray-900">{{ $purchaseRequest->quantity }}</dd>
                     </div>
                     <div class="flex justify-between gap-2">
-                        <dt class="text-gray-500">{{ __('Unit Price') }}</dt>
-                        <dd class="font-medium text-gray-900">{{ $purchaseRequest->unit_price !== null ? money($purchaseRequest->unit_price) : '—' }}</dd>
+                        <dt class="text-gray-500">{{ __('Presupuesto / Precio Unitario') }}</dt>
+                        <dd class="font-bold text-gray-900">{{ $purchaseRequest->unit_price !== null ? money($purchaseRequest->unit_price) : '—' }}</dd>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <dt class="text-gray-500">{{ __('Ganancia Estimada (Servicios)') }}</dt>
+                        <dd class="font-bold text-emerald-700">
+                            💰 {{ money($purchaseRequest->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount')) }}
+                        </dd>
                     </div>
                     <div class="flex justify-between gap-2">
                         <dt class="text-gray-500">{{ __('Discount Found') }}</dt>
@@ -81,8 +87,16 @@
 
             <div class="rounded-xl border border-gray-200 bg-white">
                 <div class="flex items-center justify-between border-b border-gray-200 px-5 py-3">
-                    <h3 class="text-sm font-semibold text-gray-900">{{ __('Costs') }}</h3>
-                    <span class="text-sm font-semibold text-gray-900">{{ money($purchaseRequest->total_cost) }}</span>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900">{{ __('Costs & Desglose') }}</h3>
+                        <p class="text-xs text-gray-400">
+                            {{ __('Ganancia Empresa:') }} <strong class="text-emerald-700">{{ money($purchaseRequest->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount')) }}</strong>
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <span class="text-xs uppercase text-gray-400 block font-medium">{{ __('Total Facturado') }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ money($purchaseRequest->total_cost) }}</span>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="table-base">

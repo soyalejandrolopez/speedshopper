@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CostType;
 use App\Livewire\ChatRequestForm;
 use App\Livewire\ClientRegistrationForm;
 use App\Livewire\PublicRequestForm;
@@ -61,7 +62,9 @@ it('registers a client and creates a request through the 3-step form', function 
         ->and($request->services)->toContain('online_shopping')
         ->and($request->services)->toContain('consolidation')
         ->and($request->description)->toContain('Compras Online')
-        ->and($request->description)->toContain('Nike Air Max 270, Zapatos Zara');
+        ->and($request->description)->toContain('Nike Air Max 270, Zapatos Zara')
+        ->and((float) $request->unit_price)->toBe(200.0)
+        ->and((float) $request->costItems()->where('type', CostType::ProductCost)->sum('amount'))->toBe(200.0);
 });
 
 it('creates a package in Operations when the client already purchased', function () {

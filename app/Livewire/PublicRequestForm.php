@@ -88,7 +88,7 @@ class PublicRequestForm extends Component
         }
     }
 
-    /** @return array{product_name: string, product_url: string, description: string, quantity: int} */
+    /** @return array{product_name: string, product_url: string, description: string, quantity: int, unit_price: ?float} */
     protected function emptyItem(): array
     {
         return [
@@ -96,6 +96,7 @@ class PublicRequestForm extends Component
             'product_url' => '',
             'description' => '',
             'quantity' => 1,
+            'unit_price' => null,
         ];
     }
 
@@ -115,6 +116,7 @@ class PublicRequestForm extends Component
             'items.*.product_url' => ['nullable', 'url:http,https', 'max:2048'],
             'items.*.description' => ['nullable', 'string', 'max:2000'],
             'items.*.quantity' => ['nullable', 'integer', 'min:1', 'max:999'],
+            'items.*.unit_price' => ['nullable', 'numeric', 'min:0', 'max:1000000'],
             'boxes_small' => ['nullable', 'integer', 'min:0', 'max:99'],
             'boxes_medium' => ['nullable', 'integer', 'min:0', 'max:99'],
             'boxes_large' => ['nullable', 'integer', 'min:0', 'max:99'],
@@ -137,6 +139,7 @@ class PublicRequestForm extends Component
             $attributes["items.{$index}.product_url"] = __('product link')." #{$num}";
             $attributes["items.{$index}.description"] = __('message / notes')." #{$num}";
             $attributes["items.{$index}.quantity"] = __('quantity')." #{$num}";
+            $attributes["items.{$index}.unit_price"] = __('price')." #{$num}";
         }
 
         return $attributes;
@@ -216,14 +219,28 @@ class PublicRequestForm extends Component
 
         $created = 0;
         foreach ($validated['items'] as $index => $item) {
+            $unitPrice = ! empty($item['unit_price']) ? (float) $item['unit_price'] : null;
+            $qty = ! empty($item['quantity']) ? (int) $item['quantity'] : 1;
+
             $req = PurchaseRequest::create([
                 'customer_id' => $customer->id,
                 'product_name' => $item['product_name'],
                 'product_url' => ! empty($item['product_url']) ? $item['product_url'] : null,
                 'description' => ! empty($item['description']) ? $item['description'] : null,
-                'quantity' => ! empty($item['quantity']) ? (int) $item['quantity'] : 1,
+                'quantity' => $qty,
+                'unit_price' => $unitPrice,
                 'services' => $services,
             ]);
+
+            if ($unitPrice !== null && $unitPrice > 0) {
+                CostItem::create([
+                    'costable_type' => PurchaseRequest::class,
+                    'costable_id' => $req->id,
+                    'type' => CostType::ProductCost,
+                    'description' => 'Valor de Producto: '.$item['product_name'],
+                    'amount' => $unitPrice * $qty,
+                ]);
+            }
 
             // Add packing cost items to the first request if multiple items
             if ($index === 0) {

@@ -590,6 +590,45 @@ test('updating an invoice automatically sends updated email to customer and admi
     });
 });
 
+test('billing automatically links budget value to unit price and calculates earnings', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['name' => 'Roberto Gómez']);
+
+    // Create a request with unit_price (e.g. from registration form budget)
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::New,
+        'product_name' => 'Nike Air Force 1',
+        'unit_price' => 250.0,
+        'quantity' => 1,
+    ]);
+
+    CostItem::create([
+        'costable_type' => PurchaseRequest::class,
+        'costable_id' => $request->id,
+        'type' => CostType::ProductCost,
+        'description' => 'Valor de Productos / Presupuesto Cliente',
+        'amount' => 250.0,
+    ]);
+
+    CostItem::create([
+        'costable_type' => PurchaseRequest::class,
+        'costable_id' => $request->id,
+        'type' => CostType::ShopperFee,
+        'description' => 'Comisión Personal Shopper (20%)',
+        'amount' => 50.0,
+    ]);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('editInvoice', $request->id)
+        ->assertSet('invoiceForm.items.0.unit_price', 250.0)
+        ->assertSet('productsSubtotal', 250.0)
+        ->assertSet('invoicedEarnings', 50.0)
+        ->assertSee('Ganancia por esta Venta')
+        ->assertSee('50.00');
+});
+
 test('unauthenticated users are redirected from billing and rates routes', function () {
     $this->get(route('admin.billing.index'))->assertRedirect(route('login'));
     $this->get(route('admin.rates.index'))->assertRedirect(route('login'));

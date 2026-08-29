@@ -653,6 +653,26 @@ class BillingIndex extends Component
         return (float) ($itemsTotal + $costsTotal);
     }
 
+    public function getInvoicedEarningsProperty(): float
+    {
+        // En compras online y reempaque, el producto fue pagado directamente en internet por el cliente.
+        // Todo lo facturado corresponde a la ganancia por servicios prestados (comisión almacén, traslados, cajas).
+        if ($this->serviceType === 'online' || $this->serviceType === 'repack') {
+            return (float) $this->invoicedTotal;
+        }
+
+        // En Personal Shopper, la ganancia de la empresa corresponde a todos los cargos por servicio (comisiones, cajas, tiendas extra, etc.)
+        $earnings = 0.0;
+        foreach ($this->invoiceForm['costs'] as $cost) {
+            $type = $cost['type'] ?? '';
+            if ($type !== CostType::ProductCost->value) {
+                $earnings += (float) ($cost['amount'] ?? 0);
+            }
+        }
+
+        return (float) $earnings;
+    }
+
     public function getPendingBalanceProperty(): float
     {
         $total = $this->invoicedTotal;
@@ -996,6 +1016,7 @@ class BillingIndex extends Component
             ->groupBy('billable_id');
 
         $totalInvoiced = CostItem::where('costable_type', PurchaseRequest::class)->sum('amount');
+        $totalEarnings = CostItem::where('costable_type', PurchaseRequest::class)->where('type', '!=', CostType::ProductCost)->sum('amount');
         $totalCollected = Payment::sum('amount_paid');
         $totalPending = max(0.0, $totalInvoiced - $totalCollected);
 
@@ -1003,6 +1024,7 @@ class BillingIndex extends Component
             'requests' => $requests,
             'paymentsByRequest' => $paymentsByRequest,
             'totalInvoiced' => $totalInvoiced,
+            'totalEarnings' => $totalEarnings,
             'totalCollected' => $totalCollected,
             'totalPending' => $totalPending,
             'customers' => Customer::orderBy('name')->get(['id', 'name', 'phone', 'email', 'country']),

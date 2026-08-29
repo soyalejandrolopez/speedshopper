@@ -168,13 +168,27 @@ class ClientRegistrationForm extends Component
             $services[] = 'packing';
         }
 
+        $budget = ! empty($this->form['budget']) ? (float) $this->form['budget'] : null;
+
         $request = $customer->purchaseRequests()->create([
             'product_name' => mb_substr($this->form['products'] ?: __('Service request'), 0, 255),
             'store' => $this->form['preferred_stores'] ?: null,
             'services' => $services,
             'description' => $this->buildDescription(),
             'status' => 'new',
+            'quantity' => 1,
+            'unit_price' => $budget,
         ]);
+
+        if ($budget !== null && $budget > 0) {
+            CostItem::create([
+                'costable_type' => PurchaseRequest::class,
+                'costable_id' => $request->id,
+                'type' => CostType::ProductCost,
+                'description' => 'Valor de Productos / Presupuesto Cliente',
+                'amount' => $budget,
+            ]);
+        }
 
         $rates = $this->rates;
         $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);

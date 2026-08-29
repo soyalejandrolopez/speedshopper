@@ -47,13 +47,22 @@
                         <th class="px-4 py-3">{{ __('Customer') }}</th>
                         <th class="px-4 py-3">{{ __('Product') }}</th>
                         <th class="px-4 py-3">{{ __('Store') }}</th>
+                        <th class="px-4 py-3">{{ __('Presupuesto') }}</th>
                         <th class="px-4 py-3">{{ __('Total') }}</th>
+                        <th class="px-4 py-3">{{ __('Ganancia') }}</th>
                         <th class="px-4 py-3">{{ __('Status') }}</th>
                         <th class="px-4 py-3 text-end">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($requests as $request)
+                        @php
+                            $productCost = (float) $request->costItems->where('type', \App\Enums\CostType::ProductCost)->sum('amount');
+                            if ($productCost == 0.0 && $request->unit_price) {
+                                $productCost = (float) $request->unit_price * max(1, $request->quantity);
+                            }
+                            $earnings = (float) $request->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                        @endphp
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3 font-mono text-xs">
                                 <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="font-medium text-emerald-600 hover:text-emerald-800">{{ $request->number }}</a>
@@ -68,7 +77,13 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-xs">{{ $request->store ?? '—' }}</td>
-                            <td class="px-4 py-3 text-xs">{{ money($request->total_cost) }}</td>
+                            <td class="px-4 py-3 text-xs font-medium text-gray-600">{{ $productCost > 0 ? money($productCost) : '—' }}</td>
+                            <td class="px-4 py-3 text-xs font-bold text-gray-900">{{ money($request->total_cost) }}</td>
+                            <td class="px-4 py-3 text-xs">
+                                <span class="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 shadow-2xs">
+                                    💰 {{ money($earnings) }}
+                                </span>
+                            </td>
                             <td class="px-4 py-3"><x-status-badge :status="$request->status" /></td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-end gap-1">
@@ -100,6 +115,13 @@
 
         <ul class="divide-y divide-gray-100 md:hidden">
             @forelse ($requests as $request)
+                @php
+                    $productCost = (float) $request->costItems->where('type', \App\Enums\CostType::ProductCost)->sum('amount');
+                    if ($productCost == 0.0 && $request->unit_price) {
+                        $productCost = (float) $request->unit_price * max(1, $request->quantity);
+                    }
+                    $earnings = (float) $request->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                @endphp
                 <li>
                     <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="block px-4 py-4 transition-colors hover:bg-emerald-50/40">
                         <div class="flex items-start justify-between gap-3">
@@ -116,10 +138,11 @@
                             @if ($request->store)
                                 <span class="inline-flex items-center gap-1"><i class="fa-solid fa-store text-xs"></i> {{ $request->store }}</span>
                             @endif
-                            @if ($request->size_color)
-                                <span>{{ $request->size_color }} · ×{{ $request->quantity }}</span>
+                            @if ($productCost > 0)
+                                <span class="text-gray-600 font-medium">{{ __('Presupuesto:') }} {{ money($productCost) }}</span>
                             @endif
-                            <span class="ms-auto font-semibold text-gray-900">{{ money($request->total_cost) }}</span>
+                            <span class="text-emerald-700 font-bold">💰 {{ __('Ganancia:') }} {{ money($earnings) }}</span>
+                            <span class="ms-auto font-bold text-gray-900">{{ money($request->total_cost) }}</span>
                         </div>
                     </a>
                 </li>
