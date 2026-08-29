@@ -138,8 +138,9 @@
                                             {{ __('Invoice Total assumed') }}
                                         </span>
                                     </div>
-                                    {{-- Hidden input keeps the bound value so validation passes --}}
-                                    <input type="hidden" wire:model="form.invoice_total">
+                                    {{-- Readonly input keeps wire:model in the DOM so Livewire never loses the value --}}
+                                    <input type="number" step="0.01" wire:model="form.invoice_total"
+                                           class="sr-only" aria-hidden="true" tabindex="-1" readonly>
                                 </div>
                             @else
                                 <div>

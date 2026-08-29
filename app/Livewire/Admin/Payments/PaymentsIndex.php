@@ -110,6 +110,12 @@ class PaymentsIndex extends Component
 
     public function save(): void
     {
+        // If a pending balance was detected, enforce it as the invoice_total
+        // regardless of what the DOM sent — avoids hidden-input sync issues.
+        if ($this->pendingBalance !== null && ! $this->editingId) {
+            $this->form['invoice_total'] = number_format($this->pendingBalance, 2, '.', '');
+        }
+
         $data = $this->validatedData();
 
         // Campos opcionales: vacío → null/0 (evita error de cast a enum, morphTo o NOT NULL).
