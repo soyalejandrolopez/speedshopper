@@ -19,7 +19,7 @@ test('admin can view dedicated rate sheet configuration page', function () {
     $this->actingAs($admin)
         ->get(route('admin.rates.index'))
         ->assertOk()
-        ->assertSee('Rate Sheet & Pricing PDF');
+        ->assertSee('Tarifario y PDF Oficial');
 });
 
 test('admin can view billing invoice management page', function () {
@@ -183,6 +183,26 @@ test('client can view portal billing and pricing guide page', function () {
         ->assertOk()
         ->assertSee('Guía Oficial de Precios y Facturas')
         ->assertSee('MacBook Pro M3');
+});
+
+test('billing and rates views render in english when locale is set to en', function () {
+    app()->setLocale('en');
+    $admin = createAdmin(['locale' => 'en']);
+
+    $this->actingAs($admin)
+        ->withSession(['locale' => 'en'])
+        ->get(route('admin.billing.index'))
+        ->assertOk()
+        ->assertSee('Billing')
+        ->assertSee('Create Invoice')
+        ->assertSee('Rate Sheet PDF');
+
+    $this->actingAs($admin)
+        ->withSession(['locale' => 'en'])
+        ->get(route('admin.rates.index'))
+        ->assertOk()
+        ->assertSee('Rate Sheet')
+        ->assertSee('Send by Email');
 });
 
 test('unauthenticated users are redirected from billing and rates routes', function () {
