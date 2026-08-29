@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PricingPdfController;
 use App\Http\Controllers\PrintController;
 use App\Livewire\Admin\Customers\CustomerShow;
 use App\Livewire\Admin\Customers\CustomersIndex;
@@ -71,6 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/inquiries', InquiriesIndex::class)->name('inquiries.index');
 
         Route::get('/mail', MailCompose::class)->name('mail.index');
+
+        Route::get('/rates/pdf', [PricingPdfController::class, 'download'])->name('rates.pdf');
 
         Route::get('/settings', SettingsIndex::class)->name('settings.index');
     });
