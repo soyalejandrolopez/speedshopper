@@ -43,7 +43,7 @@
                 </h2>
 
                 <p class="text-gray-500 text-sm max-w-sm mx-auto leading-relaxed mt-2">
-                    Lo sentimos, ha ocurrido un error o la página que buscas no se encuentra disponible en este momento.
+                    {{ __('Lo sentimos, ha ocurrido un error o la página que buscas no se encuentra disponible en este momento.') }}
                 </p>
             </div>
 
@@ -51,14 +51,14 @@
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a href="{{ url('/') }}" class="btn-primary w-full sm:w-auto px-6 py-2.5">
                     <i class="fa-solid fa-arrow-left text-base w-4.5 h-4.5"></i>
-                    <span class="ml-2">Volver al Inicio</span>
+                    <span class="ml-2">{{ __('Volver al Inicio') }}</span>
                 </a>
             </div>
         </div>
         
         <!-- Footer text -->
         <div class="mt-8 text-center text-xs text-gray-400">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.
+            &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('Todos los derechos reservados.') }}
             <div class="mt-1">
                 Powered by <a href="https://www.hamstersoftware.com" target="_blank" class="hover:text-emerald-600 transition-colors">Hamster Software</a>
             </div>

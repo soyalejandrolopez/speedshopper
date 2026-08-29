@@ -130,7 +130,7 @@
                         {{ $slot }}
                     </div>
                     <div class="mt-8 text-center text-xs text-gray-400 print:hidden">
-                        &copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.
+                        &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('Todos los derechos reservados.') }}
                         <div class="mt-1">
                             Powered by <a href="https://www.hamstersoftware.com" target="_blank" class="hover:text-emerald-600 transition-colors">Hamster Software</a>
                         </div>
