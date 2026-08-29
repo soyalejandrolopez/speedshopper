@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
+use App\Services\InvoicePdfService;
 use App\Services\PricingRateService;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
@@ -391,6 +392,113 @@ test('repack mode automatically enables fixed 20 dollar transfer, allows box sel
         ->first();
     expect($deliveryCost)->not->toBeNull()
         ->and((float) $deliveryCost->amount)->toBe(20.0);
+});
+
+test('admin can set invoice type as cotizacion, pendiente or pagado and saves correct status', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['email' => 'types.client@example.com']);
+
+    // 1. Cotización
+    $componentQuote = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->call('setInvoiceType', 'cotizacion')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Quote Item',
+                'store' => 'BestBuy',
+                'quantity' => 1,
+                'unit_price' => 100.0,
+            ],
+        ])
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $quoteReq = PurchaseRequest::where('product_name', 'Quote Item')->latest()->first();
+    expect($quoteReq)->not->toBeNull()
+        ->and($quoteReq->status)->toBe(RequestStatus::Quoted);
+
+    // 2. Pendiente
+    $componentPending = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->call('setInvoiceType', 'pendiente')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Pending Item',
+                'store' => 'Target',
+                'quantity' => 1,
+                'unit_price' => 150.0,
+            ],
+        ])
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $pendingReq = PurchaseRequest::where('product_name', 'Pending Item')->latest()->first();
+    expect($pendingReq)->not->toBeNull()
+        ->and($pendingReq->status)->toBe(RequestStatus::AwaitingPayment);
+
+    // 3. Pagado
+    $componentPaid = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateModal')
+        ->call('setInvoiceType', 'pagado')
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items', [
+            [
+                'product_name' => 'Paid Item',
+                'store' => 'Apple',
+                'quantity' => 1,
+                'unit_price' => 200.0,
+            ],
+        ])
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $paidReq = PurchaseRequest::where('product_name', 'Paid Item')->latest()->first();
+    expect($paidReq)->not->toBeNull()
+        ->and($paidReq->status)->toBe(RequestStatus::Purchased);
+});
+
+test('invoice pdf renders payment methods and instructions for pending and quote status', function () {
+    $customer = Customer::factory()->create();
+    $purchaseRequest = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'product_name' => 'AirPods Pro',
+        'status' => RequestStatus::Quoted,
+        'unit_price' => 249.0,
+        'quantity' => 1,
+    ]);
+
+    $pdfService = app(InvoicePdfService::class);
+    $pdf = $pdfService->generatePdf($purchaseRequest, 'es');
+    $html = $pdf->output();
+
+    expect($html)->not->toBeEmpty();
+
+    // Directly test the Blade view rendering
+    $viewHtml = view('pdf.invoice-pdf', [
+        'request' => $purchaseRequest,
+        'locale' => 'es',
+        'companyName' => 'Speed Shopper',
+        'companyEmail' => 'info@speedshopper.com',
+        'warehouseAddress' => 'Miami, FL',
+        'whatsappPhone' => '+1 (555) 000-0000',
+        'logoBase64' => null,
+        'qrDataUri' => null,
+        'paymentImageBase64' => null,
+        'totalCost' => 249.0,
+        'paidAmount' => 0.0,
+        'balance' => 249.0,
+        'generatedAt' => now(),
+    ])->render();
+
+    expect($viewHtml)->toContain('Gomez.Lilibeth1977@gmail.com')
+        ->and($viewHtml)->toContain('Zelle')
+        ->and($viewHtml)->toContain('PayPal')
+        ->and($viewHtml)->toContain('Cotización');
 });
 
 test('unauthenticated users are redirected from billing and rates routes', function () {

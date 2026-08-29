@@ -154,29 +154,77 @@
             color: {{ $balance > 0 ? '#b45309' : '#047857' }};
         }
 
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            margin-top: 3px;
+        }
+        .badge-quote {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        .badge-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        .badge-paid {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .payment-box {
+            width: 100%;
+            margin-top: 12px;
+            background-color: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 6px;
+            padding: 8px 12px;
+        }
+        .payment-box-title {
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #166534;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
         /* Footer */
         .footer-table {
             width: 100%;
-            margin-top: 30px;
+            margin-top: 24px;
             border-top: 1px solid #e5e7eb;
-            padding-top: 12px;
+            padding-top: 10px;
         }
         .qr-img {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
         }
         .notice-box {
             background-color: #fffbeb;
             border: 1px solid #fef3c7;
             border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 9.5px;
+            padding: 7px 10px;
+            font-size: 9px;
             color: #92400e;
-            margin-top: 14px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+
+    @php
+        $isQuoted = $request->status === \App\Enums\RequestStatus::Quoted;
+        $isPaid = ($balance <= 0 && ! $isQuoted) || $request->status === \App\Enums\RequestStatus::Purchased;
+        $isPending = ! $isPaid && ! $isQuoted;
+    @endphp
 
     <!-- Header -->
     <table class="header-table">
@@ -192,10 +240,27 @@
                 @endif
             </td>
             <td style="width: 45%; vertical-align: middle;">
-                <h2 class="invoice-title">{{ $locale === 'es' ? 'Factura Oficial' : 'Official Invoice' }}</h2>
+                <h2 class="invoice-title">
+                    @if ($isQuoted)
+                        {{ $locale === 'es' ? 'Cotización' : 'Quotation / Estimate' }}
+                    @elseif ($isPending)
+                        {{ $locale === 'es' ? 'Factura Pendiente' : 'Pending Invoice' }}
+                    @else
+                        {{ $locale === 'es' ? 'Factura Oficial' : 'Official Invoice' }}
+                    @endif
+                </h2>
                 <div class="invoice-number">#{{ $request->number }}</div>
                 <div class="invoice-date">
                     {{ $locale === 'es' ? 'Fecha de Emisión:' : 'Issue Date:' }} {{ $request->created_at->format('Y-m-d') }}
+                </div>
+                <div style="text-align: right; margin-top: 3px;">
+                    @if ($isQuoted)
+                        <span class="badge badge-quote">{{ $locale === 'es' ? 'Cotización' : 'Quote' }}</span>
+                    @elseif ($isPending)
+                        <span class="badge badge-pending">{{ $locale === 'es' ? 'Pendiente de Pago' : 'Pending Payment' }}</span>
+                    @else
+                        <span class="badge badge-paid">{{ $locale === 'es' ? 'Pagado' : 'Paid' }}</span>
+                    @endif
                 </div>
             </td>
         </tr>
@@ -340,6 +405,46 @@
             </td>
         </tr>
     </table>
+
+    <!-- Payment Methods Section (SOLO en Pendiente y Cotización) -->
+    @if ($isQuoted || $isPending)
+        <table class="payment-box">
+            <tr>
+                <td style="width: {{ $paymentImageBase64 ? '68%' : '100%' }}; vertical-align: middle;">
+                    <div class="payment-box-title">
+                        {{ $locale === 'es' ? 'MÉTODOS DE PAGO DISPONIBLES' : 'AVAILABLE PAYMENT METHODS' }}
+                    </div>
+                    <table style="width: 100%; font-size: 11px; margin-top: 2px;">
+                        <tr>
+                            <td style="width: 22%; font-weight: bold; color: #15803d; padding: 2px 0;">Zelle:</td>
+                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">Gomez.Lilibeth1977@gmail.com</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 22%; font-weight: bold; color: #15803d; padding: 2px 0;">PayPal:</td>
+                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">Gomez.Lilibeth1977@gmail.com</td>
+                        </tr>
+                    </table>
+                    <div style="margin-top: 4px; font-size: 9px; color: #166534;">
+                        {{ $locale === 'es'
+                            ? '• Por favor enviar el comprobante indicando el número de factura #' . $request->number
+                            : '• Please send payment confirmation referencing invoice #' . $request->number }}
+                    </div>
+                </td>
+                @if ($paymentImageBase64)
+                    <td style="width: 32%; text-align: center; vertical-align: middle;">
+                        <img src="{{ $paymentImageBase64 }}" style="max-height: 90px; max-width: 130px; border-radius: 4px; border: 1px solid #86efac;" alt="Info Pago">
+                    </td>
+                @endif
+            </tr>
+        </table>
+    @else
+        <!-- Paid in full banner -->
+        <div style="margin-top: 10px; background-color: #ecfdf5; border: 1px solid #059669; border-radius: 6px; padding: 8px 12px; text-align: center;">
+            <span style="font-size: 12px; font-weight: bold; color: #047857; letter-spacing: 0.5px;">
+                ✓ {{ $locale === 'es' ? 'FACTURA PAGADA EN SU TOTALIDAD - ¡GRACIAS POR SU PAGO!' : 'INVOICE PAID IN FULL - THANK YOU!' }}
+            </span>
+        </div>
+    @endif
 
     <!-- Notice -->
     <div class="notice-box">

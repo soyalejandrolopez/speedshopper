@@ -45,7 +45,9 @@ class BillingIndex extends Component
 
     public array $rates = [];
 
-    public string $serviceType = 'shopper'; // 'shopper' or 'online'
+    public string $serviceType = 'shopper'; // 'shopper', 'online', 'repack'
+
+    public string $invoiceType = 'cotizacion'; // 'cotizacion', 'pendiente', 'pagado'
 
     public array $guidedQuestions = [
         'apply_shopper_commission' => true,
@@ -63,6 +65,7 @@ class BillingIndex extends Component
     public array $invoiceForm = [
         'customer_id' => null,
         'customer_search' => '',
+        'invoice_type' => 'cotizacion',
         'notes' => '',
         'items' => [],
         'costs' => [],
@@ -141,9 +144,11 @@ class BillingIndex extends Component
         ];
         $this->customCosts = [];
 
+        $this->invoiceType = 'cotizacion';
         $this->invoiceForm = [
             'customer_id' => null,
             'customer_search' => '',
+            'invoice_type' => 'cotizacion',
             'notes' => '',
             'items' => [
                 [
@@ -162,6 +167,18 @@ class BillingIndex extends Component
 
         $this->syncGuidedQuestionsToCosts();
         $this->showCreateForm = true;
+    }
+
+    public function setInvoiceType(string $type): void
+    {
+        $this->invoiceType = in_array($type, ['cotizacion', 'pendiente', 'pagado'], true) ? $type : 'cotizacion';
+        $this->invoiceForm['invoice_type'] = $this->invoiceType;
+
+        if ($this->invoiceType === 'pagado') {
+            $this->invoiceForm['amount_paid'] = $this->invoicedTotal;
+        } elseif ($this->invoiceType === 'cotizacion') {
+            $this->invoiceForm['amount_paid'] = 0.0;
+        }
     }
 
     public function setServiceType(string $type): void
@@ -299,9 +316,18 @@ class BillingIndex extends Component
             ->where('billable_id', $request->id)
             ->sum('amount_paid');
 
+        if ($request->status === RequestStatus::Quoted) {
+            $this->invoiceType = 'cotizacion';
+        } elseif ($request->status === RequestStatus::AwaitingPayment) {
+            $this->invoiceType = 'pendiente';
+        } else {
+            $this->invoiceType = 'pagado';
+        }
+
         $this->invoiceForm = [
             'customer_id' => $request->customer_id,
             'customer_search' => $request->customer?->name ?? '',
+            'invoice_type' => $this->invoiceType,
             'notes' => $request->notes ?? '',
             'items' => $items,
             'costs' => [],
@@ -664,6 +690,14 @@ class BillingIndex extends Component
         $firstItem = $this->invoiceForm['items'][0];
         $allProductsSummary = collect($this->invoiceForm['items'])->pluck('product_name')->join(', ');
 
+        $type = $this->invoiceForm['invoice_type'] ?? $this->invoiceType;
+        $targetStatus = match ($type) {
+            'cotizacion' => RequestStatus::Quoted,
+            'pendiente' => RequestStatus::AwaitingPayment,
+            'pagado' => RequestStatus::Purchased,
+            default => RequestStatus::Quoted,
+        };
+
         if ($this->isEditing && $this->editingRequestId) {
             $purchaseRequest = PurchaseRequest::findOrFail($this->editingRequestId);
 
@@ -673,6 +707,7 @@ class BillingIndex extends Component
                 'store' => $firstItem['store'] ?? null,
                 'quantity' => $firstItem['quantity'] ?? 1,
                 'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
+                'status' => $targetStatus,
                 'notes' => $this->invoiceForm['notes'] ?? null,
             ]);
 
@@ -739,7 +774,7 @@ class BillingIndex extends Component
             'store' => $firstItem['store'] ?? null,
             'quantity' => $firstItem['quantity'] ?? 1,
             'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
-            'status' => RequestStatus::Quoted,
+            'status' => $targetStatus,
             'notes' => $this->invoiceForm['notes'] ?? null,
         ]);
 

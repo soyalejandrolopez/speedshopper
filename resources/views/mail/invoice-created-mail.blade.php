@@ -61,13 +61,37 @@
                     </table>
                 </div>
 
+                {{-- Payment Methods Box (Only for Pending or Quote) --}}
+                @if ($balance > 0 || $purchaseRequest->status === \App\Enums\RequestStatus::Quoted || $purchaseRequest->status === \App\Enums\RequestStatus::AwaitingPayment)
+                    <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 14px 16px; margin: 20px 0;">
+                        <p style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #166534; margin: 0 0 8px 0; letter-spacing: 0.5px;">
+                            💳 {{ $locale === 'es' ? 'Métodos de Pago Disponibles:' : 'Available Payment Methods:' }}
+                        </p>
+                        <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px; color: #14532d;">
+                            <tr>
+                                <td style="padding: 3px 0; font-weight: bold; width: 80px;">Zelle:</td>
+                                <td style="padding: 3px 0; font-family: monospace; font-weight: bold;">Gomez.Lilibeth1977@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 3px 0; font-weight: bold; width: 80px;">PayPal:</td>
+                                <td style="padding: 3px 0; font-family: monospace; font-weight: bold;">Gomez.Lilibeth1977@gmail.com</td>
+                            </tr>
+                        </table>
+                        <p style="font-size: 11px; color: #166534; margin: 8px 0 0 0;">
+                            {{ $locale === 'es'
+                                ? '• Por favor enviar el comprobante de pago indicando el N° de factura #' . $purchaseRequest->number
+                                : '• Please include invoice #' . $purchaseRequest->number . ' in your payment reference' }}
+                        </p>
+                    </div>
+                @endif
+
                 {{-- PDF Attachment Reminder Box --}}
                 <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 14px 16px; margin: 20px 0;">
                     <p style="font-size: 13px; color: #065f46; margin: 0; line-height: 1.5;">
                         <strong style="color: #047857;">📎 {{ $locale === 'es' ? 'Documento PDF Adjunto' : 'Attached PDF Document' }}:</strong><br>
                         {{ $locale === 'es'
-                            ? 'Descarga el PDF adjunto para imprimir o guardar tu factura oficial con código QR.'
-                            : 'Download the attached PDF to print or save your official invoice with QR code.' }}
+                            ? 'Descarga el PDF adjunto para imprimir o guardar tu factura oficial con código QR y detalles de pago.'
+                            : 'Download the attached PDF to print or save your official invoice with QR code and payment details.' }}
                     </p>
                 </div>
 

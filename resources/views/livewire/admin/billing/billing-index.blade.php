@@ -174,6 +174,50 @@
                     </div>
                 @endif
 
+                {{-- Selector de Tipo de Factura / Estado (Cotización, Pendiente, Pagada) --}}
+                <div class="rounded-xl border border-gray-200/80 bg-gray-50/50 p-3.5">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-2">
+                        {{ __('Tipo de Factura / Estado') }} *
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {{-- 1. Cotización --}}
+                        <button type="button" wire:click="setInvoiceType('cotizacion')"
+                                class="flex items-center gap-2.5 p-2.5 rounded-xl border-2 transition-all text-start {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'cotizacion' ? 'border-blue-500 bg-blue-50/80 text-blue-950 font-bold shadow-xs ring-1 ring-blue-400' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg shrink-0 {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'cotizacion' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                                <i class="fa-solid fa-file-lines text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-gray-900 truncate">{{ __('Cotización') }}</p>
+                                <p class="text-[10px] text-gray-500 font-normal leading-tight">{{ __('Presupuesto informativo') }}</p>
+                            </div>
+                        </button>
+
+                        {{-- 2. Pendiente --}}
+                        <button type="button" wire:click="setInvoiceType('pendiente')"
+                                class="flex items-center gap-2.5 p-2.5 rounded-xl border-2 transition-all text-start {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'pendiente' ? 'border-amber-500 bg-amber-50/80 text-amber-950 font-bold shadow-xs ring-1 ring-amber-400' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg shrink-0 {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'pendiente' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-500' }}">
+                                <i class="fa-solid fa-clock text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-gray-900 truncate">{{ __('Pendiente') }}</p>
+                                <p class="text-[10px] text-gray-500 font-normal leading-tight">{{ __('Esperando el pago del cliente') }}</p>
+                            </div>
+                        </button>
+
+                        {{-- 3. Pagada --}}
+                        <button type="button" wire:click="setInvoiceType('pagado')"
+                                class="flex items-center gap-2.5 p-2.5 rounded-xl border-2 transition-all text-start {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'pagado' ? 'border-emerald-500 bg-emerald-50/80 text-emerald-950 font-bold shadow-xs ring-1 ring-emerald-400' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg shrink-0 {{ ($invoiceForm['invoice_type'] ?? $invoiceType) === 'pagado' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500' }}">
+                                <i class="fa-solid fa-circle-check text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-gray-900 truncate">{{ __('Pagado') }}</p>
+                                <p class="text-[10px] text-gray-500 font-normal leading-tight">{{ __('Cobro recibido por completo') }}</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
                 {{-- 1. Datos del Cliente --}}
                 <div class="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
@@ -593,16 +637,70 @@
                         </div>
                     </div>
 
+                    {{-- Métodos de Pago disponibles (Visible en Cotización y Pendiente) --}}
+                    @if (($invoiceForm['invoice_type'] ?? $invoiceType) === 'cotizacion' || ($invoiceForm['invoice_type'] ?? $invoiceType) === 'pendiente')
+                        <div class="mt-4 rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/90 to-purple-50/70 p-4 shadow-2xs">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div class="space-y-2 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-600 text-white text-xs">
+                                            <i class="fa-solid fa-credit-card text-[10px]"></i>
+                                        </span>
+                                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-indigo-950">
+                                            {{ __('Métodos de Pago Disponibles en la Factura') }}
+                                        </h4>
+                                        <span class="text-[10px] font-bold bg-indigo-200/80 text-indigo-900 px-2 py-0.5 rounded-md">
+                                            {{ __('Visible en Cotización y Pendiente') }}
+                                        </span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                                        <div class="rounded-xl bg-white border border-indigo-100 p-2.5 shadow-2xs flex items-center gap-3">
+                                            <div class="h-8 w-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0">
+                                                <i class="fa-solid fa-z"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="text-[10px] font-bold uppercase text-gray-500">Zelle</p>
+                                                <p class="text-xs font-extrabold text-indigo-950 font-mono select-all truncate">Gomez.Lilibeth1977@gmail.com</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="rounded-xl bg-white border border-indigo-100 p-2.5 shadow-2xs flex items-center gap-3">
+                                            <div class="h-8 w-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0">
+                                                <i class="fa-brands fa-paypal"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="text-[10px] font-bold uppercase text-gray-500">PayPal</p>
+                                                <p class="text-xs font-extrabold text-indigo-950 font-mono select-all truncate">Gomez.Lilibeth1977@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-[11px] text-indigo-900/80 italic mt-1">
+                                        * {{ __('Se adjunta la información gráfica de pago en el PDF oficial.') }}
+                                    </p>
+                                </div>
+
+                                {{-- Thumbnail of Imagen.png --}}
+                                <div class="shrink-0 flex flex-col items-center">
+                                    <div class="rounded-xl border border-indigo-200 bg-white p-1.5 shadow-xs">
+                                        <img src="{{ asset('images/Imagen.png') }}" alt="Métodos de Pago" class="h-16 w-auto rounded-lg object-contain">
+                                    </div>
+                                    <span class="text-[9px] text-indigo-700 font-semibold mt-0.5">{{ __('Info Pago') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="mt-4 grid gap-3 sm:grid-cols-3">
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Método de Pago') }}</label>
                             <select wire:model="invoiceForm.payment_method" class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs font-medium">
-                                <option value="zelle">Zelle</option>
+                                <option value="zelle">Zelle (Gomez.Lilibeth1977@gmail.com)</option>
+                                <option value="paypal">PayPal (Gomez.Lilibeth1977@gmail.com)</option>
+                                <option value="bank_transfer">{{ __('Transferencia Bancaria') }}</option>
+                                <option value="card">{{ __('Tarjeta de Crédito / Débito') }}</option>
                                 <option value="cash">{{ __('Efectivo (Cash)') }}</option>
-                                <option value="card">{{ __('Tarjeta de Crédito/Débito') }}</option>
-                                <option value="transfer">{{ __('Transferencia Bancaria') }}</option>
-                                <option value="paypal">PayPal</option>
-                                <option value="other">{{ __('Otro') }}</option>
+                                <option value="other">{{ __('Otro Método') }}</option>
                             </select>
                         </div>
                         <div>

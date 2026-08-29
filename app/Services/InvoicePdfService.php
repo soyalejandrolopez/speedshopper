@@ -36,6 +36,17 @@ class InvoicePdfService
         $qrData = $cleanWa ? "https://wa.me/{$cleanWa}?text=".urlencode("Hola Speed Shopper, consulta sobre mi Factura #{$request->number}") : url('/');
         $qrDataUri = app(QrCodeService::class)->generateDataUri($qrData, 70);
 
+        $paymentImageBase64 = null;
+        $paymentImgPath = public_path('images/Imagen.png');
+        if (! file_exists($paymentImgPath)) {
+            $paymentImgPath = public_path('Imagen.png');
+        }
+        if (file_exists($paymentImgPath)) {
+            $imgData = file_get_contents($paymentImgPath);
+            $mime = mime_content_type($paymentImgPath) ?: 'image/png';
+            $paymentImageBase64 = 'data:'.$mime.';base64,'.base64_encode($imgData);
+        }
+
         $totalCost = (float) $request->total_cost;
         $paidAmount = (float) Payment::where('billable_type', PurchaseRequest::class)
             ->where('billable_id', $request->id)
@@ -51,6 +62,7 @@ class InvoicePdfService
             'whatsappPhone' => $whatsappPhone,
             'logoBase64' => $logoBase64,
             'qrDataUri' => $qrDataUri,
+            'paymentImageBase64' => $paymentImageBase64,
             'totalCost' => $totalCost,
             'paidAmount' => $paidAmount,
             'balance' => $balance,
