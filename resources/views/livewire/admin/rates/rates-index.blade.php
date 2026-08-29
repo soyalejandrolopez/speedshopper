@@ -3,32 +3,11 @@
 
     <form wire:submit="save" class="space-y-6">
         <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
-            <div class="flex flex-col gap-4 border-b border-gray-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900">{{ __('Rate Sheet & Pricing PDF') }}</h2>
-                    <p class="mt-0.5 text-xs text-gray-500">
-                        {{ __('Configure personal shopper tiers, heavy duty boxes, logistics fees, and bilingual notes for the official rate sheet.') }}
-                    </p>
-                </div>
-
-                {{-- Action Buttons: PDF (ES), PDF (EN), Send by Email --}}
-                <div class="flex flex-wrap items-center gap-2">
-                    <a href="{{ route('admin.rates.pdf', ['lang' => 'es']) }}" target="_blank"
-                       class="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50/70 px-3.5 py-2 text-xs font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-100">
-                        <i class="fa-solid fa-file-pdf text-sm text-emerald-600"></i>
-                        <span>PDF (ES)</span>
-                    </a>
-                    <a href="{{ route('admin.rates.pdf', ['lang' => 'en']) }}" target="_blank"
-                       class="inline-flex items-center gap-1.5 rounded-xl border border-blue-300 bg-blue-50/70 px-3.5 py-2 text-xs font-semibold text-blue-800 shadow-sm transition-all hover:bg-blue-100">
-                        <i class="fa-solid fa-file-pdf text-sm text-blue-600"></i>
-                        <span>PDF (EN)</span>
-                    </a>
-                    <button type="button" wire:click="openSendModal"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-gray-900 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-black">
-                        <i class="fa-solid fa-paper-plane text-xs"></i>
-                        <span>{{ __('Send by Email') }}</span>
-                    </button>
-                </div>
+            <div class="border-b border-gray-100 pb-5">
+                <h2 class="text-lg font-bold text-gray-900">{{ __('Rate Sheet & Pricing PDF') }}</h2>
+                <p class="mt-0.5 text-xs text-gray-500">
+                    {{ __('Configure personal shopper tiers, heavy duty boxes, logistics fees, and bilingual notes for the official rate sheet.') }}
+                </p>
             </div>
 
             <div class="mt-6 space-y-6">

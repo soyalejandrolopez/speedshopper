@@ -289,7 +289,7 @@ test('billing and rates views render in english when locale is set to en', funct
         ->get(route('admin.rates.index'))
         ->assertOk()
         ->assertSee('Rate Sheet')
-        ->assertSee('Send by Email');
+        ->assertSee('Personal Shopper Tiers');
 });
 
 test('unauthenticated users are redirected from billing and rates routes', function () {
