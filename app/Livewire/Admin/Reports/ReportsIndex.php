@@ -433,7 +433,7 @@ class ReportsIndex extends Component
             return [
                 'number' => $p->number,
                 'customer' => $p->customer?->name ?? '—',
-                'method' => $p->payment_method->label(),
+                'method' => $p->payment_method?->label() ?? '—',
                 'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
                 'invoice_total' => (float) $p->invoice_total,
                 'service_profit' => (float) $p->invoiced_service_earnings,
@@ -670,7 +670,7 @@ class ReportsIndex extends Component
             number_format((float) $p->service_balance_due, 2),
             number_format((float) $p->invoice_total, 2),
             number_format((float) $p->amount_paid, 2),
-            $p->payment_method->label(),
+            $p->payment_method?->label() ?? '',
             $p->paid_at?->format('Y-m-d H:i') ?? '',
         ]);
 

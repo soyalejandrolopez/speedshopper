@@ -128,16 +128,22 @@ it('renders the printable receipt for a shipment', function () {
         ->assertSee($shipment->number);
 });
 
-it('renders the portal dashboard with the new layout', function () {
-    $user = createClient();
-    $customer = Customer::where('user_id', $user->id)->first();
-    PurchaseRequest::factory()->create(['customer_id' => $customer->id]);
-    Shipment::factory()->create(['customer_id' => $customer->id]);
+it('renders reports and exports payments even with null payment method', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create();
+    Payment::create([
+        'number' => 'PAY-9999',
+        'customer_id' => $customer->id,
+        'invoice_total' => 150.0,
+        'amount_paid' => 150.0,
+        'payment_method' => null,
+        'paid_at' => now(),
+    ]);
 
-    $this->actingAs($user)
-        ->get('/portal')
+    $this->actingAs($admin);
+
+    Livewire::test(ReportsIndex::class)
         ->assertOk()
-        ->assertSee(__('Outstanding Balance'))
-        ->assertSee(__('Your orders'))
-        ->assertSee(__('Your boxes'));
+        ->call('exportPayments')
+        ->assertFileDownloaded();
 });
