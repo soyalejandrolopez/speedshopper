@@ -300,7 +300,7 @@ class ReportsIndex extends Component
         $sheet->getStyle("B{$row}")->getFont()->setBold(true);
         $row++;
 
-        $sheet->setCellValue("A{$row}", __('Saldo por Cobrar'));
+        $sheet->setCellValue("A{$row}", __('Ganancia'));
         $sheet->setCellValue("B{$row}", $data['period']['balance']);
         $sheet->setCellValue("C{$row}", __('Shipments'));
         $sheet->setCellValue("D{$row}", $data['period']['shipments']);
@@ -492,7 +492,7 @@ class ReportsIndex extends Component
                 __('Total Facturado') => $invoiced,
                 __('Ganancia Servicios') => $earnings,
                 __('Total Cobrado') => $collected,
-                __('Saldo por Cobrar') => $balance,
+                __('Ganancia') => $balance,
                 __('New Customers') => Customer::whereBetween('created_at', [$start, $end])->count(),
                 __('Requests') => $requests->count(),
                 __('Packages') => Package::whereBetween('created_at', [$start, $end])->count(),

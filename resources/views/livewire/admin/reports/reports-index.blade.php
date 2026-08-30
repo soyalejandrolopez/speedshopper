@@ -66,7 +66,7 @@
                     <p class="mt-0.5 text-lg font-bold text-teal-700">{{ money($reportPeriod['collected']) }}</p>
                 </div>
                 <div class="rounded-xl border border-amber-200 bg-amber-50/70 p-3 shadow-2xs">
-                    <p class="text-xs font-medium text-amber-800">{{ __('Saldo por Cobrar') }}</p>
+                    <p class="text-xs font-medium text-amber-800">{{ __('Ganancia') }}</p>
                     <p class="mt-0.5 text-lg font-bold {{ $reportPeriod['balance'] > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ money($reportPeriod['balance']) }}</p>
                 </div>
                 <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
