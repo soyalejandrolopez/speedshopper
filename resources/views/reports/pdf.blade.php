@@ -83,7 +83,7 @@
             <td class="amount">{{ $period['packages'] }}</td>
         </tr>
         <tr>
-            <td class="strong" style="color: #b45309; font-weight: bold;">{{ __('Ganancia') }}</td>
+            <td class="strong" style="color: #b45309; font-weight: bold;">{{ __('Saldo por Cobrar') }}</td>
             <td class="amount strong" style="color: #b45309; font-weight: bold; font-size: 13px;">{{ money($period['balance']) }}</td>
             <td class="strong">{{ __('Shipments') }}</td>
             <td class="amount">{{ $period['shipments'] }}</td>
@@ -96,7 +96,7 @@
             <thead>
                 <tr>
                     <th>{{ __('Cliente') }}</th>
-                    <th class="amount">{{ __('Ganancia') }}</th>
+                    <th class="amount">{{ __('Saldo por Cobrar') }}</th>
                 </tr>
             </thead>
             <tbody>

@@ -44,7 +44,7 @@
         <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Ganancia') }}</p>
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Saldo por Cobrar') }}</p>
                     <p class="mt-0.5 text-xl font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ money($totalPending) }}</p>
                 </div>
                 <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
