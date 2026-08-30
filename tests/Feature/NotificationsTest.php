@@ -129,3 +129,28 @@ it('sends an email notification to the administrator when a contact inquiry is s
 
     Notification::assertSentOnDemand(NewContactInquiryNotification::class);
 });
+
+it('sends email notifications with pdf attached to both customer and admin when a request is submitted', function () {
+    seedRoles();
+    Notification::fake();
+    Setting::set('admin_notification_email', 'admin@speedshopper.com');
+
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('form.name', 'Carlos Mendoza')
+        ->set('form.email', 'carlos@example.com')
+        ->set('form.whatsapp', '+584125556677')
+        ->set('form.country', 'VE')
+        ->set('form.services', ['personal_shopper'])
+        ->call('next')
+        ->set('form.products', 'PlayStation 5')
+        ->set('form.budget', '499.99')
+        ->call('next')
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    Notification::assertSentOnDemand(NewPurchaseRequestNotification::class);
+    Notification::assertSentOnDemand(\App\Notifications\ClientPurchaseRequestConfirmationNotification::class);
+});

@@ -13,7 +13,8 @@ class NewPurchaseRequestNotification extends Notification
     use Queueable;
 
     public function __construct(
-        public PurchaseRequest $purchaseRequest
+        public PurchaseRequest $purchaseRequest,
+        public ?string $pdfContent = null
     ) {}
 
     /**
@@ -42,6 +43,7 @@ class NewPurchaseRequestNotification extends Notification
             ->line("**Producto solicitado:** {$request->product_name}")
             ->when($request->store, fn (MailMessage $m) => $m->line("**Tienda preferida:** {$request->store}"))
             ->when($request->quantity > 1, fn (MailMessage $m) => $m->line("**Cantidad:** {$request->quantity}"))
+            ->when($request->total_cost > 0, fn (MailMessage $m) => $m->line('**Presupuesto / Total Estimado:** '.money($request->total_cost)))
             ->when($request->product_url, fn (MailMessage $m) => $m->line("**Enlace del producto:** {$request->product_url}"));
 
         if (! empty($request->services)) {
@@ -50,8 +52,14 @@ class NewPurchaseRequestNotification extends Notification
             $mail->line('**Servicios requeridos:** '.implode(', ', $serviceLabels));
         }
 
+        if ($this->pdfContent) {
+            $mail->attachData($this->pdfContent, "Cotizacion-{$request->number}.pdf", [
+                'mime' => 'application/pdf',
+            ]);
+        }
+
         return $mail
             ->action('Ver Solicitud en el Panel', route('admin.requests.show', $request))
-            ->line('Por favor revisa la solicitud para cotizar los productos y responderle al cliente.');
+            ->line('Se adjunta el documento PDF de la cotización estimada para su revisión.');
     }
 }

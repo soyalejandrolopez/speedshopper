@@ -6,6 +6,7 @@ use App\Models\ContactInquiry;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
 use App\Models\User;
+use App\Notifications\ClientPurchaseRequestConfirmationNotification;
 use App\Notifications\NewContactInquiryNotification;
 use App\Notifications\NewPurchaseRequestNotification;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Notification;
 class AdminNotifier
 {
     /**
-     * Notify administrators about a newly created purchase request.
+     * Notify administrators and customer about a newly created purchase request with attached PDF.
      */
     public static function notifyNewPurchaseRequest(PurchaseRequest $request): void
     {
@@ -23,14 +24,29 @@ class AdminNotifier
         }
 
         try {
-            $emails = self::getAdminEmails();
+            $pdfContent = null;
+            try {
+                $pdf = app(InvoicePdfService::class)->generatePdf($request);
+                $pdfContent = $pdf->output();
+            } catch (\Throwable $e) {
+                Log::warning('Failed to generate PDF for purchase request notification: '.$e->getMessage());
+            }
 
+            // 1. Notify Administrators
+            $emails = self::getAdminEmails();
             foreach ($emails as $email) {
                 Notification::route('mail', $email)
-                    ->notify(new NewPurchaseRequestNotification($request));
+                    ->notify(new NewPurchaseRequestNotification($request, $pdfContent));
+            }
+
+            // 2. Notify Customer
+            $customerEmail = $request->customer?->email;
+            if ($customerEmail && filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
+                Notification::route('mail', $customerEmail)
+                    ->notify(new ClientPurchaseRequestConfirmationNotification($request, $pdfContent));
             }
         } catch (\Throwable $e) {
-            Log::warning('Failed to notify admin about new purchase request: '.$e->getMessage());
+            Log::warning('Failed to notify about new purchase request: '.$e->getMessage());
         }
     }
 
