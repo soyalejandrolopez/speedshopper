@@ -186,6 +186,14 @@ if (! function_exists('countries_served_list')) {
      */
     function countries_served_list(): array
     {
+        $setting = Setting::get('countries_served');
+        if ($setting) {
+            $parsed = array_values(array_filter(array_map('trim', explode(',', strtoupper($setting)))));
+            if (! empty($parsed)) {
+                return $parsed;
+            }
+        }
+
         return ['VE', 'CO', 'EC', 'PE', 'CL', 'CR', 'PA', 'DO', 'SV', 'HN', 'MX'];
     }
 }
