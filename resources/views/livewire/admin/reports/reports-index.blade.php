@@ -108,58 +108,6 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 lg:grid-cols-5 mt-6">
-        <div class="stat-card text-emerald-600 animate-fade-up">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total Facturado') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                    <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">{{ money($totalInvoiced) }}</p>
-        </div>
-
-        <div class="stat-card text-emerald-800 border-2 border-emerald-200 bg-emerald-50/50 animate-fade-up" style="animation-delay: 50ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-bold text-emerald-800">{{ __('Ganancia Servicios') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
-                    <i class="fa-solid fa-sack-dollar text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-2xl font-extrabold text-emerald-800">{{ money($totalEarnings) }}</p>
-        </div>
-
-        <div class="stat-card text-teal-600 animate-fade-up" style="animation-delay: 100ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total Cobrado') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
-                    <i class="fa-solid fa-circle-check text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-2xl font-semibold text-teal-700">{{ money($totalCollected) }}</p>
-        </div>
-
-        <div class="stat-card text-amber-600 animate-fade-up" style="animation-delay: 150ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Saldo por Cobrar') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                    <i class="fa-solid fa-clock-rotate-left text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">{{ money($balanceDue) }}</p>
-        </div>
-
-        <div class="stat-card text-sky-600 animate-fade-up col-span-2 lg:col-span-1" style="animation-delay: 200ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Cobrado Este Mes') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-                    <i class="fa-solid fa-chart-simple text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">{{ money($revenueThisMonth) }}</p>
-        </div>
-    </div>
-
     <div class="grid gap-6 mt-6 lg:grid-cols-2">
         <div class="card animate-fade-up" style="animation-delay: 220ms">
             <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">

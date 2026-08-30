@@ -60,10 +60,8 @@ class ReportsIndex extends Component
         $payments = Payment::query()
             ->with(['customer', 'billable.costItems'])
             ->where(function ($q) use ($start, $end) {
-                $q->whereBetween('paid_at', [$start, $end])
-                  ->orWhere(function ($q2) use ($start, $end) {
-                      $q2->whereNull('paid_at')->whereBetween('created_at', [$start, $end]);
-                  });
+                $q->whereBetween('created_at', [$start, $end])
+                  ->orWhereBetween('paid_at', [$start, $end]);
             })
             ->get();
 
@@ -374,10 +372,8 @@ class ReportsIndex extends Component
         $payments = Payment::query()
             ->with(['customer', 'billable.costItems'])
             ->where(function ($q) use ($start, $end) {
-                $q->whereBetween('paid_at', [$start, $end])
-                  ->orWhere(function ($q2) use ($start, $end) {
-                      $q2->whereNull('paid_at')->whereBetween('created_at', [$start, $end]);
-                  });
+                $q->whereBetween('created_at', [$start, $end])
+                  ->orWhereBetween('paid_at', [$start, $end]);
             })
             ->orderBy('created_at')
             ->get();
