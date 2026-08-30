@@ -4,10 +4,10 @@
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center flex-1 min-w-0">
-                <x-search-input model="search" placeholder="{{ __('Buscar por N° envío, transportista, tracking, cliente...') }}" class="w-full sm:max-w-md" />
+                <x-search-input model="search" placeholder="{{ __('Buscar por N° envío, transportista, tracking, cliente...') }}" class="flex-1 max-w-lg" />
 
                 <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}"
-                        class="filter-select w-full sm:w-52 border border-gray-200/90 bg-gray-50/70 font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs cursor-pointer">
+                        class="filter-select border border-gray-200/90 bg-gray-50/70 font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs cursor-pointer">
                     <option value="all">{{ __('All statuses') }}</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>

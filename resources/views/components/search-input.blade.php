@@ -5,10 +5,10 @@
     'buttonText' => __('Buscar'),
 ])
 
-<div {{ $attributes->merge(['class' => 'flex items-center gap-2 flex-1 group']) }}
+<div {{ $attributes->merge(['class' => 'flex items-center gap-2 flex-1 w-full max-w-lg group']) }}
      x-data="{ query: @entangle($model) }">
     {{-- Clean Input with Clear Button --}}
-    <div class="relative flex-1 min-w-0">
+    <div class="relative flex-1 min-w-[180px]">
         <input type="search"
                wire:model.live.debounce.{{ $debounce }}="{{ $model }}"
                placeholder="{{ $placeholder }}"

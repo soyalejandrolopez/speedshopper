@@ -110,6 +110,10 @@ select {
 }
 
 .filter-select {
+    width: auto !important;
+    min-width: 11.5rem !important;
+    max-width: 14.5rem !important;
+    flex-shrink: 0 !important;
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
     padding-left: 0.875rem !important;
@@ -120,6 +124,13 @@ select {
     min-height: 2.375rem !important;
     border-radius: 0.75rem !important;
     box-sizing: border-box !important;
+}
+
+@media (max-width: 640px) {
+    .filter-select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 /* Prevent iOS Safari auto-zoom on inputs by ensuring >= 16px font size on mobile */
