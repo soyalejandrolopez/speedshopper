@@ -120,37 +120,45 @@
         .totals-table {
             width: 100%;
             margin-top: 10px;
+            margin-bottom: 12px;
+            border-collapse: collapse;
+            clear: both;
         }
-        .summary-box {
-            width: 250px;
-            float: right;
-            border: 1px solid #e5e7eb;
+        .totals-card {
+            width: 100%;
+            border: 1.5px solid #d1fae5;
             border-radius: 6px;
             background-color: #fafafa;
-            padding: 10px;
+            border-collapse: collapse;
         }
-        .summary-line {
-            display: block;
-            margin-bottom: 4px;
+        .totals-card td {
+            padding: 5px 10px;
             font-size: 11px;
         }
-        .summary-line strong {
-            float: right;
+        .totals-card .label-cell {
+            color: #4b5563;
+            border-bottom: 1px solid #f3f4f6;
         }
-        .total-highlight {
-            border-top: 2px solid #059669;
-            padding-top: 6px;
-            margin-top: 6px;
-            font-size: 13px;
+        .totals-card .value-cell {
+            text-align: right;
             font-weight: bold;
-            color: #065f46;
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
         }
-        .balance-highlight {
-            border-top: 1px dashed #d1d5db;
-            padding-top: 4px;
-            margin-top: 4px;
+        .totals-card .paid-row td {
+            color: #047857;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .totals-card .balance-row td {
+            background-color: #ecfdf5;
             font-size: 12px;
             font-weight: bold;
+            color: #065f46;
+            border-top: 2px solid #059669;
+            padding: 7px 10px;
+        }
+        .totals-card .balance-row .value-cell {
+            font-size: 13.5px;
             color: {{ $balance > 0 ? '#b45309' : '#047857' }};
         }
 
@@ -377,9 +385,9 @@
     </table>
 
     <!-- Totals & Balance Summary -->
-    <table style="width: 100%;">
+    <table class="totals-table">
         <tr>
-            <td style="width: 50%; vertical-align: top;">
+            <td style="width: 48%; vertical-align: top;">
                 @if ($request->notes)
                     <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; font-size: 10px;">
                         <strong style="color: #334155;">{{ $locale === 'es' ? 'Notas / Observaciones:' : 'Notes / Instructions:' }}</strong><br>
@@ -387,21 +395,36 @@
                     </div>
                 @endif
             </td>
-            <td style="width: 50%; vertical-align: top;">
-                <div class="summary-box">
-                    <div class="summary-line">
-                        <span>{{ $locale === 'es' ? 'Total Facturado:' : 'Total Invoiced:' }}</span>
-                        <strong>${{ number_format($totalCost, 2) }}</strong>
-                    </div>
-                    <div class="summary-line" style="color: #047857;">
-                        <span>{{ $locale === 'es' ? 'Monto Pagado:' : 'Amount Paid:' }}</span>
-                        <strong>${{ number_format($paidAmount, 2) }}</strong>
-                    </div>
-                    <div class="balance-highlight">
-                        <span>{{ $locale === 'es' ? 'Saldo por Pagar:' : 'Balance Due:' }}</span>
-                        <strong style="float: right;">${{ number_format($balance, 2) }}</strong>
-                    </div>
-                </div>
+            <td style="width: 4%;"></td>
+            <td style="width: 48%; vertical-align: top;">
+                <table class="totals-card">
+                    <tr>
+                        <td class="label-cell">
+                            {{ $locale === 'es' ? 'Total Facturado / Cotizado:' : 'Total Invoiced / Quoted:' }}
+                        </td>
+                        <td class="value-cell">
+                            ${{ number_format($totalCost, 2) }}
+                        </td>
+                    </tr>
+                    @if ($paidAmount > 0)
+                        <tr class="paid-row">
+                            <td class="label-cell" style="color: #047857;">
+                                {{ $locale === 'es' ? 'Monto Pagado:' : 'Amount Paid:' }}
+                            </td>
+                            <td class="value-cell" style="color: #047857;">
+                                -${{ number_format($paidAmount, 2) }}
+                            </td>
+                        </tr>
+                    @endif
+                    <tr class="balance-row">
+                        <td class="label-cell">
+                            {{ $locale === 'es' ? 'TOTAL A PAGAR:' : 'TOTAL TO PAY:' }}
+                        </td>
+                        <td class="value-cell">
+                            ${{ number_format($balance > 0 ? $balance : $totalCost, 2) }}
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>

@@ -100,8 +100,8 @@
                 <span class="font-bold text-emerald-700 ms-1">{{ money($paidAmount) }}</span>
             </div>
             <div class="rounded-lg bg-emerald-600 px-4 py-2 text-white font-bold text-base">
-                <span>{{ __('Saldo por Pagar') }}:</span>
-                <span class="ms-1">{{ money($balance) }}</span>
+                <span>{{ __('Saldo por Pagar / Total') }}:</span>
+                <span class="ms-1">{{ money($balance > 0 ? $balance : $totalCost) }}</span>
             </div>
         </div>
     </div>
