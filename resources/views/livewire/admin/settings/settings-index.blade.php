@@ -241,7 +241,7 @@
                                 class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                             <option value="tls">TLS</option>
                             <option value="ssl">SSL</option>
-                            <option value="">None</option>
+                            <option value="">{{ __('None') }}</option>
                         </select>
                     </div>
                     <div>
