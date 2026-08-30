@@ -363,7 +363,7 @@ class ReportsIndex extends Component
         $sheet->getStyle($range)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($color600);
     }
 
-    /** @return array{logo: ?string, company: string, period: array, summary: array, payments: array, revenue: array} */
+    /** @return array{logo: ?string, company: string, period: array, summary: array, payments: array, revenue: array, balanceByCustomer: array} */
     protected function reportData(Carbon $start, Carbon $end): array
     {
         $requests = PurchaseRequest::query()
@@ -396,6 +396,79 @@ class ReportsIndex extends Component
         $collected = (float) $payments->sum('amount_paid');
         $balance = max(0.0, $invoiced - $collected);
 
+        $requestIds = $requests->pluck('id')->toArray();
+        $paymentsByRequest = Payment::where('billable_type', PurchaseRequest::class)
+            ->whereIn('billable_id', $requestIds)
+            ->get()
+            ->groupBy('billable_id');
+
+        $invoicesList = $requests->map(function (PurchaseRequest $r) use ($paymentsByRequest) {
+            $totalCost = (float) $r->total_cost;
+            if ($totalCost == 0.0 && $r->unit_price) {
+                $totalCost = (float) $r->unit_price * max(1, $r->quantity);
+            }
+            $earnings = (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
+            $requestPayments = $paymentsByRequest->get($r->id) ?? collect();
+            $paid = (float) $requestPayments->sum('amount_paid');
+            $balance = max(0.0, $totalCost - $paid);
+            $lastPaymentMethod = $requestPayments->last()?->payment_method?->label() ?? '—';
+
+            return [
+                'number' => $r->number,
+                'customer' => $r->customer?->name ?? '—',
+                'method' => $lastPaymentMethod,
+                'date' => $r->created_at?->format('Y-m-d') ?? '',
+                'invoice_total' => $totalCost,
+                'service_profit' => $earnings,
+                'amount_paid' => $paid,
+                'balance' => $balance,
+            ];
+        });
+
+        $linkedPaymentIds = Payment::where('billable_type', PurchaseRequest::class)
+            ->whereIn('billable_id', $requestIds)
+            ->pluck('id')
+            ->toArray();
+
+        $standalonePayments = $payments->whereNotIn('id', $linkedPaymentIds)->map(function (Payment $p) {
+            return [
+                'number' => $p->number,
+                'customer' => $p->customer?->name ?? '—',
+                'method' => $p->payment_method->label(),
+                'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
+                'invoice_total' => (float) $p->invoice_total,
+                'service_profit' => (float) $p->invoiced_service_earnings,
+                'amount_paid' => (float) $p->amount_paid,
+                'balance' => (float) $p->balance_due,
+            ];
+        });
+
+        $allRecords = $invoicesList->concat($standalonePayments)->sortByDesc('date')->values()->all();
+
+        $balanceByCustomer = Customer::query()
+            ->with(['purchaseRequests.costItems', 'payments'])
+            ->whereNull('deleted_at')
+            ->get()
+            ->map(function (Customer $customer) {
+                $invoiced = (float) $customer->purchaseRequests->sum(function ($r) {
+                    $costs = (float) $r->costItems->sum('amount');
+                    if ($costs > 0) return $costs;
+                    if ($r->unit_price) return (float) ($r->unit_price * max(1, $r->quantity));
+                    return 0.0;
+                });
+                $paid = (float) $customer->payments->sum('amount_paid');
+                $balance = max(0.0, $invoiced - $paid);
+
+                return [
+                    'name' => $customer->name,
+                    'balance' => $balance,
+                ];
+            })
+            ->filter(fn (array $row) => $row['balance'] > 0.005)
+            ->sortByDesc('balance')
+            ->values()
+            ->all();
+
         return [
             'logo' => $this->logoDataUri(),
             'company' => Setting::get('company_name', config('app.name')),
@@ -426,16 +499,8 @@ class ReportsIndex extends Component
                 __('Packages') => Package::whereBetween('created_at', [$start, $end])->count(),
                 __('Shipments') => Shipment::whereBetween('created_at', [$start, $end])->count(),
             ],
-            'payments' => $payments->map(fn (Payment $p) => [
-                'number' => $p->number,
-                'customer' => $p->customer?->name ?? '—',
-                'method' => $p->payment_method->label(),
-                'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
-                'invoice_total' => (float) $p->invoice_total,
-                'service_profit' => (float) $p->invoiced_service_earnings,
-                'amount_paid' => (float) $p->amount_paid,
-                'balance' => (float) $p->balance_due,
-            ])->all(),
+            'payments' => $allRecords,
+            'balanceByCustomer' => $balanceByCustomer,
             'revenue' => $this->revenueBuckets($payments),
         ];
     }

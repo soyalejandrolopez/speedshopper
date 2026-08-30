@@ -83,12 +83,32 @@
             <td class="amount">{{ $period['packages'] }}</td>
         </tr>
         <tr>
-            <td class="strong">{{ __('Saldo por Cobrar') }}</td>
-            <td class="amount strong">{{ money($period['balance']) }}</td>
+            <td class="strong" style="color: #b45309; font-weight: bold;">{{ __('Saldo por Cobrar') }}</td>
+            <td class="amount strong" style="color: #b45309; font-weight: bold; font-size: 13px;">{{ money($period['balance']) }}</td>
             <td class="strong">{{ __('Shipments') }}</td>
             <td class="amount">{{ $period['shipments'] }}</td>
         </tr>
     </table>
+
+    @if (!empty($balanceByCustomer))
+        <div class="section-title" style="color: #b45309; margin-top: 14px;">{{ __('Saldos Pendientes por Cliente') }}</div>
+        <table class="data" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>{{ __('Cliente') }}</th>
+                    <th class="amount">{{ __('Saldo por Cobrar') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($balanceByCustomer as $b)
+                    <tr>
+                        <td class="strong">{{ $b['name'] }}</td>
+                        <td class="amount strong" style="color: #b45309; font-weight: bold;">{{ money($b['balance']) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 
     @if ($revenue)
         <div class="section-title">{{ __('Ingresos por Período') }}</div>
@@ -110,7 +130,7 @@
         </table>
     @endif
 
-    <div class="section-title">{{ __('Payments') }} ({{ count($payments) }})</div>
+    <div class="section-title">{{ __('Facturas, Cobros y Saldos') }} ({{ count($payments) }})</div>
     @if ($payments)
         <table class="data" cellspacing="0">
             <thead>
@@ -135,7 +155,9 @@
                         <td class="amount">{{ number_format($p['invoice_total'], 2) }}</td>
                         <td class="amount">{{ number_format($p['service_profit'], 2) }}</td>
                         <td class="amount">{{ number_format($p['amount_paid'], 2) }}</td>
-                        <td class="amount">{{ number_format($p['balance'], 2) }}</td>
+                        <td class="amount" style="{{ $p['balance'] > 0.005 ? 'color: #b45309; font-weight: bold;' : 'color: #059669;' }}">
+                            {{ number_format($p['balance'], 2) }}
+                        </td>
                     </tr>
                 @endforeach
                 <tr class="total-row">
