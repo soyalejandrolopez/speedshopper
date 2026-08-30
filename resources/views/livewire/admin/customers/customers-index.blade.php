@@ -3,16 +3,7 @@
 
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="relative w-full sm:w-64">
-                <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-gray-400">
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                </div>
-                <input name="search"
-                    wire:model.live.debounce.300ms="search" data-shortcut-search aria-label="{{ __('Search') }}"
-                    type="search"
-                    placeholder="{{ __('Search') }}..."
-                    class="input ps-8 text-xs">
-            </div>
+            <x-search-input model="search" placeholder="{{ __('Search customer by name, number, email, phone...') }}" class="sm:max-w-sm" />
 
             <button wire:click="openCreate" type="button"
                     class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">

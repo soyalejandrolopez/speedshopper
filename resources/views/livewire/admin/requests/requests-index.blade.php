@@ -3,17 +3,8 @@
 
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col gap-2 sm:flex-row">
-                <div class="relative w-full sm:w-64">
-                    <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-gray-400">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </div>
-                    <input name="search"
-                        wire:model.live.debounce.300ms="search" data-shortcut-search aria-label="{{ __('Search') }}"
-                        type="search"
-                        placeholder="{{ __('Search') }}..."
-                        class="input ps-8 text-xs">
-                </div>
+            <div class="flex flex-col gap-2 sm:flex-row flex-1">
+                <x-search-input model="search" placeholder="{{ __('Search by request #, product, customer...') }}" class="sm:max-w-xs" />
 
                 <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     <option value="all">{{ __('All statuses') }}</option>

@@ -136,13 +136,15 @@
             </aside>
 
             <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0 w-full overflow-x-hidden">
-                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200/80 bg-white/90 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
+                <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 border-b border-gray-200/80 bg-white/90 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
                     <div class="flex items-center gap-3 min-w-0">
                         <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden" aria-label="{{ __('Open menu') }}">
                             <i class="fa-solid fa-bars text-xl"></i>
                         </button>
                         <h1 class="text-base sm:text-lg font-bold tracking-tight text-gray-900 truncate">{{ $header ?? '' }}</h1>
                     </div>
+
+                    <livewire:admin.global-search />
 
                     <div class="flex items-center gap-2 shrink-0">
                         <a href="{{ route('home') }}" target="_blank" class="hidden items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-700 md:inline-flex">

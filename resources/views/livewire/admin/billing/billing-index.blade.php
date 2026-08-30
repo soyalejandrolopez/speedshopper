@@ -787,11 +787,7 @@
     {{-- Invoices Table Card --}}
     <div class="rounded-2xl border border-gray-200/80 bg-white shadow-sm overflow-hidden">
         <div class="flex flex-col gap-3 border-b border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="relative flex-1 max-w-md">
-                <i class="fa-solid fa-magnifying-glass absolute start-3.5 top-3 text-xs text-gray-400"></i>
-                <input type="search" wire:model.live.debounce.300ms="search" placeholder="{{ __('Buscar por factura, cliente, teléfono...') }}"
-                       class="w-full rounded-xl border border-gray-200 bg-gray-50/50 py-2 ps-9 pe-4 text-xs focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
-            </div>
+            <x-search-input model="search" placeholder="{{ __('Buscar por factura, cliente, teléfono...') }}" />
 
             <div class="flex items-center gap-2">
                 @if (! $showCreateForm)
