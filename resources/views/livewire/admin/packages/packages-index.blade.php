@@ -7,7 +7,7 @@
                 <x-search-input model="search" placeholder="{{ __('Buscar por N° paquete, tracking, cliente, tienda...') }}" class="w-full sm:max-w-md" />
 
                 <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}"
-                        class="h-[34px] rounded-xl border border-gray-200/90 bg-gray-50/70 py-1.5 px-3 text-xs font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs">
+                        class="h-[34px] min-w-[170px] sm:min-w-[190px] rounded-xl border border-gray-200/90 bg-gray-50/70 py-1.5 ps-3 pe-8 text-xs font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs shrink-0 cursor-pointer">
                     <option value="all">{{ __('All statuses') }}</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>
