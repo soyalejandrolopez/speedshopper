@@ -261,7 +261,7 @@ test('client can view portal billing and pricing guide page', function () {
     $this->actingAs($clientUser)
         ->get(route('portal.billing.index'))
         ->assertOk()
-        ->assertSee('Guía Oficial de Precios y Facturas')
+        ->assertSee(__('Mis Facturas y Cotizaciones'))
         ->assertSee('MacBook Pro M3');
 });
 

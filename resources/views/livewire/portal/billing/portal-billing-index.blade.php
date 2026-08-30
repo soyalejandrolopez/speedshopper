@@ -1,122 +1,86 @@
 <div>
-    <x-slot name="header">{{ __('Facturación y Tarifario') }}</x-slot>
+    <x-slot name="header">{{ __('Facturación') }}</x-slot>
 
     {{-- Welcome banner --}}
-    <div class="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 p-6 text-white shadow-lg shadow-emerald-200">
+    <div class="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 p-5 sm:p-6 text-white shadow-lg shadow-emerald-200">
+        <div class="pointer-events-none absolute -end-10 -top-10 h-36 w-36 rounded-full bg-white/10 blur-xl"></div>
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-emerald-50 backdrop-blur">
                     <i class="fa-solid fa-file-invoice-dollar text-xs"></i>
-                    {{ __('Tarifas y Facturación') }}
+                    {{ __('Portal de Facturación') }}
                 </span>
-                <h2 class="mt-2 text-2xl font-bold">{{ __('Guía Oficial de Precios y Facturas') }}</h2>
-                <p class="mt-1 text-xs text-emerald-100">{{ __('Consulta nuestras tarifas oficiales, descarga la guía en PDF y revisa tus cotizaciones.') }}</p>
+                <h1 class="mt-2 text-xl sm:text-2xl font-bold">{{ __('Mis Facturas y Cotizaciones') }}</h1>
+                <p class="mt-1 text-xs sm:text-sm text-emerald-100">{{ __('Consulta, imprime o descarga tus cotizaciones oficiales, comprobantes de pago y recibos de envío.') }}</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-                <a href="{{ route('admin.rates.pdf', ['lang' => 'es']) }}" target="_blank"
-                   class="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-emerald-800 shadow-md transition-transform hover:scale-105">
-                    <i class="fa-solid fa-file-pdf text-sm text-emerald-600"></i>
-                    <span>{{ __('Descargar PDF (Español)') }}</span>
-                </a>
-                <a href="{{ route('admin.rates.pdf', ['lang' => 'en']) }}" target="_blank"
-                   class="inline-flex items-center gap-1.5 rounded-xl bg-white/90 px-4 py-2.5 text-xs font-bold text-gray-800 shadow-md transition-transform hover:scale-105">
-                    <i class="fa-solid fa-file-pdf text-sm text-blue-600"></i>
-                    <span>{{ __('Download PDF (English)') }}</span>
-                </a>
-            </div>
+            <a href="{{ route('portal.requests.create') }}" wire:navigate
+               class="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-emerald-800 shadow-md transition-all hover:bg-emerald-50 hover:shadow-lg active:scale-95">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>{{ __('Nueva Solicitud') }}</span>
+            </a>
         </div>
     </div>
 
-    {{-- Official Rate Grid --}}
-    <div class="mb-8 grid gap-6 lg:grid-cols-2">
-        {{-- Personal Shopper Tiers --}}
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
-            <div class="flex items-center gap-2.5 border-b border-gray-100 pb-3">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-sm font-bold text-emerald-700">1</div>
+    {{-- Financial Summary KPIs --}}
+    @php
+        $balance = $customer ? $customer->balance_due : 0;
+        $totalPaid = $customer ? $customer->payments()->where('status', 'confirmed')->sum('amount') : 0;
+        $totalQuotes = $quotes->count() + $shipments->count();
+    @endphp
+    <div class="mb-6 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-2xs">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Personal Shopper (Compras Físicas)') }}</h3>
-                    <p class="text-[11px] text-gray-500">{{ __('Porcentaje de comisión y beneficios según el rango de compra') }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">{{ __('Balance Pendiente') }}</p>
+                    <p class="mt-1 text-xl sm:text-2xl font-bold {{ $balance > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ money($balance) }}</p>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                    <i class="fa-solid fa-clock text-base"></i>
                 </div>
             </div>
+            @if ($balance > 0)
+                <div class="mt-3">
+                    <a href="{{ route('portal.payments.index') }}" wire:navigate
+                       class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700">
+                        {{ __('Ir a Pagar Balance') }} &rarr;
+                    </a>
+                </div>
+            @endif
+        </div>
 
-            <div class="mt-4 space-y-3">
-                @foreach ($rates['shopper_tiers'] ?? [] as $tier)
-                    <div class="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50/40 p-3.5">
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">
-                                @if (empty($tier['max']))
-                                    ${{ number_format($tier['min']) }} {{ __('o más') }}
-                                @else
-                                    ${{ number_format($tier['min']) }} – ${{ number_format($tier['max']) }}
-                                @endif
-                            </p>
-                            <p class="text-[11px] text-gray-500">
-                                {{ $tier['stores'] }} {{ __('tiendas') }} &bull; {{ $tier['hours'] }} {{ __('horas') }}
-                            </p>
-                        </div>
-                        <div class="text-end">
-                            <span class="inline-block rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-extrabold text-white">
-                                {{ $tier['percent'] }}%
-                            </span>
-                        </div>
-                    </div>
-                @endforeach
-
-                <div class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3 text-xs text-gray-700">
-                    <span>{{ __('Visitar una tienda adicional:') }}</span>
-                    <strong class="font-bold text-gray-900">${{ number_format($rates['extra_store_fee'] ?? 20, 2) }} USD</strong>
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-2xs">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">{{ __('Total Pagado') }}</p>
+                    <p class="mt-1 text-xl sm:text-2xl font-bold text-emerald-600">{{ money($totalPaid) }}</p>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <i class="fa-solid fa-circle-check text-base"></i>
                 </div>
             </div>
         </div>
 
-        {{-- Repackaging & Storage --}}
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
-            <div class="flex items-center gap-2.5 border-b border-gray-100 pb-3">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">2</div>
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-2xs">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('Reempaques y Almacén') }}</h3>
-                    <p class="text-[11px] text-gray-500">{{ __('Cajas Heavy Duty y tarifas de recepción') }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">{{ __('Documentos / Recibos') }}</p>
+                    <p class="mt-1 text-xl sm:text-2xl font-bold text-gray-900">{{ $totalQuotes }}</p>
                 </div>
-            </div>
-
-            <div class="mt-4 grid grid-cols-3 gap-2 text-center">
-                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
-                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Small') }}</p>
-                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_small_heavy_duty'] ?? 15) }}</p>
-                </div>
-                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
-                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Mediana') }}</p>
-                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_medium_heavy_duty'] ?? 20) }}</p>
-                </div>
-                <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
-                    <p class="text-[11px] font-medium text-gray-500">{{ __('Caja Larga') }}</p>
-                    <p class="mt-1 text-lg font-bold text-emerald-700">${{ number_format($rates['box_large_heavy_duty'] ?? 25) }}</p>
-                </div>
-            </div>
-
-            <div class="mt-4 space-y-2 text-xs">
-                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
-                    <span class="text-gray-600">{{ __('Comisión por compras online recibidas:') }}</span>
-                    <strong class="font-bold text-gray-900">{{ $rates['warehouse_percent'] ?? 15 }}%</strong>
-                </div>
-                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
-                    <span class="text-gray-600">{{ __('Llevar caja al almacén:') }}</span>
-                    <strong class="font-bold text-gray-900">${{ number_format($rates['warehouse_delivery_fee'] ?? 20, 2) }}</strong>
-                </div>
-                <div class="flex items-center justify-between rounded-xl bg-gray-50 p-3">
-                    <span class="text-gray-600">{{ __('Almacenaje (más de 30 días):') }}</span>
-                    <strong class="font-bold text-gray-900">${{ number_format($rates['monthly_storage_fee'] ?? 15, 2) }}/mes</strong>
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                    <i class="fa-solid fa-file-lines text-base"></i>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- My Quotes / Invoices Section --}}
-    <div class="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
-        <div class="border-b border-gray-100 pb-3">
-            <h3 class="text-sm font-bold text-gray-900">{{ __('Mis Facturas y Cotizaciones') }}</h3>
-            <p class="text-xs text-gray-500">{{ __('Descarga o imprime tus cotizaciones y recibos oficiales con código QR.') }}</p>
+    <div class="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-sm">
+        <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <div>
+                <h2 class="text-base font-bold text-gray-900">{{ __('Historial de Facturas y Cotizaciones') }}</h2>
+                <p class="text-xs text-gray-500">{{ __('Descarga o imprime tus cotizaciones oficiales y recibos con código QR de verificación.') }}</p>
+            </div>
         </div>
 
         <div class="mt-4 overflow-x-auto">
@@ -135,7 +99,7 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3 font-mono font-bold text-emerald-700">
                                 {{ $quote->number }}
-                                <span class="block text-[10px] font-normal text-gray-400">{{ __('Cotización') }}</span>
+                                <span class="block text-[10px] font-normal text-gray-400">{{ __('Cotización de Compra') }}</span>
                             </td>
                             <td class="px-4 py-3 font-medium text-gray-900">{{ $quote->product_name }}</td>
                             <td class="px-4 py-3 text-gray-500">{{ $quote->created_at->format('Y-m-d') }}</td>
