@@ -105,7 +105,7 @@
                             <td class="px-4 py-3 text-gray-500">{{ $quote->created_at->format('Y-m-d') }}</td>
                             <td class="px-4 py-3 font-semibold text-gray-900">{{ money($quote->total_cost ?? 0) }}</td>
                             <td class="px-4 py-3 text-end">
-                                <a href="{{ route('admin.requests.print', $quote) }}" target="_blank"
+                                <a href="{{ route('requests.print', $quote) }}" target="_blank"
                                    class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700 hover:bg-emerald-100">
                                     <i class="fa-solid fa-print text-xs"></i>
                                     <span>{{ __('Imprimir / QR') }}</span>
@@ -123,7 +123,7 @@
                                 <td class="px-4 py-3 text-gray-500">{{ $shipment->created_at->format('Y-m-d') }}</td>
                                 <td class="px-4 py-3 font-semibold text-gray-900">{{ money($shipment->shipping_cost ?? 0) }}</td>
                                 <td class="px-4 py-3 text-end">
-                                    <a href="{{ route('admin.shipments.print', $shipment) }}" target="_blank"
+                                    <a href="{{ route('shipments.print', $shipment) }}" target="_blank"
                                        class="inline-flex items-center gap-1 rounded-lg border border-purple-300 bg-purple-50 px-2.5 py-1 font-semibold text-purple-700 hover:bg-purple-100">
                                         <i class="fa-solid fa-print text-xs"></i>
                                         <span>{{ __('Imprimir / QR') }}</span>

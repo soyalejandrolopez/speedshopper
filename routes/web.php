@@ -52,7 +52,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile', fn () => view('profile'))->name('profile');
 
+    Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
+    Route::get('/shipments/{shipment}/print', [PrintController::class, 'shipmentReceipt'])->name('shipments.print');
+
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+        Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
+        Route::get('/shipments/{shipment}/print', [PrintController::class, 'shipmentReceipt'])->name('shipments.print');
         Route::get('/reports', ReportsIndex::class)->name('reports.index');
 
         Route::get('/customers', CustomersIndex::class)->name('customers.index');
@@ -60,14 +65,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/requests', RequestsIndex::class)->name('requests.index');
         Route::get('/requests/{purchaseRequest}', RequestShow::class)->name('requests.show');
-        Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
 
         Route::get('/packages', PackagesIndex::class)->name('packages.index');
         Route::get('/packages/{package}', PackageShow::class)->name('packages.show');
 
         Route::get('/shipments', ShipmentsIndex::class)->name('shipments.index');
         Route::get('/shipments/{shipment}', ShipmentShow::class)->name('shipments.show');
-        Route::get('/shipments/{shipment}/print', [PrintController::class, 'shipmentReceipt'])->name('shipments.print');
 
         Route::get('/payments', PaymentsIndex::class)->name('payments.index');
         Route::get('/payments/{payment}', PaymentShow::class)->name('payments.show');
@@ -90,9 +93,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/requests', MyRequests::class)->name('requests.index');
         Route::get('/requests/create', \App\Livewire\Portal\Requests\CreateRequest::class)->name('requests.create');
         Route::get('/requests/{purchaseRequest}', MyRequestShow::class)->name('requests.show');
+        Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
 
         Route::get('/packages', MyPackages::class)->name('packages.index');
         Route::get('/shipments', MyShipments::class)->name('shipments.index');
+        Route::get('/shipments/{shipment}/print', [PrintController::class, 'shipmentReceipt'])->name('shipments.print');
         Route::get('/payments', MyPayments::class)->name('payments.index');
         Route::get('/facturacion', PortalBillingIndex::class)->name('billing.index');
     });

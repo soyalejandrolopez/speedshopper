@@ -77,3 +77,23 @@ test('client can create a purchase request via dedicated create form', function 
     expect($request)->not->toBeNull()
         ->and($request->customer_id)->toBe($client->customer->id);
 });
+
+test('client can print their own purchase request quote without error 403', function () {
+    $client = createClient();
+    $request = PurchaseRequest::factory()->create(['customer_id' => $client->customer->id]);
+
+    $this->actingAs($client)
+        ->get(route('requests.print', $request))
+        ->assertOk()
+        ->assertSee($request->number);
+});
+
+test('client cannot print another customers quote', function () {
+    $client = createClient();
+    $otherCustomer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create(['customer_id' => $otherCustomer->id]);
+
+    $this->actingAs($client)
+        ->get(route('requests.print', $request))
+        ->assertForbidden();
+});

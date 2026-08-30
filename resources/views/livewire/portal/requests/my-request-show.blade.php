@@ -1,10 +1,16 @@
 <div>
     <x-slot name="header">{{ $purchaseRequest->number }}</x-slot>
 
-    <div class="mb-4">
+    <div class="mb-4 flex items-center justify-between">
         <a href="{{ route('portal.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-sm font-medium text-emerald-600 hover:text-emerald-800">
             <i class="fa-solid fa-arrow-left text-base"></i>
             {{ __('Back') }}
+        </a>
+
+        <a href="{{ route('requests.print', $purchaseRequest) }}" target="_blank"
+           class="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700 shadow-2xs transition-all hover:bg-emerald-100 hover:shadow-xs active:scale-95">
+            <i class="fa-solid fa-print text-sm"></i>
+            <span>{{ __('Imprimir Cotización con QR') }}</span>
         </a>
     </div>
 
