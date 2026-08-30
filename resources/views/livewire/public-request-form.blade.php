@@ -164,7 +164,7 @@
                                             <span>{{ __('Product name or description') }} *</span>
                                         </label>
                                         <input id="product_name-{{ $index }}" name="product_name_{{ $index }}" autocomplete="off" type="text" wire:model="items.{{ $index }}.product_name"
-                                               class="input text-sm" placeholder="Ej. Nike Air Max 270, Zapatos Zara...">
+                                               class="input text-sm" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}">
                                         @error("items.{$index}.product_name") <p class="helper-error">{{ $message }}</p> @enderror
                                     </div>
                                     <div class="sm:col-span-2">
@@ -196,7 +196,7 @@
                                         <span>{{ __('Product link') }}</span>
                                     </label>
                                     <input id="product_url-{{ $index }}" name="product_url_{{ $index }}" autocomplete="off" type="url" wire:model="items.{{ $index }}.product_url"
-                                           class="input text-sm" placeholder="https://amazon.com/... o tienda">
+                                           class="input text-sm" placeholder="{{ __('https://amazon.com/... o tienda') }}">
                                     @error("items.{$index}.product_url") <p class="helper-error">{{ $message }}</p> @enderror
                                 </div>
 

@@ -291,12 +291,12 @@
                             <div class="grid gap-2 rounded-xl border border-gray-200 bg-white p-3 sm:grid-cols-12 items-center shadow-2xs">
                                 <div class="sm:col-span-5">
                                     <label class="block text-[11px] font-medium text-gray-500">{{ __('Producto / Descripción') }} *</label>
-                                    <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.product_name" placeholder="ej. Zapatos Nike Air Max"
+                                    <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.product_name" placeholder="{{ __('ej. Zapatos Nike Air Max') }}"
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label class="block text-[11px] font-medium text-gray-500">{{ __('Tienda / Proveedor') }}</label>
-                                    <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.store" placeholder="ej. Amazon / Nike"
+                                    <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.store" placeholder="{{ __('ej. Amazon / Nike') }}"
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
                                 </div>
                                 <div class="sm:col-span-2">
@@ -571,7 +571,7 @@
                                     <div class="grid gap-2 grid-cols-12 items-center bg-white p-2.5 rounded-xl border border-gray-200">
                                         <div class="col-span-7">
                                             <input type="text" wire:model.live.debounce.300ms="customCosts.{{ $cIdx }}.description"
-                                                   placeholder="Descripción del cargo adicional"
+                                                   placeholder="{{ __('Descripción del cargo adicional') }}"
                                                    class="w-full rounded-lg border border-gray-300 p-1.5 text-xs">
                                         </div>
                                         <div class="col-span-5 flex items-center gap-1">
@@ -752,7 +752,7 @@
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Referencia de Pago') }}</label>
-                            <input type="text" wire:model="invoiceForm.payment_reference" placeholder="ej. Zelle #48291"
+                            <input type="text" wire:model="invoiceForm.payment_reference" placeholder="{{ __('ej. Zelle #48291') }}"
                                    class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs">
                         </div>
                         <div>
@@ -764,7 +764,7 @@
 
                     <div class="mt-3">
                         <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Notas de la Factura (opcional)') }}</label>
-                        <input type="text" wire:model="invoiceForm.notes" placeholder="Notas visibles o internas"
+                        <input type="text" wire:model="invoiceForm.notes" placeholder="{{ __('Notas visibles o internas') }}"
                                class="w-full rounded-lg border border-gray-300 bg-white p-2 text-xs">
                     </div>
                 </div>
@@ -974,7 +974,7 @@
 
                     <div>
                         <label class="mb-1 block text-xs font-semibold text-gray-700">{{ __('Referencia de Pago') }}</label>
-                        <input type="text" wire:model="paymentForm.reference" placeholder="ej. Zelle confirmación #3921"
+                        <input type="text" wire:model="paymentForm.reference" placeholder="{{ __('ej. Zelle confirmación #3921') }}"
                                class="w-full rounded-xl border border-gray-300 p-2 text-xs">
                     </div>
 
