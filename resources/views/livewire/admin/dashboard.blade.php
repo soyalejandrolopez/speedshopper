@@ -1,121 +1,121 @@
-<div>
+<div class="space-y-4 sm:space-y-6 min-w-0 w-full">
     <x-slot name="header">{{ __('Dashboard') }}</x-slot>
 
-    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <a href="{{ route('admin.customers.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total Customers') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-users text-xl"></i>
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
+        <a href="{{ route('admin.customers.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total Customers') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-users text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $totalCustomers }}">{{ $totalCustomers }}</span>
             </p>
         </a>
 
-        <a href="{{ route('admin.requests.index') }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up" style="animation-delay: 60ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Open Requests') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-clipboard-list text-xl"></i>
+        <a href="{{ route('admin.requests.index') }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 60ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Open Requests') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-clipboard-list text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $openRequests }}">{{ $openRequests }}</span>
             </p>
         </a>
 
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up" style="animation-delay: 120ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Packages received today') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-box text-xl"></i>
+        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 120ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages received today') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-box text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $packagesReceivedToday }}">{{ $packagesReceivedToday }}</span>
             </p>
         </a>
 
-        <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up" style="animation-delay: 180ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total balance due') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-money-bill text-xl"></i>
+        <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 180ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total balance due') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-money-bill text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $totalBalanceDue }}" data-prefix="$">{{ money($totalBalanceDue) }}</span>
             </p>
         </a>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up" style="animation-delay: 220ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Stored Packages') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-box text-xl"></i>
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
+        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 220ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Stored Packages') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-box text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $storedPackages }}">{{ $storedPackages }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.shipments.index') }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up" style="animation-delay: 260ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Shipments in transit') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-truck-fast text-xl"></i>
+        <a href="{{ route('admin.shipments.index') }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 260ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Shipments in transit') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-truck-fast text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $shipmentsInTransit }}">{{ $shipmentsInTransit }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up" style="animation-delay: 300ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Packages ready to ship') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-shield-halved text-xl"></i>
+        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 300ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages ready to ship') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-shield-halved text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $readyShipments }}">{{ $readyShipments }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up" style="animation-delay: 340ms">
-            <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Mensajes de Contacto') }}</p>
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-envelope text-xl"></i>
+        <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 340ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Mensajes de Contacto') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-envelope text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-2xl font-semibold text-gray-900 flex items-center gap-2">
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 flex items-center gap-2 truncate">
                 <span data-count="{{ $unreadInquiriesCount }}">{{ $unreadInquiriesCount }}</span>
                 @if ($unreadInquiriesCount > 0)
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">{{ __('sin leer') }}</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0">{{ __('sin leer') }}</span>
                 @endif
             </p>
         </a>
     </div>
 
     <!-- Contact Inquiries Section in Dashboard -->
-    <div class="card mt-6 animate-fade-up" style="animation-delay: 350ms">
-        <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-            <div class="flex items-center gap-2">
-                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                    <i class="fa-solid fa-envelope text-base"></i>
+    <div class="card animate-fade-up min-w-0" style="animation-delay: 350ms">
+        <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <i class="fa-solid fa-envelope text-sm sm:text-base"></i>
                 </span>
-                <div>
-                    <h2 class="text-sm font-bold text-gray-900">{{ __('Mensajes de Contacto Recientes') }}</h2>
-                    <p class="text-xs text-gray-500">{{ __('Consultas enviadas desde la página de contacto pública') }}</p>
+                <div class="min-w-0">
+                    <h2 class="text-sm font-bold text-gray-900 truncate">{{ __('Mensajes de Contacto Recientes') }}</h2>
+                    <p class="text-xs text-gray-500 truncate hidden sm:block">{{ __('Consultas enviadas desde la página de contacto pública') }}</p>
                 </div>
             </div>
-            <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                {{ __('Ver todos los mensajes') }}
-                <i class="fa-solid fa-chevron-right text-sm"></i>
+            <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                <span>{{ __('Ver todos') }}</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </a>
         </div>
         <div class="hidden md:block overflow-x-auto">
@@ -273,16 +273,16 @@
         </ul>
     </div>
 
-    <div class="grid gap-6 mt-6 lg:grid-cols-2">
-        <div class="card animate-fade-up" style="animation-delay: 360ms">
-            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Requests by status') }}</h2>
-                <a href="{{ route('admin.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                    {{ __('View All') }}
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+    <div class="grid gap-4 sm:gap-6 mt-4 sm:mt-6 lg:grid-cols-2 min-w-0">
+        <div class="card animate-fade-up min-w-0" style="animation-delay: 360ms">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+                <h2 class="text-sm font-semibold text-gray-900 truncate">{{ __('Requests by status') }}</h2>
+                <a href="{{ route('admin.requests.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                    <span>{{ __('View All') }}</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </a>
             </div>
-            <div class="space-y-4 p-5">
+            <div class="space-y-4 p-4 sm:p-5">
                 @forelse ($requestsByStatus as $label => $total)
                     @php
                         $pct = round(($total / $maxRequests) * 100);
@@ -291,8 +291,8 @@
                     @endphp
                     <a href="{{ route('admin.requests.index') }}" wire:navigate class="group block">
                         <div class="mb-1.5 flex items-center justify-between text-sm">
-                            <span class="font-medium text-gray-700 group-hover:text-emerald-700">{{ $label }}</span>
-                            <span class="font-semibold text-gray-900">{{ $total }}</span>
+                            <span class="font-medium text-gray-700 group-hover:text-emerald-700 truncate pr-2">{{ $label }}</span>
+                            <span class="font-semibold text-gray-900 shrink-0">{{ $total }}</span>
                         </div>
                         <div class="bar-track">
                             <div class="bar-fill {{ $color }}" style="width: 0%" data-bar="{{ $pct }}"></div>
@@ -304,15 +304,15 @@
             </div>
         </div>
 
-        <div class="card animate-fade-up" style="animation-delay: 420ms">
-            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Shipments by carrier') }}</h2>
-                <a href="{{ route('admin.shipments.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                    {{ __('View All') }}
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+        <div class="card animate-fade-up min-w-0" style="animation-delay: 420ms">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+                <h2 class="text-sm font-semibold text-gray-900 truncate">{{ __('Shipments by carrier') }}</h2>
+                <a href="{{ route('admin.shipments.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                    <span>{{ __('View All') }}</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </a>
             </div>
-            <div class="space-y-4 p-5">
+            <div class="space-y-4 p-4 sm:p-5">
                 @forelse ($carriers as $carrier => $total)
                     @php
                         $pct = round(($total / $maxCarrier) * 100);
@@ -321,8 +321,8 @@
                     @endphp
                     <a href="{{ route('admin.shipments.index') }}" wire:navigate class="group block">
                         <div class="mb-1.5 flex items-center justify-between text-sm">
-                            <span class="font-medium text-gray-700 group-hover:text-emerald-700">{{ $carrier }}</span>
-                            <span class="font-semibold text-gray-900">{{ $total }}</span>
+                            <span class="font-medium text-gray-700 group-hover:text-emerald-700 truncate pr-2">{{ $carrier }}</span>
+                            <span class="font-semibold text-gray-900 shrink-0">{{ $total }}</span>
                         </div>
                         <div class="bar-track">
                             <div class="bar-fill {{ $color }}" style="width: 0%" data-bar="{{ $pct }}"></div>
@@ -335,19 +335,19 @@
         </div>
     </div>
 
-    <div class="grid gap-6 mt-6 lg:grid-cols-3">
-        <div class="card animate-fade-up" style="animation-delay: 380ms">
-            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Requests') }}</h2>
-                <a href="{{ route('admin.requests.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                    {{ __('View All') }}
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+    <div class="grid gap-4 sm:gap-6 mt-4 sm:mt-6 lg:grid-cols-3 min-w-0">
+        <div class="card animate-fade-up min-w-0" style="animation-delay: 380ms">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+                <h2 class="text-sm font-semibold text-gray-900 truncate">{{ __('Recent Requests') }}</h2>
+                <a href="{{ route('admin.requests.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                    <span>{{ __('View All') }}</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </a>
             </div>
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentRequests as $request)
                     <li>
-                        <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="group flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
+                        <a href="{{ route('admin.requests.show', $request) }}" wire:navigate class="group flex items-center justify-between gap-3 px-4 py-3 sm:px-5 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900 group-hover:text-emerald-700">{{ $request->number }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $request->customer?->name ?? __('Unknown') }} · {{ $request->product_name }}</p>
@@ -361,18 +361,18 @@
             </ul>
         </div>
 
-        <div class="card animate-fade-up" style="animation-delay: 440ms">
-            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Packages') }}</h2>
-                <a href="{{ route('admin.packages.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                    {{ __('View All') }}
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+        <div class="card animate-fade-up min-w-0" style="animation-delay: 440ms">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+                <h2 class="text-sm font-semibold text-gray-900 truncate">{{ __('Recent Packages') }}</h2>
+                <a href="{{ route('admin.packages.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                    <span>{{ __('View All') }}</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </a>
             </div>
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentPackages as $package)
                     <li>
-                        <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
+                        <a href="{{ route('admin.packages.show', $package) }}" wire:navigate class="flex items-center justify-between gap-3 px-4 py-3 sm:px-5 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900">{{ $package->number }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $package->customer?->name ?? __('Unknown') }} · {{ $package->store }}</p>
@@ -386,18 +386,18 @@
             </ul>
         </div>
 
-        <div class="card animate-fade-up" style="animation-delay: 500ms">
-            <div class="flex items-center justify-between border-b border-gray-100/60 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Recent Payments') }}</h2>
-                <a href="{{ route('admin.payments.index') }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-800">
-                    {{ __('View All') }}
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+        <div class="card animate-fade-up min-w-0" style="animation-delay: 500ms">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100/60 px-4 py-3.5 sm:px-5 sm:py-4">
+                <h2 class="text-sm font-semibold text-gray-900 truncate">{{ __('Recent Payments') }}</h2>
+                <a href="{{ route('admin.payments.index') }}" wire:navigate class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 transition-colors hover:text-emerald-800">
+                    <span>{{ __('View All') }}</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </a>
             </div>
             <ul class="divide-y divide-gray-100">
                 @forelse ($recentPayments as $payment)
                     <li>
-                        <a href="{{ route('admin.payments.index') }}" wire:navigate class="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
+                        <a href="{{ route('admin.payments.index') }}" wire:navigate class="flex items-center justify-between gap-3 px-4 py-3 sm:px-5 transition-colors hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent">
                             <div class="min-w-0">
                                 <p class="truncate text-sm font-medium text-gray-900">{{ $payment->customer?->name ?? __('Unknown') }}</p>
                                 <p class="truncate text-xs text-gray-500">{{ $payment->number }}</p>

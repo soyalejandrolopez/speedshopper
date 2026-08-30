@@ -20,8 +20,8 @@
 
         <x-theme-color />
     </head>
-    <body class="font-sans antialiased bg-gray-50">
-        <div x-data="{ sidebarOpen: false }" @open-sidebar.window="sidebarOpen = true" class="flex min-h-screen">
+    <body class="font-sans antialiased bg-gray-50 min-h-screen overflow-x-hidden">
+        <div x-data="{ sidebarOpen: false }" @open-sidebar.window="sidebarOpen = true" class="flex min-h-screen w-full min-w-0 overflow-x-hidden">
             <aside class="fixed inset-y-0 start-0 z-40 flex w-64 flex-col print:hidden border-e border-gray-200/80 bg-white/95 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 -translate-x-full lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
                 <div class="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-4 bg-white/60">
                     <a href="{{ route('dashboard') }}" class="group flex min-w-0 items-center gap-2.5 overflow-hidden" wire:navigate>
@@ -135,7 +135,7 @@
                 </nav>
             </aside>
 
-            <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0">
+            <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0 w-full overflow-x-hidden">
                 <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200/80 bg-white/90 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
                     <div class="flex items-center gap-3 min-w-0">
                         <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden" aria-label="{{ __('Open menu') }}">
@@ -178,8 +178,8 @@
                     </div>
                 </header>
 
-                <main class="flex-1 p-3.5 sm:p-5 lg:p-6 pb-24 lg:pb-8 print:p-0 flex flex-col min-w-0">
-                    <div class="flex-1 min-w-0">
+                <main class="flex-1 p-3.5 sm:p-5 lg:p-6 pb-24 lg:pb-8 print:p-0 flex flex-col min-w-0 w-full overflow-x-hidden">
+                    <div class="flex-1 min-w-0 w-full overflow-x-hidden">
                         {{ $slot }}
                     </div>
                     <div class="mt-8 text-center text-xs text-gray-400 print:hidden">
