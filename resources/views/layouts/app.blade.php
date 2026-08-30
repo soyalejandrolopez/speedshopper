@@ -135,33 +135,32 @@
                 </nav>
             </aside>
 
-            <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0 w-full overflow-x-hidden">
-                <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 border-b border-gray-200/80 bg-white/90 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden" aria-label="{{ __('Open menu') }}">
-                            <i class="fa-solid fa-bars text-xl"></i>
+                <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 border-b border-gray-200/80 bg-white/90 px-3 sm:px-6 backdrop-blur-2xl shadow-xs print:hidden">
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <button @click="sidebarOpen = true" class="flex h-9 w-9 items-center justify-center rounded-xl p-1.5 text-gray-500 hover:bg-gray-100 lg:hidden shrink-0" aria-label="{{ __('Open menu') }}">
+                            <i class="fa-solid fa-bars text-lg"></i>
                         </button>
-                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-gray-900 truncate">{{ $header ?? '' }}</h1>
+                        <h1 class="text-sm sm:text-base md:text-lg font-bold tracking-tight text-gray-900 truncate">{{ $header ?? '' }}</h1>
                     </div>
 
-                    <livewire:admin.global-search />
+                    <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                        <livewire:admin.global-search />
 
-                    <div class="flex items-center gap-2 shrink-0">
-                        <a href="{{ route('home') }}" target="_blank" class="hidden items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-700 md:inline-flex">
-                            <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        <a href="{{ route('home') }}" target="_blank" class="hidden items-center gap-1.5 rounded-xl border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-700 lg:inline-flex">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                             {{ __('Public Website') }}
                         </a>
 
-                        <div class="flex items-center gap-1 border-s border-gray-200 ps-3">
-                            <a href="{{ route('locale.switch', 'es') }}" class="text-xs {{ app()->getLocale() === 'es' ? 'font-semibold text-emerald-700' : 'text-gray-400 hover:text-gray-600' }}">ES</a>
+                        <div class="flex items-center gap-0.5 border-s border-gray-200 ps-2 sm:ps-3">
+                            <a href="{{ route('locale.switch', 'es') }}" class="px-1.5 py-0.5 rounded text-xs {{ app()->getLocale() === 'es' ? 'font-bold text-emerald-700 bg-emerald-50' : 'text-gray-400 hover:text-gray-600' }}">ES</a>
                             <span class="text-xs text-gray-300">/</span>
-                            <a href="{{ route('locale.switch', 'en') }}" class="text-xs {{ app()->getLocale() === 'en' ? 'font-semibold text-emerald-700' : 'text-gray-400 hover:text-gray-600' }}">EN</a>
+                            <a href="{{ route('locale.switch', 'en') }}" class="px-1.5 py-0.5 rounded text-xs {{ app()->getLocale() === 'en' ? 'font-bold text-emerald-700 bg-emerald-50' : 'text-gray-400 hover:text-gray-600' }}">EN</a>
                         </div>
 
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button class="flex items-center gap-2 rounded-full p-1.5 transition-colors hover:bg-gray-100">
-                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-sm font-semibold text-white shadow-sm shadow-emerald-200">
+                                <button class="flex items-center gap-2 rounded-full p-1 transition-colors hover:bg-gray-100">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm shadow-emerald-200">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </span>
                                     <span class="hidden text-sm font-medium text-gray-700 lg:block">{{ auth()->user()->name }}</span>

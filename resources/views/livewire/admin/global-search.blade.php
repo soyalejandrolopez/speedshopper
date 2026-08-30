@@ -12,14 +12,23 @@
             }
         });
     }
-}" class="relative flex-1 max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4">
-    {{-- Trigger Input and Separated Buscar Button in Header --}}
-    <div class="flex items-center gap-1.5 w-full">
+}" class="relative flex items-center">
+    {{-- Mobile Search Icon Button (< md) --}}
+    <button type="button"
+            @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
+            class="flex h-8 w-8 items-center justify-center rounded-xl border border-gray-200 bg-gray-50/80 text-gray-500 transition-colors hover:border-gray-300 hover:bg-white hover:text-emerald-700 shadow-2xs md:hidden"
+            aria-label="{{ __('Buscar') }}"
+            title="{{ __('Buscar') }}">
+        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+    </button>
+
+    {{-- Desktop Full Trigger (>= md) --}}
+    <div class="hidden md:flex items-center gap-1.5 w-64 lg:w-80 xl:w-96">
         <button type="button"
                 @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
                 class="group flex flex-1 items-center justify-between gap-2 rounded-xl border border-gray-200/90 bg-gray-50/70 px-3.5 py-1.5 text-xs text-gray-400 transition-all duration-200 hover:border-gray-300 hover:bg-white hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-2xs">
             <span class="truncate">{{ __('Buscar clientes, órdenes, paquetes...') }}</span>
-            <kbd class="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-400 shadow-2xs group-hover:text-gray-600">
+            <kbd class="hidden lg:inline-flex items-center gap-0.5 rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-400 shadow-2xs group-hover:text-gray-600">
                 <span>⌘</span>K
             </kbd>
         </button>
@@ -28,7 +37,7 @@
                 @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
                 class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
             <i class="fa-solid fa-magnifying-glass text-xs"></i>
-            <span class="hidden sm:inline">{{ __('Buscar') }}</span>
+            <span>{{ __('Buscar') }}</span>
         </button>
     </div>
 
