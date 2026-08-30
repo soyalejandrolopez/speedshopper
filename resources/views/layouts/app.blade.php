@@ -22,7 +22,7 @@
     </head>
     <body class="font-sans antialiased bg-gray-50">
         <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
-            <aside class="fixed inset-y-0 start-0 z-40 flex w-64 flex-col print:hidden border-e border-gray-200/80 bg-white/90 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform -translate-x-full sm:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
+            <aside class="fixed inset-y-0 start-0 z-40 flex w-64 flex-col print:hidden border-e border-gray-200/80 bg-white/95 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 -translate-x-full lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
                 <div class="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-4 bg-white/60">
                     <a href="{{ route('dashboard') }}" class="group flex min-w-0 items-center gap-2.5 overflow-hidden" wire:navigate>
                         <x-brand-logo size="md" class="transition-transform duration-200 group-hover:scale-105" />
@@ -31,7 +31,7 @@
                             <p class="truncate text-[10px] font-semibold uppercase tracking-wider text-emerald-600 leading-none mt-0.5">{{ __('Admin Panel') }}</p>
                         </div>
                     </a>
-                    <button @click="sidebarOpen = false" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 sm:hidden shrink-0" aria-label="{{ __('Close') }}">
+                    <button @click="sidebarOpen = false" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:hidden shrink-0" aria-label="{{ __('Close') }}">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
@@ -135,16 +135,16 @@
                 </nav>
             </aside>
 
-            <div class="flex flex-1 flex-col sm:ms-64 print:ms-0 print:flex-none">
-                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/40 bg-white/60 px-4 backdrop-blur-2xl shadow-sm sm:px-6 print:hidden">
-                    <div class="flex items-center gap-3">
-                        <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 sm:hidden">
+            <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0">
+                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/40 bg-white/70 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden" aria-label="{{ __('Open menu') }}">
                             <i class="fa-solid fa-bars text-xl"></i>
                         </button>
-                        <h1 class="text-lg font-bold tracking-tight text-gray-900">{{ $header ?? '' }}</h1>
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-gray-900 truncate">{{ $header ?? '' }}</h1>
                     </div>
 
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 shrink-0">
                         <a href="{{ route('home') }}" target="_blank" class="hidden items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-700 md:inline-flex">
                             <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
                             {{ __('Public Website') }}
@@ -178,8 +178,8 @@
                     </div>
                 </header>
 
-                <main class="flex-1 p-4 pb-24 sm:p-6 md:pb-6 print:p-0 flex flex-col">
-                    <div class="flex-1">
+                <main class="flex-1 p-3.5 sm:p-5 lg:p-6 pb-24 lg:pb-8 print:p-0 flex flex-col min-w-0">
+                    <div class="flex-1 min-w-0">
                         {{ $slot }}
                     </div>
                     <div class="mt-8 text-center text-xs text-gray-400 print:hidden">
@@ -191,7 +191,15 @@
                 </main>
             </div>
 
-            <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" print:hidden class="fixed inset-0 z-30 bg-gray-900/50 sm:hidden"></div>
+            <div x-show="sidebarOpen" x-cloak
+                 x-transition:enter="transition-opacity ease-linear duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition-opacity ease-linear duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 @click="sidebarOpen = false"
+                 print:hidden class="fixed inset-0 z-30 bg-gray-900/50 backdrop-blur-xs lg:hidden"></div>
         </div>
 
         @php

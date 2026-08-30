@@ -109,10 +109,27 @@ select {
     appearance: none;
 }
 
+/* Prevent iOS Safari auto-zoom on inputs by ensuring >= 16px font size on mobile */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="month"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
 input[type="checkbox"],
 input[type="radio"] {
-    width: 1rem;
-    height: 1rem;
+    width: 1.125rem;
+    height: 1.125rem;
     accent-color: #059669;
     border-radius: 0.25rem;
     border: 1px solid #d1d5db;

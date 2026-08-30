@@ -1,23 +1,23 @@
 <x-public-layout title="{{ __('Contacto') }} | {{ \App\Models\Setting::get('company_name', config('app.name')) }}">
-    <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-white to-white py-16 lg:py-24">
+    <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-white to-white py-8 sm:py-14 lg:py-20">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -start-32 top-0 h-96 w-96 rounded-full bg-emerald-100/80 blur-3xl"></div>
             <div class="absolute -end-24 bottom-0 h-96 w-96 rounded-full bg-teal-100/80 blur-3xl"></div>
             <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,150,105,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(5,150,105,0.04)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,black,transparent)]"></div>
         </div>
 
-        <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="relative mx-auto max-w-7xl px-3.5 sm:px-6">
             <div class="text-center" data-reveal>
                 <span class="section-eyebrow">{{ __('Atención personalizada') }}</span>
-                <h1 class="mt-3 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+                <h1 class="mt-3 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                     {{ __('Contáctanos') }}
                 </h1>
-                <p class="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+                <p class="mx-auto mt-3 max-w-2xl text-sm sm:text-base text-gray-600 leading-relaxed">
                     {{ __('Estamos en Baytown, Texas. Escríbenos o llena el formulario y te asesoramos de inmediato con tus compras y envíos a Latinoamérica.') }}
                 </p>
             </div>
 
-            <div class="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
+            <div class="mt-8 sm:mt-12 grid gap-8 lg:grid-cols-12 lg:gap-12">
                 <!-- Left Column: Contact Cards & Info -->
                 <div class="space-y-6 lg:col-span-5" data-reveal>
                     <!-- WhatsApp Card -->

@@ -31,9 +31,9 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
         </div>
 
-        <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-4 pt-64 pb-8 text-center sm:px-6">
+        <div class="relative mx-auto flex min-h-[85vh] sm:min-h-screen max-w-4xl flex-col justify-center px-4 pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-44 lg:pb-24 text-center sm:px-6">
             <div class="flex flex-col items-center">
-                <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
                     <span class="relative flex h-2 w-2">
                         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
@@ -41,30 +41,30 @@
                     {{ __('Personal Shopper in Baytown, TX') }}
                 </span>
 
-                <h1 class="mt-6 text-3xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <h1 class="mt-5 text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                     {{ __('We buy, receive and ship') }}
                     <span class="text-white">{{ __('your products to Latin America') }}</span>
                 </h1>
 
-                <div class="mt-8 flex flex-wrap justify-center gap-3">
-                    <a href="{{ route('request') }}" class="btn-primary px-6 py-3 text-base">
+                <div class="mt-6 sm:mt-8 flex flex-wrap justify-center gap-3 w-full sm:w-auto">
+                    <a href="{{ route('request') }}" class="btn-primary w-full sm:w-auto px-6 py-3 text-base shadow-lg shadow-emerald-950/40">
                         {{ __('New Order') }}
                         <i class="fa-solid fa-arrow-right text-lg"></i>
                     </a>
                     @guest
-                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
+                        <a href="{{ route('register') }}" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
                             {{ __('Create Account') }}
                         </a>
                     @endguest
                 </div>
 
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-medium text-gray-300">
+                <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-medium text-gray-200">
                     <span class="inline-flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-check text-xs text-white"></i>
+                        <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
                         Zelle
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-check text-xs text-white"></i>
+                        <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
                         PayPal
                     </span>
                 </div>
@@ -73,9 +73,9 @@
     </section>
 
     <!-- QUICK QUOTE SECTION AT TOP -->
-    <section id="quick-quote" class="relative -mt-12 z-20 mx-auto max-w-7xl px-4 pb-12 sm:px-6">
-        <div class="rounded-3xl border border-emerald-100/80 bg-white p-6 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-950/10">
-            <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
+    <section id="quick-quote" class="relative -mt-10 sm:-mt-12 z-20 mx-auto max-w-7xl px-3.5 sm:px-6 pb-12">
+        <div class="rounded-3xl border border-emerald-100/80 bg-white p-4 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-950/10">
+            <div class="grid gap-8 lg:grid-cols-12 lg:items-start">
                 
                 <!-- Left Details & Value Props (2nd on mobile, 1st on desktop) -->
                 <div class="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-between" data-reveal>
@@ -85,79 +85,79 @@
                             Quick Quote
                         </span>
 
-                        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        <h2 class="mt-3.5 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl lg:text-4xl">
                             {{ __('Envíanos tu solicitud de compra') }}
                         </h2>
 
-                        <p class="mt-3 text-base text-gray-600 leading-relaxed">
+                        <p class="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">
                             {{ __('Cuéntanos qué quieres y te cotizamos el costo total.') }}
                         </p>
 
                         <!-- Benefit bullets -->
-                        <div class="mt-6 space-y-3.5">
+                        <div class="mt-5 space-y-3">
                             <div class="flex items-start gap-3">
                                 <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-800">{{ __('Cotización gratis, sin compromiso') }}</span>
+                                <span class="text-xs sm:text-sm font-semibold text-gray-800">{{ __('Cotización gratis, sin compromiso') }}</span>
                             </div>
 
                             <div class="flex items-start gap-3">
                                 <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
-                                <span class="text-sm font-medium text-gray-700">{{ __('Envía el link del producto y nosotros nos encargamos del resto.') }}</span>
+                                <span class="text-xs sm:text-sm font-medium text-gray-700">{{ __('Envía el link del producto y nosotros nos encargamos del resto.') }}</span>
                             </div>
 
                             <div class="flex items-start gap-3">
                                 <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
-                                <span class="text-sm font-medium text-gray-700">{{ __('Buscamos las mejores ofertas y descuentos para ti.') }}</span>
+                                <span class="text-xs sm:text-sm font-medium text-gray-700">{{ __('Buscamos las mejores ofertas y descuentos para ti.') }}</span>
                             </div>
 
                             <div class="flex items-start gap-3">
                                 <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mt-0.5">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
-                                <span class="text-sm font-semibold text-emerald-700">{{ __('Respuesta rápida por chat · Pago por adelantado') }}</span>
+                                <span class="text-xs sm:text-sm font-semibold text-emerald-700">{{ __('Respuesta rápida por chat · Pago por adelantado') }}</span>
                             </div>
                         </div>
 
                         <!-- Consolidación de Paquetes Highlight Card -->
-                        <div class="mt-6 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-teal-50/60 to-white p-4 shadow-sm">
-                            <div class="flex items-center gap-3.5">
-                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
-                                    <i class="fa-solid fa-boxes-packing text-lg"></i>
+                        <div class="mt-5 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-teal-50/60 to-white p-3.5 sm:p-4 shadow-xs">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
+                                    <i class="fa-solid fa-boxes-packing text-base sm:text-lg"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-gray-900">{{ __('Consolidación de Paquetes') }}</h4>
-                                    <p class="text-xs text-gray-600 mt-0.5">{{ __('Consolidamos todos tus paquetes en una sola caja.') }}</p>
+                                    <h4 class="text-xs sm:text-sm font-bold text-gray-900">{{ __('Consolidación de Paquetes') }}</h4>
+                                    <p class="text-[11px] sm:text-xs text-gray-600 mt-0.5">{{ __('Consolidamos todos tus paquetes en una sola caja.') }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 3 Stats Metrics Row -->
-                    <div class="mt-8 pt-6 border-t border-gray-100 grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
-                            <p class="text-2xl font-black text-emerald-600 tracking-tight">12+</p>
-                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Países a los que enviamos') }}</p>
+                    <div class="mt-6 pt-5 border-t border-gray-100 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-2.5 sm:p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">12+</p>
+                            <p class="text-[10px] sm:text-[11px] font-semibold text-gray-700 mt-0.5 sm:mt-1 leading-tight">{{ __('Países a los que enviamos') }}</p>
                         </div>
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
-                            <p class="text-2xl font-black text-emerald-600 tracking-tight">&lt; 1h</p>
-                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Respondemos en menos de 1 hora por chat.') }}</p>
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-2.5 sm:p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">&lt; 1h</p>
+                            <p class="text-[10px] sm:text-[11px] font-semibold text-gray-700 mt-0.5 sm:mt-1 leading-tight">{{ __('Respondemos en menos de 1 hora por chat.') }}</p>
                         </div>
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
-                            <p class="text-2xl font-black text-emerald-600 tracking-tight">100%</p>
-                            <p class="text-[11px] font-semibold text-gray-700 mt-1 leading-tight">{{ __('Pago por adelantado') }}</p>
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-2.5 sm:p-3 transition-colors hover:bg-emerald-50/60 hover:border-emerald-200">
+                            <p class="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">100%</p>
+                            <p class="text-[10px] sm:text-[11px] font-semibold text-gray-700 mt-0.5 sm:mt-1 leading-tight">{{ __('Pago por adelantado') }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Form: Client Registration Form (1st on mobile, 2nd on desktop) -->
                 <div class="order-1 lg:order-2 lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
-                    <div class="w-full rounded-3xl border border-gray-200 bg-white p-6 shadow-xl shadow-emerald-950/5 ring-1 ring-black/5 sm:p-8">
+                    <div class="w-full rounded-3xl border border-gray-200 bg-white p-4 sm:p-6 lg:p-8 shadow-xl shadow-emerald-950/5 ring-1 ring-black/5">
                         <div class="border-b border-gray-100 pb-4 mb-6">
                             <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
                                 <i class="fa-solid fa-clipboard-list text-emerald-600"></i>

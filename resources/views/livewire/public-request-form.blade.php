@@ -246,90 +246,90 @@
 
                 <div class="grid gap-3 sm:grid-cols-3">
                     {{-- 1. Caja Small --}}
-                    <div class="rounded-xl border {{ $boxes_small > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                    <div class="rounded-xl border {{ $boxes_small > 0 ? 'border-teal-500 bg-teal-50/80 ring-2 ring-teal-400/30' : 'border-gray-200 bg-white' }} p-3.5 transition-all">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-gray-900">{{ __('Caja Small') }}</span>
-                            <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                            <span class="rounded-md bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
                                 ${{ number_format($this->rates['box_small_heavy_duty'] ?? 15, 2) }}
                             </span>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
 
-                        <div class="mt-3 flex items-center justify-between">
+                        <div class="mt-3.5 flex items-center justify-between">
                             <button type="button" wire:click="decrementBox('small')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-700 shadow-2xs hover:bg-gray-100 active:scale-95 transition-transform" aria-label="{{ __('Decrease') }}">
                                 <i class="fa-solid fa-minus text-xs"></i>
                             </button>
-                            <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                            <span class="text-base font-bold text-gray-900 w-8 text-center">
                                 {{ $boxes_small }}
                             </span>
                             <button type="button" wire:click="incrementBox('small')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-teal-500 bg-teal-600 text-white shadow-2xs hover:bg-teal-700 active:scale-95 transition-transform" aria-label="{{ __('Increase') }}">
                                 <i class="fa-solid fa-plus text-xs"></i>
                             </button>
                         </div>
                         @if ($boxes_small > 0)
-                            <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                            <div class="mt-2.5 text-end text-xs font-bold text-teal-700">
                                 = {{ money($boxes_small * ($this->rates['box_small_heavy_duty'] ?? 15)) }}
                             </div>
                         @endif
                     </div>
 
                     {{-- 2. Caja Mediana --}}
-                    <div class="rounded-xl border {{ $boxes_medium > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                    <div class="rounded-xl border {{ $boxes_medium > 0 ? 'border-teal-500 bg-teal-50/80 ring-2 ring-teal-400/30' : 'border-gray-200 bg-white' }} p-3.5 transition-all">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-gray-900">{{ __('Caja Mediana') }}</span>
-                            <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                            <span class="rounded-md bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
                                 ${{ number_format($this->rates['box_medium_heavy_duty'] ?? 20, 2) }}
                             </span>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
 
-                        <div class="mt-3 flex items-center justify-between">
+                        <div class="mt-3.5 flex items-center justify-between">
                             <button type="button" wire:click="decrementBox('medium')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-700 shadow-2xs hover:bg-gray-100 active:scale-95 transition-transform" aria-label="{{ __('Decrease') }}">
                                 <i class="fa-solid fa-minus text-xs"></i>
                             </button>
-                            <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                            <span class="text-base font-bold text-gray-900 w-8 text-center">
                                 {{ $boxes_medium }}
                             </span>
                             <button type="button" wire:click="incrementBox('medium')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-teal-500 bg-teal-600 text-white shadow-2xs hover:bg-teal-700 active:scale-95 transition-transform" aria-label="{{ __('Increase') }}">
                                 <i class="fa-solid fa-plus text-xs"></i>
                             </button>
                         </div>
                         @if ($boxes_medium > 0)
-                            <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                            <div class="mt-2.5 text-end text-xs font-bold text-teal-700">
                                 = {{ money($boxes_medium * ($this->rates['box_medium_heavy_duty'] ?? 20)) }}
                             </div>
                         @endif
                     </div>
 
                     {{-- 3. Caja Larga --}}
-                    <div class="rounded-xl border {{ $boxes_large > 0 ? 'border-teal-500 bg-teal-50/80 ring-1 ring-teal-400' : 'border-gray-200 bg-white' }} p-3 transition-all">
+                    <div class="rounded-xl border {{ $boxes_large > 0 ? 'border-teal-500 bg-teal-50/80 ring-2 ring-teal-400/30' : 'border-gray-200 bg-white' }} p-3.5 transition-all">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-gray-900">{{ __('Caja Larga') }}</span>
-                            <span class="rounded bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
+                            <span class="rounded-md bg-teal-100 px-2 py-0.5 text-xs font-extrabold text-teal-800">
                                 ${{ number_format($this->rates['box_large_heavy_duty'] ?? 25, 2) }}
                             </span>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-0.5">Heavy Duty</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
 
-                        <div class="mt-3 flex items-center justify-between">
+                        <div class="mt-3.5 flex items-center justify-between">
                             <button type="button" wire:click="decrementBox('large')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-700 shadow-2xs hover:bg-gray-100 active:scale-95 transition-transform" aria-label="{{ __('Decrease') }}">
                                 <i class="fa-solid fa-minus text-xs"></i>
                             </button>
-                            <span class="text-sm font-bold text-gray-900 w-8 text-center">
+                            <span class="text-base font-bold text-gray-900 w-8 text-center">
                                 {{ $boxes_large }}
                             </span>
                             <button type="button" wire:click="incrementBox('large')"
-                                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-teal-500 bg-teal-600 text-white hover:bg-teal-700 active:scale-95">
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-teal-500 bg-teal-600 text-white shadow-2xs hover:bg-teal-700 active:scale-95 transition-transform" aria-label="{{ __('Increase') }}">
                                 <i class="fa-solid fa-plus text-xs"></i>
                             </button>
                         </div>
                         @if ($boxes_large > 0)
-                            <div class="mt-2 text-end text-[11px] font-bold text-teal-700">
+                            <div class="mt-2.5 text-end text-xs font-bold text-teal-700">
                                 = {{ money($boxes_large * ($this->rates['box_large_heavy_duty'] ?? 25)) }}
                             </div>
                         @endif
@@ -337,9 +337,9 @@
                 </div>
 
                 @if ($this->packagingTotal > 0)
-                    <div class="mt-3 rounded-lg bg-teal-100/80 p-2 text-center text-xs font-bold text-teal-950 flex items-center justify-between px-3">
+                    <div class="mt-3 rounded-xl bg-teal-100/90 p-2.5 text-center text-xs font-bold text-teal-950 flex items-center justify-between px-3.5">
                         <span>{{ __('Subtotal de Embalaje Seleccionado:') }}</span>
-                        <span class="text-sm font-black text-teal-800">{{ money($this->packagingTotal) }}</span>
+                        <span class="text-sm font-black text-teal-900">{{ money($this->packagingTotal) }}</span>
                     </div>
                 @endif
             </div>

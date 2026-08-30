@@ -1,31 +1,31 @@
 <x-public-layout :title="__('Productos Prohibidos y Restringidos')">
     <!-- HERO SECTION -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-white to-gray-50/50 py-12 sm:py-16">
+    <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-white to-gray-50/50 py-8 sm:py-14">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -start-24 top-0 h-80 w-80 rounded-full bg-rose-100/60 blur-3xl"></div>
             <div class="absolute -end-24 bottom-0 h-80 w-80 rounded-full bg-emerald-100/60 blur-3xl"></div>
             <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,150,105,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(5,150,105,0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,black,transparent)]"></div>
         </div>
 
-        <div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <div class="relative mx-auto max-w-4xl px-3.5 text-center sm:px-6">
             <span class="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-1.5 text-xs font-semibold text-rose-700 shadow-sm">
                 <i class="fa-solid fa-shield-halved text-rose-600 text-xs"></i>
                 {{ __('Políticas de Envío y Seguridad') }}
             </span>
 
-            <h1 class="mt-5 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+            <h1 class="mt-4 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                 {{ __('Productos Prohibidos y Restringidos') }}
             </h1>
 
-            <p class="mt-4 text-base sm:text-lg leading-relaxed text-gray-600">
+            <p class="mt-3 text-sm sm:text-base leading-relaxed text-gray-600">
                 {{ __('Por razones de seguridad y regulaciones de transporte, algunos productos no pueden ser recibidos, almacenados o enviados a destinos internacionales.') }}
             </p>
         </div>
     </section>
 
     <!-- CONTENT SECTION -->
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 pb-20">
-        <div class="grid gap-10 lg:grid-cols-2">
+    <section class="mx-auto max-w-5xl px-3.5 py-6 sm:px-6 sm:py-8 pb-20">
+        <div class="grid gap-8 lg:grid-cols-2">
 
             <!-- PROHIBITED ITEMS CARD (RED ACCENT) -->
             <div class="overflow-hidden rounded-3xl border border-rose-200/80 bg-white shadow-xl shadow-rose-100/40">
