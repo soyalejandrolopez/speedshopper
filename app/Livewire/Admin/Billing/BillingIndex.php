@@ -1015,8 +1015,9 @@ class BillingIndex extends Component
             ->get()
             ->groupBy('billable_id');
 
-        $totalInvoiced = CostItem::where('costable_type', PurchaseRequest::class)->sum('amount');
-        $totalEarnings = CostItem::where('costable_type', PurchaseRequest::class)->where('type', '!=', CostType::ProductCost)->sum('amount');
+        $billedRequestIds = PurchaseRequest::billed()->pluck('id');
+        $totalInvoiced = CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', $billedRequestIds)->sum('amount');
+        $totalEarnings = CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', $billedRequestIds)->where('type', '!=', CostType::ProductCost)->sum('amount');
         $totalCollected = Payment::sum('amount_paid');
         $totalPending = max(0.0, $totalInvoiced - $totalCollected);
 

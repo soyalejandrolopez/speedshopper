@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Enums\RequestStatus;
 use App\Enums\ShipmentStatus;
 use App\Models\ContactInquiry;
+use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
@@ -62,7 +63,7 @@ class Dashboard extends Component
             'storedPackages' => Package::whereIn('status', ['received', 'storing', 'packing', 'ready'])->count(),
             'shipmentsInTransit' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
             'readyShipments' => Shipment::where('status', ShipmentStatus::Ready->value)->count(),
-            'totalBalanceDue' => (float) Payment::sum('invoice_total') - (float) Payment::sum('amount_paid'),
+            'totalBalanceDue' => max(0.0, (float) CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', PurchaseRequest::billed()->pluck('id'))->sum('amount') - (float) Payment::sum('amount_paid')),
             'unreadInquiriesCount' => ContactInquiry::unread()->count(),
             'recentInquiries' => ContactInquiry::latest()->limit(6)->get(),
             'recentRequests' => PurchaseRequest::with('customer')->latest()->limit(5)->get(),

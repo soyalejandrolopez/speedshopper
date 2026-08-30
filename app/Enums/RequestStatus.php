@@ -72,4 +72,14 @@ enum RequestStatus: string
     {
         return self::transitions()[$this->value];
     }
+
+    public function isBilled(): bool
+    {
+        return ! in_array($this, [self::New, self::Quoted, self::Cancelled]);
+    }
+
+    public function isQuote(): bool
+    {
+        return in_array($this, [self::New, self::Quoted]);
+    }
 }

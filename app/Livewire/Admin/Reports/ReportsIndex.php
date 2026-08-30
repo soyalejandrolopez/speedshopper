@@ -53,6 +53,7 @@ class ReportsIndex extends Component
         [$start, $end] = $this->range();
 
         $requests = PurchaseRequest::query()
+            ->billed()
             ->with(['customer', 'costItems'])
             ->whereBetween('created_at', [$start, $end])
             ->get();
@@ -65,7 +66,7 @@ class ReportsIndex extends Component
             })
             ->get();
 
-        $allRequests = PurchaseRequest::with(['customer', 'costItems'])->get();
+        $allRequests = PurchaseRequest::billed()->with(['customer', 'costItems'])->get();
 
         $totalInvoiced = (float) $allRequests->sum(function (PurchaseRequest $r) {
             $costs = (float) $r->costItems->sum('amount');
@@ -80,6 +81,7 @@ class ReportsIndex extends Component
         });
 
         $totalEarnings = (float) CostItem::where('costable_type', PurchaseRequest::class)
+            ->whereIn('costable_id', $allRequests->pluck('id'))
             ->where('type', '!=', CostType::ProductCost)
             ->sum('amount');
 
@@ -96,7 +98,7 @@ class ReportsIndex extends Component
             ->sum('amount_paid');
 
         $balanceByCustomer = Customer::query()
-            ->with(['purchaseRequests.costItems', 'payments'])
+            ->with(['purchaseRequests' => fn ($q) => $q->billed()->with('costItems'), 'payments'])
             ->whereNull('deleted_at')
             ->get()
             ->map(function (Customer $customer) {
@@ -150,9 +152,9 @@ class ReportsIndex extends Component
             'balanceDue' => $totalBalanceDue,
             'revenueThisMonth' => $thisMonthCollected,
             'customersCount' => Customer::count(),
-            'requestsCount' => PurchaseRequest::count(),
-            'packagesCount' => Package::count(),
-            'shipmentsCount' => Shipment::count(),
+            'requestsCount' => $requests->count(),
+            'packagesCount' => Package::whereBetween('created_at', [$start, $end])->count(),
+            'shipmentsCount' => Shipment::whereBetween('created_at', [$start, $end])->count(),
             'paymentsCount' => Payment::count(),
 
             'reportPeriod' => [
@@ -365,6 +367,7 @@ class ReportsIndex extends Component
     protected function reportData(Carbon $start, Carbon $end): array
     {
         $requests = PurchaseRequest::query()
+            ->billed()
             ->with(['customer', 'costItems'])
             ->whereBetween('created_at', [$start, $end])
             ->get();
@@ -442,7 +445,7 @@ class ReportsIndex extends Component
         $allRecords = $invoicesList->concat($standalonePayments)->sortByDesc('date')->values()->all();
 
         $balanceByCustomer = Customer::query()
-            ->with(['purchaseRequests.costItems', 'payments'])
+            ->with(['purchaseRequests' => fn ($q) => $q->billed()->with('costItems'), 'payments'])
             ->whereNull('deleted_at')
             ->get()
             ->map(function (Customer $customer) {

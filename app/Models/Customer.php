@@ -70,6 +70,30 @@ class Customer extends Model
 
     public function getBalanceDueAttribute(): float
     {
+        $hasBilledRequests = $this->purchaseRequests()->billed()->exists();
+
+        if ($hasBilledRequests) {
+            $invoiced = (float) $this->purchaseRequests()
+                ->billed()
+                ->with('costItems')
+                ->get()
+                ->sum(function (PurchaseRequest $r) {
+                    $costs = (float) $r->costItems->sum('amount');
+                    if ($costs > 0) {
+                        return $costs;
+                    }
+                    if ($r->unit_price) {
+                        return (float) ($r->unit_price * max(1, $r->quantity));
+                    }
+
+                    return 0.0;
+                });
+
+            $paid = (float) $this->payments()->sum('amount_paid');
+
+            return max(0.0, $invoiced - $paid);
+        }
+
         return (float) $this->payments()
             ->selectRaw('COALESCE(SUM(invoice_total - amount_paid), 0) as balance')
             ->value('balance');

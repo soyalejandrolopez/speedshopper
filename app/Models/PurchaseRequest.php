@@ -62,4 +62,18 @@ class PurchaseRequest extends Model
     {
         return $this->hasMany(Package::class);
     }
+
+    public function scopeBilled($query)
+    {
+        return $query->whereNotIn('status', [
+            RequestStatus::New->value,
+            RequestStatus::Quoted->value,
+            RequestStatus::Cancelled->value,
+        ]);
+    }
+
+    public function isBilled(): bool
+    {
+        return $this->status->isBilled();
+    }
 }
