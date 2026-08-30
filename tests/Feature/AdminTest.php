@@ -28,7 +28,7 @@ test('admin can view dashboard', function () {
     Livewire::test(Dashboard::class)
         ->assertOk()
         ->assertSee(__('Total Customers'))
-        ->assertSee(__('Total balance due'));
+        ->assertSee(__('Balance'));
 });
 
 test('admin can manage customers', function () {

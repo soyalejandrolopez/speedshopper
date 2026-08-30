@@ -40,7 +40,7 @@
 
         <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 180ms">
             <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total balance due') }}</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Balance') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
                     <i class="fa-solid fa-money-bill text-base sm:text-xl"></i>
                 </span>
