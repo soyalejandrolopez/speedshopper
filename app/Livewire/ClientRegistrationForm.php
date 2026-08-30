@@ -55,6 +55,26 @@ class ClientRegistrationForm extends Component
 
     public const TOTAL_STEPS = 3;
 
+    public function mount(): void
+    {
+        $this->fillAuthenticatedData();
+    }
+
+    public function fillAuthenticatedData(): void
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $customer = $user->customer;
+
+            $this->form['name'] = $this->form['name'] ?: ($user->name ?? $customer?->name ?? '');
+            $this->form['email'] = $this->form['email'] ?: ($user->email ?? $customer?->email ?? '');
+            $this->form['whatsapp'] = $this->form['whatsapp'] ?: ($customer?->whatsapp ?? $user->whatsapp ?? $user->phone ?? '');
+            $this->form['country'] = $customer?->country ?? $user->country ?? ($this->form['country'] ?: 'VE');
+            $this->form['city'] = $this->form['city'] ?: ($customer?->city ?? $user->city ?? '');
+            $this->form['address'] = $this->form['address'] ?: ($customer?->address ?? $user->address ?? '');
+        }
+    }
+
     /** @return array<string, array{key: string, title: string, subtitle: string, icon: string}> */
     public function serviceDefinitions(): array
     {
@@ -324,6 +344,7 @@ class ClientRegistrationForm extends Component
     public function resetForm(): void
     {
         $this->reset();
+        $this->fillAuthenticatedData();
     }
 
     public function progressPercent(): int

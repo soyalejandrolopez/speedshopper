@@ -62,18 +62,24 @@ test('client can view packages, shipments and payments lists', function () {
 test('client can create a purchase request via dedicated create form', function () {
     $client = createClient();
 
-    Livewire::actingAs($client)->test(\App\Livewire\Portal\Requests\CreateRequest::class)
+    $this->actingAs($client)
+        ->get(route('portal.requests.create'))
         ->assertOk()
-        ->set('form.product_name', 'Nike Air Max')
-        ->set('form.product_url', 'https://nike.com/airmax')
-        ->set('form.quantity', 2)
-        ->set('form.unit_price', 120.00)
-        ->set('form.services', ['personal_shopper'])
-        ->call('submit')
-        ->assertHasNoErrors()
-        ->assertRedirect();
+        ->assertSeeLivewire(\App\Livewire\ClientRegistrationForm::class);
 
-    $request = PurchaseRequest::where('product_name', 'Nike Air Max')->first();
+    Livewire::actingAs($client)->test(\App\Livewire\ClientRegistrationForm::class)
+        ->assertOk()
+        ->set('form.whatsapp', '+584121234567')
+        ->set('form.products', 'Nike Air Max 90')
+        ->set('form.budget', 120.00)
+        ->set('form.services', ['personal_shopper'])
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $request = PurchaseRequest::where('product_name', 'Nike Air Max 90')->first();
     expect($request)->not->toBeNull()
         ->and($request->customer_id)->toBe($client->customer->id);
 });
