@@ -13,18 +13,24 @@
         });
     }
 }" class="relative flex-1 max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4">
-    {{-- Trigger Input in Header --}}
-    <button type="button"
-            @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
-            class="group flex w-full items-center justify-between gap-2 rounded-xl border border-gray-200/80 bg-gray-50/60 px-3.5 py-1.5 text-xs text-gray-400 transition-all duration-200 hover:border-gray-300 hover:bg-white hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-2xs">
-        <div class="flex items-center gap-2 min-w-0">
-            <i class="fa-solid fa-magnifying-glass text-xs text-gray-400 group-hover:text-emerald-600 transition-colors"></i>
+    {{-- Trigger Input and Separated Buscar Button in Header --}}
+    <div class="flex items-center gap-1.5 w-full">
+        <button type="button"
+                @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
+                class="group flex flex-1 items-center justify-between gap-2 rounded-xl border border-gray-200/90 bg-gray-50/70 px-3.5 py-1.5 text-xs text-gray-400 transition-all duration-200 hover:border-gray-300 hover:bg-white hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-2xs">
             <span class="truncate">{{ __('Buscar clientes, órdenes, paquetes...') }}</span>
-        </div>
-        <kbd class="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-400 shadow-2xs group-hover:text-gray-600">
-            <span>⌘</span>K
-        </kbd>
-    </button>
+            <kbd class="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-400 shadow-2xs group-hover:text-gray-600">
+                <span>⌘</span>K
+            </kbd>
+        </button>
+
+        <button type="button"
+                @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
+                class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            <span class="hidden sm:inline">{{ __('Buscar') }}</span>
+        </button>
+    </div>
 
     {{-- Modal Backdrop & Command Palette --}}
     <div x-show="open" x-cloak
@@ -46,20 +52,24 @@
              x-transition:leave-end="opacity-0 scale-95"
              class="mx-auto max-w-xl transform overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl transition-all">
             
-            {{-- Search Input in Modal --}}
-            <div class="relative flex items-center border-b border-gray-100 px-4">
-                <i class="fa-solid fa-magnifying-glass text-sm text-emerald-600"></i>
+            {{-- Search Input in Modal with Separate Button --}}
+            <div class="relative flex items-center gap-2 border-b border-gray-100 px-4 py-1.5">
                 <input x-ref="modalSearchInput"
                        type="text"
                        wire:model.live.debounce.250ms="query"
                        placeholder="{{ __('Escribe para buscar clientes, solicitudes, facturas, paquetes...') }}"
-                       class="h-12 w-full border-0 bg-transparent px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0">
+                       class="h-11 flex-1 border-0 bg-transparent px-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0">
                 
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 shrink-0">
                     <span wire:loading wire:target="query" class="text-xs text-emerald-600">
                         <i class="fa-solid fa-circle-notch fa-spin"></i>
                     </span>
-                    <button type="button" @click="open = false" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                    <button type="button"
+                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 transition-all">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        <span>{{ __('Buscar') }}</span>
+                    </button>
+                    <button type="button" @click="open = false" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600" title="{{ __('Cerrar') }}">
                         <kbd class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-[10px] text-gray-500">ESC</kbd>
                     </button>
                 </div>
