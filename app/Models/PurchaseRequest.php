@@ -68,6 +68,7 @@ class PurchaseRequest extends Model
         return $query->whereNotIn('status', [
             RequestStatus::New->value,
             RequestStatus::Quoted->value,
+            RequestStatus::AwaitingPayment->value,
             RequestStatus::Cancelled->value,
         ]);
     }

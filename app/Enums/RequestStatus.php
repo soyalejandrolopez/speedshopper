@@ -75,11 +75,11 @@ enum RequestStatus: string
 
     public function isBilled(): bool
     {
-        return ! in_array($this, [self::New, self::Quoted, self::Cancelled]);
+        return ! in_array($this, [self::New, self::Quoted, self::AwaitingPayment, self::Cancelled]);
     }
 
     public function isQuote(): bool
     {
-        return in_array($this, [self::New, self::Quoted]);
+        return in_array($this, [self::New, self::Quoted, self::AwaitingPayment]);
     }
 }
