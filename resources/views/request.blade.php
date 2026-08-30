@@ -14,7 +14,7 @@
                     <div>
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 uppercase tracking-wide">
                             <i class="fa-solid fa-bolt text-xs text-emerald-600"></i>
-                            Quick Quote
+                            {{ __('Quick Quote') }}
                         </span>
 
                         <h1 class="mt-3.5 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl lg:text-4xl">

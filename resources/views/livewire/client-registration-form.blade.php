@@ -310,7 +310,7 @@
                                             ${{ number_format($this->rates['box_small_heavy_duty'] ?? 15, 2) }}
                                         </span>
                                     </div>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">{{ __('Heavy Duty') }}</p>
 
                                     <div class="mt-3.5 flex items-center justify-between">
                                         <button type="button" wire:click="decrementBox('small')"
@@ -340,7 +340,7 @@
                                             ${{ number_format($this->rates['box_medium_heavy_duty'] ?? 20, 2) }}
                                         </span>
                                     </div>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">{{ __('Heavy Duty') }}</p>
 
                                     <div class="mt-3.5 flex items-center justify-between">
                                         <button type="button" wire:click="decrementBox('medium')"
@@ -370,7 +370,7 @@
                                             ${{ number_format($this->rates['box_large_heavy_duty'] ?? 25, 2) }}
                                         </span>
                                     </div>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Heavy Duty</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">{{ __('Heavy Duty') }}</p>
 
                                     <div class="mt-3.5 flex items-center justify-between">
                                         <button type="button" wire:click="decrementBox('large')"
