@@ -109,6 +109,19 @@ select {
     appearance: none;
 }
 
+.filter-select {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    padding-left: 0.875rem !important;
+    padding-right: 2.5rem !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.25rem !important;
+    height: auto !important;
+    min-height: 2.375rem !important;
+    border-radius: 0.75rem !important;
+    box-sizing: border-box !important;
+}
+
 /* Prevent iOS Safari auto-zoom on inputs by ensuring >= 16px font size on mobile */
 @media (max-width: 768px) {
     input[type="text"],

@@ -8,7 +8,7 @@
 
                 <div class="flex items-center gap-2 shrink-0">
                     <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}"
-                            class="h-9 min-w-[180px] sm:w-52 rounded-xl border border-gray-200/90 bg-gray-50/70 py-1.5 ps-3 pe-8 text-xs font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs cursor-pointer">
+                            class="filter-select w-full sm:w-52 border border-gray-200/90 bg-gray-50/70 font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs cursor-pointer">
                         <option value="all">{{ __('All statuses') }}</option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -16,7 +16,7 @@
                     </select>
 
                     @if ($customer)
-                        <span class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/80 px-3 text-xs font-semibold text-emerald-800 shadow-2xs">
+                        <span class="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/80 px-3 py-2 text-xs font-semibold text-emerald-800 shadow-2xs">
                             <i class="fa-solid fa-user text-[10px] text-emerald-600"></i>
                             <span class="truncate max-w-[140px]">{{ $customers->firstWhere('id', $customer)?->name }}</span>
                             <button wire:click="$set('customer', null)" class="text-emerald-500 hover:text-emerald-700 transition-colors" title="{{ __('Quitar filtro') }}">
@@ -28,7 +28,7 @@
             </div>
 
             <button wire:click="openCreate" type="button"
-                    class="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
+                    class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
                 <i class="fa-solid fa-plus text-xs"></i>
                 <span>{{ __('New Request') }}</span>
             </button>

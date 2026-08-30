@@ -12,7 +12,8 @@
         <input type="search"
                wire:model.live.debounce.{{ $debounce }}="{{ $model }}"
                placeholder="{{ $placeholder }}"
-               class="h-9 w-full rounded-xl border border-gray-200/90 bg-gray-50/70 px-3.5 pe-8 text-xs text-gray-900 placeholder:text-gray-400 transition-all duration-200 hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs">
+               style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.875rem; padding-right: 2rem; font-size: 0.8125rem; line-height: 1.25rem; min-height: 2.375rem;"
+               class="w-full rounded-xl border border-gray-200/90 bg-gray-50/70 text-gray-900 placeholder:text-gray-400 transition-all duration-200 hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs">
 
         <button type="button"
                 x-show="query && query.length > 0"
@@ -27,7 +28,8 @@
     {{-- Separate "Buscar" Button --}}
     <button type="button"
             wire:click="$refresh"
-            class="h-9 inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0 focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
+            style="min-height: 2.375rem; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0 focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
         <i wire:loading.remove wire:target="{{ $model }}" class="fa-solid fa-magnifying-glass text-xs"></i>
         <i wire:loading wire:target="{{ $model }}" class="fa-solid fa-circle-notch fa-spin text-xs"></i>
         <span>{{ $buttonText }}</span>
