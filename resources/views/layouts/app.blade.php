@@ -21,7 +21,7 @@
         <x-theme-color />
     </head>
     <body class="font-sans antialiased bg-gray-50">
-        <div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
+        <div x-data="{ sidebarOpen: false }" @open-sidebar.window="sidebarOpen = true" class="flex min-h-screen">
             <aside class="fixed inset-y-0 start-0 z-40 flex w-64 flex-col print:hidden border-e border-gray-200/80 bg-white/95 backdrop-blur-2xl shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 -translate-x-full lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
                 <div class="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-4 bg-white/60">
                     <a href="{{ route('dashboard') }}" class="group flex min-w-0 items-center gap-2.5 overflow-hidden" wire:navigate>
@@ -136,7 +136,7 @@
             </aside>
 
             <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0">
-                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/40 bg-white/70 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
+                <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200/80 bg-white/90 px-4 backdrop-blur-2xl shadow-xs sm:px-6 print:hidden">
                     <div class="flex items-center gap-3 min-w-0">
                         <button @click="sidebarOpen = true" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden" aria-label="{{ __('Open menu') }}">
                             <i class="fa-solid fa-bars text-xl"></i>
@@ -205,15 +205,11 @@
         @php
             $adminNavItems = [
                 ['label' => __('Dashboard'), 'url' => route('dashboard'), 'icon' => 'fa-solid fa-table-cells', 'active' => request()->routeIs('dashboard'), 'navigate' => true],
-                ['label' => __('Customers'), 'url' => route('admin.customers.index'), 'icon' => 'fa-solid fa-users', 'active' => request()->routeIs('admin.customers.*'), 'navigate' => true],
-                ['label' => __('Requests'), 'url' => route('admin.requests.index'), 'icon' => 'fa-solid fa-clipboard-list', 'active' => request()->routeIs('admin.requests.*'), 'navigate' => true],
-                ['label' => __('Packages'), 'url' => route('admin.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('admin.packages.*'), 'navigate' => true],
-                ['label' => __('Shipments'), 'url' => route('admin.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('admin.shipments.*'), 'navigate' => true],
-                ['label' => __('Payments'), 'url' => route('admin.payments.index'), 'icon' => 'fa-solid fa-credit-card', 'active' => request()->routeIs('admin.payments.*'), 'navigate' => true],
-                ['label' => __('Facturación'), 'url' => route('admin.billing.index'), 'icon' => 'fa-solid fa-file-invoice-dollar', 'active' => request()->routeIs('admin.billing.*'), 'navigate' => true],
-                ['label' => __('Reports'), 'url' => route('admin.reports.index'), 'icon' => 'fa-solid fa-chart-simple', 'active' => request()->routeIs('admin.reports.*'), 'navigate' => true],
-                ['label' => __('Mail'), 'url' => route('admin.mail.index'), 'icon' => 'fa-solid fa-paper-plane', 'active' => request()->routeIs('admin.mail.*'), 'navigate' => true],
-                ['label' => __('Settings'), 'url' => route('admin.settings.index'), 'icon' => 'fa-solid fa-gear', 'active' => request()->routeIs('admin.settings.*'), 'navigate' => true],
+                ['label' => __('Clientes'), 'url' => route('admin.customers.index'), 'icon' => 'fa-solid fa-users', 'active' => request()->routeIs('admin.customers.*'), 'navigate' => true],
+                ['label' => __('Pedidos'), 'url' => route('admin.requests.index'), 'icon' => 'fa-solid fa-clipboard-list', 'active' => request()->routeIs('admin.requests.*'), 'navigate' => true],
+                ['label' => __('Paquetes'), 'url' => route('admin.packages.index'), 'icon' => 'fa-solid fa-box', 'active' => request()->routeIs('admin.packages.*'), 'navigate' => true],
+                ['label' => __('Envíos'), 'url' => route('admin.shipments.index'), 'icon' => 'fa-solid fa-truck-fast', 'active' => request()->routeIs('admin.shipments.*'), 'navigate' => true],
+                ['label' => __('Menú'), 'url' => '#', 'icon' => 'fa-solid fa-bars', 'active' => false, 'action' => 'open-sidebar'],
             ];
         @endphp
 
