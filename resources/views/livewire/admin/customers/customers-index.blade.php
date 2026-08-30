@@ -2,13 +2,13 @@
     <x-slot name="header">{{ __('Customers') }}</x-slot>
 
     <div class="rounded-xl border border-gray-200 bg-white">
-        <div class="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <x-search-input model="search" placeholder="{{ __('Search customer by name, number, email, phone...') }}" class="sm:max-w-sm" />
+        <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <x-search-input model="search" placeholder="{{ __('Buscar por nombre, código CUST, email, teléfono...') }}" class="w-full sm:max-w-md" />
 
             <button wire:click="openCreate" type="button"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
-                <i class="fa-solid fa-plus text-base"></i>
-                {{ __('New Customer') }}
+                    class="inline-flex h-[34px] items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>{{ __('New Customer') }}</span>
             </button>
         </div>
 

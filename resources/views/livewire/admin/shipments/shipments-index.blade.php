@@ -2,11 +2,12 @@
     <x-slot name="header">{{ __('Shipments') }}</x-slot>
 
     <div class="rounded-xl border border-gray-200 bg-white">
-        <div class="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-col gap-2 sm:flex-row flex-1">
-                <x-search-input model="search" placeholder="{{ __('Search shipment by #, carrier, customer...') }}" class="sm:max-w-xs" />
+        <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center flex-1 min-w-0">
+                <x-search-input model="search" placeholder="{{ __('Buscar por N° envío, transportista, tracking, cliente...') }}" class="w-full sm:max-w-md" />
 
-                <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}" class="rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}"
+                        class="h-[34px] rounded-xl border border-gray-200/90 bg-gray-50/70 py-1.5 px-3 text-xs font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs">
                     <option value="all">{{ __('All statuses') }}</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -15,9 +16,9 @@
             </div>
 
             <button wire:click="openCreate" type="button"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
-                <i class="fa-solid fa-plus text-base"></i>
-                {{ __('New Shipment') }}
+                    class="inline-flex h-[34px] items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 active:scale-95 transition-all shrink-0">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>{{ __('New Shipment') }}</span>
             </button>
         </div>
 
