@@ -88,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', PortalDashboard::class)->name('dashboard');
 
         Route::get('/requests', MyRequests::class)->name('requests.index');
+        Route::get('/requests/create', \App\Livewire\Portal\Requests\CreateRequest::class)->name('requests.create');
         Route::get('/requests/{purchaseRequest}', MyRequestShow::class)->name('requests.show');
 
         Route::get('/packages', MyPackages::class)->name('packages.index');

@@ -58,3 +58,22 @@ test('client can view packages, shipments and payments lists', function () {
     Livewire::actingAs($client)->test(MyShipments::class)->assertOk();
     Livewire::actingAs($client)->test(MyPayments::class)->assertOk();
 });
+
+test('client can create a purchase request via dedicated create form', function () {
+    $client = createClient();
+
+    Livewire::actingAs($client)->test(\App\Livewire\Portal\Requests\CreateRequest::class)
+        ->assertOk()
+        ->set('form.product_name', 'Nike Air Max')
+        ->set('form.product_url', 'https://nike.com/airmax')
+        ->set('form.quantity', 2)
+        ->set('form.unit_price', 120.00)
+        ->set('form.services', ['personal_shopper'])
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertRedirect();
+
+    $request = PurchaseRequest::where('product_name', 'Nike Air Max')->first();
+    expect($request)->not->toBeNull()
+        ->and($request->customer_id)->toBe($client->customer->id);
+});

@@ -4,11 +4,11 @@
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex items-center justify-between border-b border-gray-200 p-4">
             <h2 class="text-sm font-semibold text-gray-900">{{ __('Purchase Requests') }}</h2>
-            <button wire:click="openForm" type="button"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+            <a href="{{ route('portal.requests.create') }}" wire:navigate
+               class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700">
                 <i class="fa-solid fa-plus text-base"></i>
                 {{ __('New Request') }}
-            </button>
+            </a>
         </div>
 
         <div class="hidden md:block overflow-x-auto">

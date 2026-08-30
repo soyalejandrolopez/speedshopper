@@ -16,7 +16,7 @@
                 <p class="mt-1 text-sm text-emerald-100">{{ __('Track your requests, packages and shipments in real time.') }}</p>
             </div>
 
-            <a href="{{ route('portal.requests.index') }}" wire:navigate
+            <a href="{{ route('portal.requests.create') }}" wire:navigate
                class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl">
                 <i class="fa-solid fa-plus text-lg"></i>
                 {{ __('New Request') }}
@@ -79,7 +79,7 @@
                 @empty
                     <li>
                         <x-empty-state :message="__('No records found.')" icon="inbox">
-                            <a href="{{ route('portal.requests.index') }}" wire:navigate class="btn-primary mt-4 px-4 py-2 text-sm">{{ __('Create a request') }}</a>
+                            <a href="{{ route('portal.requests.create') }}" wire:navigate class="btn-primary mt-4 px-4 py-2 text-sm">{{ __('Create a request') }}</a>
                         </x-empty-state>
                     </li>
                 @endforelse

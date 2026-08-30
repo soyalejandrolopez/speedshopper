@@ -39,6 +39,14 @@
                 <nav class="flex-1 space-y-1 overflow-y-auto p-3">
                     <p class="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">{{ __('My Account') }}</p>
 
+                    <div class="px-1.5 py-1 mb-1">
+                        <a href="{{ route('portal.requests.create') }}" wire:navigate
+                           class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-2.5 text-xs font-bold text-white shadow-xs shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-sm active:scale-95">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            {{ __('Solicitar Compra') }}
+                        </a>
+                    </div>
+
                     <a href="{{ route('portal.dashboard') }}" wire:navigate
                        class="sidebar-link {{ request()->routeIs('portal.dashboard') ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
                         <i class="fa-solid fa-table-cells text-xl w-5 text-center"></i>
