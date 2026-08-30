@@ -45,7 +45,7 @@
 
         <x-public-footer />
 
-        <div class="h-20 md:hidden" aria-hidden="true"></div>
+        <div class="h-20 lg:hidden" aria-hidden="true"></div>
 
         <x-chat-fab />
 
