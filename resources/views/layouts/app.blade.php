@@ -135,6 +135,7 @@
                 </nav>
             </aside>
 
+            <div class="flex flex-1 flex-col lg:ms-64 print:ms-0 print:flex-none min-w-0 w-full overflow-x-hidden">
                 <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 border-b border-gray-200/80 bg-white/90 px-3 sm:px-6 backdrop-blur-2xl shadow-xs print:hidden">
                     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                         <button @click="sidebarOpen = true" class="flex h-9 w-9 items-center justify-center rounded-xl p-1.5 text-gray-500 hover:bg-gray-100 lg:hidden shrink-0" aria-label="{{ __('Open menu') }}">
