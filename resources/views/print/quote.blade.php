@@ -107,7 +107,7 @@
     </div>
 
     {{-- Métodos de Pago (Zelle y PayPal @speedingshopper) --}}
-    @if ($isQuoted || $isPending || $balance > 0)
+    @if (! $isPaid)
         <div class="mt-6 rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50/90 to-teal-50/60 p-4 shadow-sm">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div class="space-y-2 flex-1">

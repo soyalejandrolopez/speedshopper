@@ -70,28 +70,26 @@ class Customer extends Model
 
     public function getBalanceDueAttribute(): float
     {
-        $hasBilledRequests = $this->purchaseRequests()->billed()->exists();
+        $hasActiveRequests = $this->purchaseRequests()
+            ->where('status', '!=', \App\Enums\RequestStatus::Cancelled->value)
+            ->exists();
 
-        if ($hasBilledRequests) {
-            $invoiced = (float) $this->purchaseRequests()
-                ->billed()
+        if ($hasActiveRequests || $this->shipments()->where('status', '!=', 'cancelled')->exists()) {
+            $requestsInvoiced = (float) $this->purchaseRequests()
+                ->where('status', '!=', \App\Enums\RequestStatus::Cancelled->value)
                 ->with('costItems')
                 ->get()
-                ->sum(function (PurchaseRequest $r) {
-                    $costs = (float) $r->costItems->sum('amount');
-                    if ($costs > 0) {
-                        return $costs;
-                    }
-                    if ($r->unit_price) {
-                        return (float) ($r->unit_price * max(1, $r->quantity));
-                    }
+                ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);
 
-                    return 0.0;
-                });
+            $shipmentsInvoiced = (float) $this->shipments()
+                ->where('status', '!=', 'cancelled')
+                ->with('costItems')
+                ->get()
+                ->sum(fn (Shipment $s) => (float) $s->total_cost);
 
             $paid = (float) $this->payments()->sum('amount_paid');
 
-            return max(0.0, $invoiced - $paid);
+            return max(0.0, ($requestsInvoiced + $shipmentsInvoiced) - $paid);
         }
 
         return (float) $this->payments()

@@ -25,7 +25,7 @@
     {{-- Financial Summary KPIs --}}
     @php
         $balance = $customer ? $customer->balance_due : 0;
-        $totalPaid = $customer ? $customer->payments()->where('status', 'confirmed')->sum('amount') : 0;
+        $totalPaid = $customer ? (float) $customer->payments()->sum('amount_paid') : 0;
         $totalQuotes = $quotes->count() + $shipments->count();
     @endphp
     <div class="mb-6 grid gap-4 sm:grid-cols-3">

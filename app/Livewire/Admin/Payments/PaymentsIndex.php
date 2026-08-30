@@ -110,8 +110,8 @@ class PaymentsIndex extends Component
 
     public function save(): void
     {
-        // If customer has a pending balance, enforce it as the invoice_total
-        if (! $this->editingId && ! empty($this->form['customer_id'])) {
+        // If customer has a pending balance and invoice_total is empty, enforce it
+        if (! $this->editingId && ! empty($this->form['customer_id']) && empty($this->form['invoice_total'])) {
             $customer = Customer::find($this->form['customer_id']);
             if ($customer && $customer->balance_due > 0) {
                 $this->pendingBalance = (float) $customer->balance_due;
