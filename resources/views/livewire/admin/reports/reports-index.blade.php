@@ -4,8 +4,8 @@
     <div class="card animate-fade-up">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-5 py-4">
             <div>
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Report Generator') }}</h2>
-                <p class="mt-0.5 text-xs text-gray-500">{{ __('Choose a period and download the financial report in PDF, Excel or CSV with your company logo.') }}</p>
+                <h2 class="text-sm font-semibold text-gray-900">{{ __('Reporte de Ganancias por Servicios') }}</h2>
+                <p class="mt-0.5 text-xs text-gray-500">{{ __('Muestra exclusivamente las comisiones y tarifas por servicios ganadas por la empresa.') }}</p>
             </div>
             <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                 <i class="fa-solid fa-calendar-days text-sm"></i>
@@ -53,17 +53,17 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                    <p class="text-xs text-gray-500">{{ __('Invoiced') }}</p>
-                    <p class="mt-0.5 text-lg font-bold text-gray-900">{{ money($reportPeriod['invoiced']) }}</p>
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
+                    <p class="text-xs font-semibold text-emerald-800">{{ __('Ganancia Facturada') }}</p>
+                    <p class="mt-0.5 text-lg font-extrabold text-emerald-950">{{ money($reportPeriod['invoiced']) }}</p>
                 </div>
-                <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                    <p class="text-xs text-gray-500">{{ __('Collected') }}</p>
-                    <p class="mt-0.5 text-lg font-bold text-gray-900">{{ money($reportPeriod['collected']) }}</p>
+                <div class="rounded-xl border border-teal-200 bg-teal-50/60 p-3">
+                    <p class="text-xs font-semibold text-teal-800">{{ __('Ganancia Cobrada') }}</p>
+                    <p class="mt-0.5 text-lg font-extrabold text-teal-950">{{ money($reportPeriod['collected']) }}</p>
                 </div>
-                <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                    <p class="text-xs text-gray-500">{{ __('Balance') }}</p>
-                    <p class="mt-0.5 text-lg font-bold {{ $reportPeriod['balance'] > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ money($reportPeriod['balance']) }}</p>
+                <div class="rounded-xl border border-amber-200 bg-amber-50/60 p-3">
+                    <p class="text-xs font-semibold text-amber-800">{{ __('Saldo por Cobrar') }}</p>
+                    <p class="mt-0.5 text-lg font-extrabold {{ $reportPeriod['balance'] > 0 ? 'text-amber-700' : 'text-gray-900' }}">{{ money($reportPeriod['balance']) }}</p>
                 </div>
                 <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
                     <p class="text-xs text-gray-500">{{ __('New Customers') }}</p>
@@ -107,7 +107,7 @@
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div class="stat-card text-emerald-600 animate-fade-up">
             <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total Invoiced') }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ __('Ganancia Total Facturada') }}</p>
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                     <i class="fa-solid fa-money-bill text-xl"></i>
                 </span>
@@ -117,7 +117,7 @@
 
         <div class="stat-card text-teal-600 animate-fade-up" style="animation-delay: 60ms">
             <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Total Collected') }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ __('Ganancia Total Cobrada') }}</p>
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
                     <i class="fa-solid fa-circle-check text-xl"></i>
                 </span>
@@ -127,7 +127,7 @@
 
         <div class="stat-card text-amber-600 animate-fade-up" style="animation-delay: 120ms">
             <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Balance Due') }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ __('Saldo Pendiente de Servicios') }}</p>
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
                     <i class="fa-solid fa-clock text-xl"></i>
                 </span>
@@ -137,7 +137,7 @@
 
         <div class="stat-card text-sky-600 animate-fade-up" style="animation-delay: 180ms">
             <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-500">{{ __('Revenue This Month') }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ __('Ganancia Este Mes') }}</p>
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
                     <i class="fa-solid fa-chart-simple text-xl"></i>
                 </span>
@@ -149,7 +149,7 @@
     <div class="grid gap-6 mt-6 lg:grid-cols-2">
         <div class="card animate-fade-up" style="animation-delay: 220ms">
             <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Revenue by Period') }}</h2>
+                <h2 class="text-sm font-semibold text-gray-900">{{ __('Ganancia por Período') }}</h2>
             </div>
             <div class="space-y-4 p-5">
                 @php $maxRevenue = max($reportPeriod['revenue'] ? max(array_column($reportPeriod['revenue'], 'total')) : 0, 1); @endphp
@@ -172,7 +172,7 @@
 
         <div class="card animate-fade-up" style="animation-delay: 280ms">
             <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Balance by Customer') }}</h2>
+                <h2 class="text-sm font-semibold text-gray-900">{{ __('Saldo de Servicios por Cliente') }}</h2>
             </div>
             <div class="space-y-4 p-5">
                 @forelse ($balanceByCustomer as $row)

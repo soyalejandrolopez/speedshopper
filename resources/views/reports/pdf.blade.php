@@ -55,7 +55,7 @@
                     <div class="address">{{ $address }}</div>
                 </td>
                 <td class="doc-title">
-                    <div class="title">{{ __('Financial Report') }}</div>
+                    <div class="title">{{ __('Reporte de Ganancias por Servicios') }}</div>
                     <div class="meta">{{ $period['label'] }}</div>
                     <div class="meta">{{ __('Generated') }}: {{ $generatedAt }}</div>
                 </td>
@@ -65,19 +65,19 @@
 
     <table class="data summary" cellspacing="0">
         <tr>
-            <td class="strong">{{ __('Invoiced') }}</td>
+            <td class="strong">{{ __('Ganancia Facturada') }}</td>
             <td class="amount strong">{{ money($period['invoiced']) }}</td>
             <td class="strong">{{ __('New Customers') }}</td>
             <td class="amount">{{ $period['newCustomers'] }}</td>
         </tr>
         <tr>
-            <td class="strong">{{ __('Collected') }}</td>
+            <td class="strong">{{ __('Ganancia Cobrada') }}</td>
             <td class="amount strong">{{ money($period['collected']) }}</td>
             <td class="strong">{{ __('Requests') }}</td>
             <td class="amount">{{ $period['requests'] }}</td>
         </tr>
         <tr>
-            <td class="strong">{{ __('Balance') }}</td>
+            <td class="strong">{{ __('Saldo por Cobrar') }}</td>
             <td class="amount strong">{{ money($period['balance']) }}</td>
             <td class="strong">{{ __('Packages') }}</td>
             <td class="amount">{{ $period['packages'] }}</td>
@@ -91,12 +91,12 @@
     </table>
 
     @if ($revenue)
-        <div class="section-title">{{ __('Revenue') }}</div>
+        <div class="section-title">{{ __('Ganancia por Período') }}</div>
         <table class="data" cellspacing="0">
             <thead>
                 <tr>
                     <th>{{ __('Period') }}</th>
-                    <th class="amount">{{ __('Collected') }}</th>
+                    <th class="amount">{{ __('Ganancia Cobrada') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,9 +119,9 @@
                     <th>{{ __('Customer') }}</th>
                     <th>{{ __('Method') }}</th>
                     <th>{{ __('Date') }}</th>
-                    <th class="amount">{{ __('Invoiced') }}</th>
-                    <th class="amount">{{ __('Paid') }}</th>
-                    <th class="amount">{{ __('Balance') }}</th>
+                    <th class="amount">{{ __('Ganancia Facturada') }}</th>
+                    <th class="amount">{{ __('Ganancia Cobrada') }}</th>
+                    <th class="amount">{{ __('Saldo') }}</th>
                 </tr>
             </thead>
             <tbody>
