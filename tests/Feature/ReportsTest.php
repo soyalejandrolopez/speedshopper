@@ -17,8 +17,8 @@ it('renders the reports page', function () {
 
     Livewire::test(ReportsIndex::class)
         ->assertOk()
-        ->assertSee(__('Ganancia Total Facturada'))
-        ->assertSee(__('Reporte de Ganancias por Servicios'))
+        ->assertSee(__('Total Facturado'))
+        ->assertSee(__('Generador de Reportes'))
         ->assertSee(__('Download PDF'))
         ->assertSee(__('Export Data (CSV)'));
 });

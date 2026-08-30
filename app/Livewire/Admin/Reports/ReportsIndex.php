@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Reports;
 
+use App\Enums\CostType;
+use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
@@ -50,35 +52,73 @@ class ReportsIndex extends Component
     {
         [$start, $end] = $this->range();
 
-        $payments = Payment::query()
-            ->with(['customer', 'billable.costItems'])
+        $requests = PurchaseRequest::query()
+            ->with(['customer', 'costItems'])
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
-        $allPayments = Payment::query()
-            ->with(['billable.costItems'])
+        $payments = Payment::query()
+            ->with(['customer', 'billable.costItems'])
+            ->where(function ($q) use ($start, $end) {
+                $q->whereBetween('paid_at', [$start, $end])
+                  ->orWhere(function ($q2) use ($start, $end) {
+                      $q2->whereNull('paid_at')->whereBetween('created_at', [$start, $end]);
+                  });
+            })
             ->get();
 
-        $totalInvoicedEarnings = (float) $allPayments->sum(fn (Payment $p) => $p->invoiced_service_earnings);
-        $totalCollectedEarnings = (float) $allPayments->sum(fn (Payment $p) => $p->service_earnings);
-        $balanceDueEarnings = max(0.0, $totalInvoicedEarnings - $totalCollectedEarnings);
+        $allRequests = PurchaseRequest::with(['customer', 'costItems'])->get();
 
-        $thisMonthPayments = Payment::query()
-            ->with(['billable.costItems'])
-            ->whereBetween('paid_at', [now()->startOfMonth(), now()->endOfMonth()])
-            ->get();
-        $revenueThisMonthEarnings = (float) $thisMonthPayments->sum(fn (Payment $p) => $p->service_earnings);
+        $totalInvoiced = (float) $allRequests->sum(function (PurchaseRequest $r) {
+            $costs = (float) $r->costItems->sum('amount');
+            if ($costs > 0) {
+                return $costs;
+            }
+            if ($r->unit_price) {
+                return (float) ($r->unit_price * max(1, $r->quantity));
+            }
+
+            return 0.0;
+        });
+
+        $totalEarnings = (float) CostItem::where('costable_type', PurchaseRequest::class)
+            ->where('type', '!=', CostType::ProductCost)
+            ->sum('amount');
+
+        $totalCollected = (float) Payment::sum('amount_paid');
+        $totalBalanceDue = max(0.0, $totalInvoiced - $totalCollected);
+
+        $thisMonthCollected = (float) Payment::query()
+            ->where(function ($q) {
+                $q->whereBetween('paid_at', [now()->startOfMonth(), now()->endOfMonth()])
+                  ->orWhere(function ($q2) {
+                      $q2->whereNull('paid_at')->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()]);
+                  });
+            })
+            ->sum('amount_paid');
 
         $balanceByCustomer = Customer::query()
-            ->with(['payments.billable.costItems'])
+            ->with(['purchaseRequests.costItems', 'payments'])
             ->whereNull('deleted_at')
             ->get()
             ->map(function (Customer $customer) {
-                $serviceBalance = (float) $customer->payments->sum(fn (Payment $p) => $p->service_balance_due);
+                $invoiced = (float) $customer->purchaseRequests->sum(function ($r) {
+                    $costs = (float) $r->costItems->sum('amount');
+                    if ($costs > 0) {
+                        return $costs;
+                    }
+                    if ($r->unit_price) {
+                        return (float) ($r->unit_price * max(1, $r->quantity));
+                    }
+
+                    return 0.0;
+                });
+                $paid = (float) $customer->payments->sum('amount_paid');
+                $balance = max(0.0, $invoiced - $paid);
 
                 return [
                     'name' => $customer->name,
-                    'balance' => $serviceBalance,
+                    'balance' => $balance,
                 ];
             })
             ->filter(fn (array $row) => $row['balance'] > 0.005)
@@ -86,17 +126,31 @@ class ReportsIndex extends Component
             ->take(10)
             ->values();
 
-        $periodInvoicedEarnings = (float) $payments->sum(fn (Payment $p) => $p->invoiced_service_earnings);
-        $periodCollectedEarnings = (float) $payments->sum(fn (Payment $p) => $p->service_earnings);
-        $periodBalanceEarnings = max(0.0, $periodInvoicedEarnings - $periodCollectedEarnings);
+        $periodInvoiced = (float) $requests->sum(function (PurchaseRequest $r) {
+            $costs = (float) $r->costItems->sum('amount');
+            if ($costs > 0) {
+                return $costs;
+            }
+            if ($r->unit_price) {
+                return (float) ($r->unit_price * max(1, $r->quantity));
+            }
+
+            return 0.0;
+        });
+
+        $periodEarnings = (float) $requests->sum(function (PurchaseRequest $r) {
+            return (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
+        });
+
+        $periodCollected = (float) $payments->sum('amount_paid');
+        $periodBalance = max(0.0, $periodInvoiced - $periodCollected);
 
         return view('livewire.admin.reports.reports-index', [
-            'totalInvoiced' => $totalInvoicedEarnings,
-            'totalCollected' => $totalCollectedEarnings,
-            'balanceDue' => $balanceDueEarnings,
-            'revenueThisMonth' => $revenueThisMonthEarnings,
-            'grossTotalInvoiced' => (float) Payment::sum('invoice_total'),
-            'grossTotalCollected' => (float) Payment::sum('amount_paid'),
+            'totalInvoiced' => $totalInvoiced,
+            'totalEarnings' => $totalEarnings,
+            'totalCollected' => $totalCollected,
+            'balanceDue' => $totalBalanceDue,
+            'revenueThisMonth' => $thisMonthCollected,
             'customersCount' => Customer::count(),
             'requestsCount' => PurchaseRequest::count(),
             'packagesCount' => Package::count(),
@@ -107,13 +161,12 @@ class ReportsIndex extends Component
                 'start' => $start,
                 'end' => $end,
                 'label' => $this->periodLabel($start, $end),
-                'invoiced' => $periodInvoicedEarnings,
-                'collected' => $periodCollectedEarnings,
-                'balance' => $periodBalanceEarnings,
-                'gross_invoiced' => (float) $payments->sum('invoice_total'),
-                'gross_collected' => (float) $payments->sum('amount_paid'),
+                'invoiced' => $periodInvoiced,
+                'earnings' => $periodEarnings,
+                'collected' => $periodCollected,
+                'balance' => $periodBalance,
                 'newCustomers' => Customer::whereBetween('created_at', [$start, $end])->count(),
-                'requests' => PurchaseRequest::whereBetween('created_at', [$start, $end])->count(),
+                'requests' => $requests->count(),
                 'packages' => Package::whereBetween('created_at', [$start, $end])->count(),
                 'shipments' => Shipment::whereBetween('created_at', [$start, $end])->count(),
                 'payments' => $payments,
@@ -138,11 +191,11 @@ class ReportsIndex extends Component
             fputcsv($out, []);
             fputcsv($out, ['Metric', 'Value']);
             foreach ($data['summary'] as $label => $value) {
-                fputcsv($out, [$label, $value]);
+                fputcsv($out, [$label, is_numeric($value) ? number_format($value, 2) : $value]);
             }
             fputcsv($out, []);
-            fputcsv($out, ['Payments']);
-            fputcsv($out, ['Number', 'Customer', 'Method', 'Date', 'Invoice Total', 'Amount Paid', 'Balance']);
+            fputcsv($out, ['Payments & Invoices']);
+            fputcsv($out, ['Number', 'Customer', 'Method', 'Date', 'Total Invoiced', 'Service Profit', 'Amount Paid', 'Balance']);
             foreach ($data['payments'] as $p) {
                 fputcsv($out, [
                     $p['number'],
@@ -150,6 +203,7 @@ class ReportsIndex extends Component
                     $p['method'],
                     $p['date'],
                     number_format($p['invoice_total'], 2),
+                    number_format($p['service_profit'], 2),
                     number_format($p['amount_paid'], 2),
                     number_format($p['balance'], 2),
                 ]);
@@ -225,38 +279,41 @@ class ReportsIndex extends Component
         $sheet->getStyle('B5')->getFont()->setSize(10)->getColor()->setARGB('FF9CA3AF');
 
         $row = 7;
-        $sheet->setCellValue("A{$row}", __('Ganancia Facturada (Servicios)'));
+        $sheet->setCellValue("A{$row}", __('Total Facturado'));
         $sheet->setCellValue("B{$row}", $data['period']['invoiced']);
         $sheet->setCellValue("C{$row}", __('New Customers'));
         $sheet->setCellValue("D{$row}", $data['period']['newCustomers']);
         $sheet->getStyle("B{$row}")->getFont()->setBold(true);
         $row++;
 
-        $sheet->setCellValue("A{$row}", __('Ganancia Cobrada (Servicios)'));
-        $sheet->setCellValue("B{$row}", $data['period']['collected']);
+        $sheet->setCellValue("A{$row}", __('Ganancia Servicios'));
+        $sheet->setCellValue("B{$row}", $data['period']['earnings']);
         $sheet->setCellValue("C{$row}", __('Requests'));
         $sheet->setCellValue("D{$row}", $data['period']['requests']);
         $sheet->getStyle("B{$row}")->getFont()->setBold(true);
         $row++;
 
-        $sheet->setCellValue("A{$row}", __('Saldo Pendiente de Servicios'));
-        $sheet->setCellValue("B{$row}", $data['period']['balance']);
+        $sheet->setCellValue("A{$row}", __('Total Cobrado'));
+        $sheet->setCellValue("B{$row}", $data['period']['collected']);
         $sheet->setCellValue("C{$row}", __('Packages'));
         $sheet->setCellValue("D{$row}", $data['period']['packages']);
         $sheet->getStyle("B{$row}")->getFont()->setBold(true);
         $row++;
 
+        $sheet->setCellValue("A{$row}", __('Saldo por Cobrar'));
+        $sheet->setCellValue("B{$row}", $data['period']['balance']);
         $sheet->setCellValue("C{$row}", __('Shipments'));
         $sheet->setCellValue("D{$row}", $data['period']['shipments']);
-        $sheet->getStyle('A7:B9')->getNumberFormat()->setFormatCode($money);
+        $sheet->getStyle("B{$row}")->getFont()->setBold(true);
+        $sheet->getStyle('A7:B10')->getNumberFormat()->setFormatCode($money);
 
         $row += 2;
-        $sheet->setCellValue("A{$row}", __('Ganancia por Período'));
+        $sheet->setCellValue("A{$row}", __('Ingresos Cobrados por Período'));
         $sheet->getStyle("A{$row}")->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($color800);
         $row++;
 
         $revenueHeader = $row;
-        $sheet->fromArray([__('Period'), __('Ganancia Cobrada')], null, "A{$row}");
+        $sheet->fromArray([__('Period'), __('Cobrado')], null, "A{$row}");
         $this->styleTableHeader($sheet, "A{$row}:B{$row}");
         $row++;
 
@@ -273,8 +330,8 @@ class ReportsIndex extends Component
         $row++;
 
         $paymentsHeader = $row;
-        $sheet->fromArray([__('Number'), __('Customer'), __('Method'), __('Date'), __('Ganancia Facturada'), __('Ganancia Cobrada'), __('Saldo')], null, "A{$row}");
-        $this->styleTableHeader($sheet, "A{$row}:G{$row}");
+        $sheet->fromArray([__('Number'), __('Customer'), __('Method'), __('Date'), __('Total Facturado'), __('Ganancia Servicios'), __('Pagado'), __('Saldo')], null, "A{$row}");
+        $this->styleTableHeader($sheet, "A{$row}:H{$row}");
         $row++;
 
         foreach ($data['payments'] as $p) {
@@ -283,14 +340,15 @@ class ReportsIndex extends Component
             $sheet->setCellValue("C{$row}", $p['method']);
             $sheet->setCellValue("D{$row}", $p['date']);
             $sheet->setCellValue("E{$row}", $p['invoice_total']);
-            $sheet->setCellValue("F{$row}", $p['amount_paid']);
-            $sheet->setCellValue("G{$row}", $p['balance']);
+            $sheet->setCellValue("F{$row}", $p['service_profit']);
+            $sheet->setCellValue("G{$row}", $p['amount_paid']);
+            $sheet->setCellValue("H{$row}", $p['balance']);
             $row++;
         }
-        $sheet->getStyle('E'.($paymentsHeader + 1).':G'.($row - 1))->getNumberFormat()->setFormatCode($money);
-        $sheet->getStyle('A'.($paymentsHeader + 1).':G'.($row - 1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        $sheet->getStyle('E'.($paymentsHeader + 1).':H'.($row - 1))->getNumberFormat()->setFormatCode($money);
+        $sheet->getStyle('A'.($paymentsHeader + 1).':H'.($row - 1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
-        foreach (['A' => 20, 'B' => 28, 'C' => 15, 'D' => 16, 'E' => 18, 'F' => 18, 'G' => 14] as $col => $width) {
+        foreach (['A' => 20, 'B' => 28, 'C' => 15, 'D' => 16, 'E' => 16, 'F' => 16, 'G' => 16, 'H' => 14] as $col => $width) {
             $sheet->getColumnDimension($col)->setWidth($width);
         }
 
@@ -308,14 +366,34 @@ class ReportsIndex extends Component
     /** @return array{logo: ?string, company: string, period: array, summary: array, payments: array, revenue: array} */
     protected function reportData(Carbon $start, Carbon $end): array
     {
+        $requests = PurchaseRequest::query()
+            ->with(['customer', 'costItems'])
+            ->whereBetween('created_at', [$start, $end])
+            ->get();
+
         $payments = Payment::query()
             ->with(['customer', 'billable.costItems'])
-            ->whereBetween('created_at', [$start, $end])
+            ->where(function ($q) use ($start, $end) {
+                $q->whereBetween('paid_at', [$start, $end])
+                  ->orWhere(function ($q2) use ($start, $end) {
+                      $q2->whereNull('paid_at')->whereBetween('created_at', [$start, $end]);
+                  });
+            })
             ->orderBy('created_at')
             ->get();
 
-        $invoiced = (float) $payments->sum(fn (Payment $p) => $p->invoiced_service_earnings);
-        $collected = (float) $payments->sum(fn (Payment $p) => $p->service_earnings);
+        $invoiced = (float) $requests->sum(function (PurchaseRequest $r) {
+            $costs = (float) $r->costItems->sum('amount');
+            if ($costs > 0) return $costs;
+            if ($r->unit_price) return (float) ($r->unit_price * max(1, $r->quantity));
+            return 0.0;
+        });
+
+        $earnings = (float) $requests->sum(function (PurchaseRequest $r) {
+            return (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
+        });
+
+        $collected = (float) $payments->sum('amount_paid');
         $balance = max(0.0, $invoiced - $collected);
 
         return [
@@ -329,21 +407,22 @@ class ReportsIndex extends Component
                 'end' => $end,
                 'label' => $this->periodLabel($start, $end),
                 'invoiced' => $invoiced,
+                'earnings' => $earnings,
                 'collected' => $collected,
                 'balance' => $balance,
-                'gross_invoiced' => (float) $payments->sum('invoice_total'),
-                'gross_collected' => (float) $payments->sum('amount_paid'),
                 'newCustomers' => Customer::whereBetween('created_at', [$start, $end])->count(),
-                'requests' => PurchaseRequest::whereBetween('created_at', [$start, $end])->count(),
+                'requests' => $requests->count(),
                 'packages' => Package::whereBetween('created_at', [$start, $end])->count(),
                 'shipments' => Shipment::whereBetween('created_at', [$start, $end])->count(),
+                'payments' => $payments->count(),
             ],
             'summary' => [
-                __('Ganancia Facturada (Servicios)') => $invoiced,
-                __('Ganancia Cobrada (Servicios)') => $collected,
-                __('Saldo Pendiente de Servicios') => $balance,
+                __('Total Facturado') => $invoiced,
+                __('Ganancia Servicios') => $earnings,
+                __('Total Cobrado') => $collected,
+                __('Saldo por Cobrar') => $balance,
                 __('New Customers') => Customer::whereBetween('created_at', [$start, $end])->count(),
-                __('Requests') => PurchaseRequest::whereBetween('created_at', [$start, $end])->count(),
+                __('Requests') => $requests->count(),
                 __('Packages') => Package::whereBetween('created_at', [$start, $end])->count(),
                 __('Shipments') => Shipment::whereBetween('created_at', [$start, $end])->count(),
             ],
@@ -352,11 +431,10 @@ class ReportsIndex extends Component
                 'customer' => $p->customer?->name ?? '—',
                 'method' => $p->payment_method->label(),
                 'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
-                'invoice_total' => (float) $p->invoiced_service_earnings,
-                'amount_paid' => (float) $p->service_earnings,
-                'balance' => (float) $p->service_balance_due,
-                'gross_total' => (float) $p->invoice_total,
-                'gross_paid' => (float) $p->amount_paid,
+                'invoice_total' => (float) $p->invoice_total,
+                'service_profit' => (float) $p->invoiced_service_earnings,
+                'amount_paid' => (float) $p->amount_paid,
+                'balance' => (float) $p->balance_due,
             ])->all(),
             'revenue' => $this->revenueBuckets($payments),
         ];

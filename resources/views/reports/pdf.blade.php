@@ -55,7 +55,7 @@
                     <div class="address">{{ $address }}</div>
                 </td>
                 <td class="doc-title">
-                    <div class="title">{{ __('Reporte de Ganancias por Servicios') }}</div>
+                    <div class="title">{{ __('Reporte Financiero') }}</div>
                     <div class="meta">{{ $period['label'] }}</div>
                     <div class="meta">{{ __('Generated') }}: {{ $generatedAt }}</div>
                 </td>
@@ -65,38 +65,38 @@
 
     <table class="data summary" cellspacing="0">
         <tr>
-            <td class="strong">{{ __('Ganancia Facturada') }}</td>
+            <td class="strong">{{ __('Total Facturado') }}</td>
             <td class="amount strong">{{ money($period['invoiced']) }}</td>
             <td class="strong">{{ __('New Customers') }}</td>
             <td class="amount">{{ $period['newCustomers'] }}</td>
         </tr>
         <tr>
-            <td class="strong">{{ __('Ganancia Cobrada') }}</td>
-            <td class="amount strong">{{ money($period['collected']) }}</td>
+            <td class="strong" style="color: {{ $colors['800'] }};">{{ __('Ganancia Servicios') }}</td>
+            <td class="amount strong" style="color: {{ $colors['800'] }};">{{ money($period['earnings']) }}</td>
             <td class="strong">{{ __('Requests') }}</td>
             <td class="amount">{{ $period['requests'] }}</td>
         </tr>
         <tr>
-            <td class="strong">{{ __('Saldo por Cobrar') }}</td>
-            <td class="amount strong">{{ money($period['balance']) }}</td>
+            <td class="strong">{{ __('Total Cobrado') }}</td>
+            <td class="amount strong">{{ money($period['collected']) }}</td>
             <td class="strong">{{ __('Packages') }}</td>
             <td class="amount">{{ $period['packages'] }}</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td class="strong">{{ __('Saldo por Cobrar') }}</td>
+            <td class="amount strong">{{ money($period['balance']) }}</td>
             <td class="strong">{{ __('Shipments') }}</td>
             <td class="amount">{{ $period['shipments'] }}</td>
         </tr>
     </table>
 
     @if ($revenue)
-        <div class="section-title">{{ __('Ganancia por Período') }}</div>
+        <div class="section-title">{{ __('Ingresos por Período') }}</div>
         <table class="data" cellspacing="0">
             <thead>
                 <tr>
                     <th>{{ __('Period') }}</th>
-                    <th class="amount">{{ __('Ganancia Cobrada') }}</th>
+                    <th class="amount">{{ __('Cobrado') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,8 +119,9 @@
                     <th>{{ __('Customer') }}</th>
                     <th>{{ __('Method') }}</th>
                     <th>{{ __('Date') }}</th>
-                    <th class="amount">{{ __('Ganancia Facturada') }}</th>
-                    <th class="amount">{{ __('Ganancia Cobrada') }}</th>
+                    <th class="amount">{{ __('Total Facturado') }}</th>
+                    <th class="amount">{{ __('Ganancia Servicios') }}</th>
+                    <th class="amount">{{ __('Pagado') }}</th>
                     <th class="amount">{{ __('Saldo') }}</th>
                 </tr>
             </thead>
@@ -132,6 +133,7 @@
                         <td>{{ $p['method'] }}</td>
                         <td>{{ $p['date'] }}</td>
                         <td class="amount">{{ number_format($p['invoice_total'], 2) }}</td>
+                        <td class="amount">{{ number_format($p['service_profit'], 2) }}</td>
                         <td class="amount">{{ number_format($p['amount_paid'], 2) }}</td>
                         <td class="amount">{{ number_format($p['balance'], 2) }}</td>
                     </tr>
@@ -139,6 +141,7 @@
                 <tr class="total-row">
                     <td colspan="4">{{ __('Total') }}</td>
                     <td class="amount">{{ number_format($period['invoiced'], 2) }}</td>
+                    <td class="amount">{{ number_format($period['earnings'], 2) }}</td>
                     <td class="amount">{{ number_format($period['collected'], 2) }}</td>
                     <td class="amount">{{ number_format($period['balance'], 2) }}</td>
                 </tr>
