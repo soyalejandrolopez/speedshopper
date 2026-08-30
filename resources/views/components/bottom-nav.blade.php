@@ -1,7 +1,8 @@
 @props(['items' => []])
 
 @if (count($items))
-    <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden print:hidden"
+    <nav class="border-t border-gray-200 bg-white/95 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden print:hidden"
+         style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 50 !important; -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0); -webkit-backface-visibility: hidden; backface-visibility: hidden;"
          aria-label="{{ __('Mobile navigation') }}">
         <div class="flex items-stretch justify-around px-1 py-1">
             @foreach ($items as $item)

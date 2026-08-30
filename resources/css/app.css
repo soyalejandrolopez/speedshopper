@@ -539,6 +539,20 @@ input[type="radio"]:focus {
     transition: opacity 0.3s;
 }
 
+/* Fixed App Mobile Bottom Navigation */
+.app-bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 50 !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
 /* Lightbox */
 .lightbox-backdrop {
     @apply fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 p-4 backdrop-blur-sm;
