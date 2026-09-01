@@ -103,7 +103,7 @@ it('auto-populates invoice total from pending balance when selecting customer fo
         ->call('selectCustomer', $customer->id, $customer->name)
         ->assertSet('pendingBalance', 500.0)
         ->assertSet('form.invoice_total', '500.00')
-        ->assertSee(__('Balance due'))
+        ->assertSee(__('Balance Pendiente'))
         ->assertDontSee('Invoice Total *')
         ->set('form.amount_paid', 500)
         ->call('save')

@@ -45,7 +45,21 @@ class PaymentsIndex extends Component
 
     protected function rules(): array
     {
-        return $this->rulesFrom(new StorePaymentRequest, []);
+        $rules = $this->rulesFrom(new StorePaymentRequest, []);
+
+        if (! $this->editingId && $this->pendingBalance !== null) {
+            $rules['form.amount_paid'] = array_merge($rules['form.amount_paid'], ['max:' . $this->pendingBalance]);
+        }
+
+        return $rules;
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'form.amount_paid.max' => __('El monto pagado no puede exceder el balance pendiente (:max).', ['max' => money($this->pendingBalance ?? 0)]),
+            'form.amount_paid.lte' => __('El monto pagado no puede ser mayor al total de la factura.'),
+        ];
     }
 
     public function updatedSearch(): void

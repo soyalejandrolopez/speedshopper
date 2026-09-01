@@ -1111,8 +1111,15 @@ class BillingIndex extends Component
         abort_unless(auth()->user()->isAdmin(), 403);
 
         $this->validate([
-            'paymentForm.amount_paid' => ['required', 'numeric', 'min:0.01'],
+            'paymentForm.amount_paid' => [
+                'required',
+                'numeric',
+                'min:0.01',
+                'max:' . ($this->paymentForm['pending_balance'] ?? 0),
+            ],
             'paymentForm.payment_method' => ['required', 'string'],
+        ], [
+            'paymentForm.amount_paid.max' => __('El monto pagado no puede exceder el balance pendiente (:max).', ['max' => money($this->paymentForm['pending_balance'] ?? 0)]),
         ]);
 
         Payment::create([
