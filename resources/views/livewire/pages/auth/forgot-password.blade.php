@@ -13,9 +13,19 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function sendPasswordResetLink(): void
     {
-        $this->validate([
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-        ]);
+        try {
+            $this->validate([
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstError = collect($e->validator->errors()->all())->first() ?? __('Por favor ingresa un correo válido.');
+            $this->dispatch('swal.fire', [
+                'icon' => 'warning',
+                'title' => __('Revisa el correo ingresado'),
+                'text' => $firstError,
+            ]);
+            throw $e;
+        }
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
@@ -25,7 +35,13 @@ new #[Layout('layouts.guest')] class extends Component
         );
 
         if ($status != Password::RESET_LINK_SENT) {
-            $this->addError('email', __($status));
+            $msg = __($status);
+            $this->addError('email', $msg);
+            $this->dispatch('swal.fire', [
+                'icon' => 'error',
+                'title' => __('No se pudo enviar el enlace'),
+                'text' => $msg,
+            ]);
 
             return;
         }
@@ -33,6 +49,11 @@ new #[Layout('layouts.guest')] class extends Component
         $this->reset('email');
 
         session()->flash('status', __($status));
+        $this->dispatch('swal.fire', [
+            'icon' => 'success',
+            'title' => __('¡Enlace enviado!'),
+            'text' => __('Hemos enviado el enlace para restablecer tu contraseña a tu correo electrónico.'),
+        ]);
     }
 }; ?>
 

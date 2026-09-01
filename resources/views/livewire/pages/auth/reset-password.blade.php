@@ -32,11 +32,21 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function resetPassword(): void
     {
-        $this->validate([
-            'token' => ['required'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try {
+            $this->validate([
+                'token' => ['required'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+                'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstError = collect($e->validator->errors()->all())->first() ?? __('Por favor verifica las contraseñas ingresadas.');
+            $this->dispatch('swal.fire', [
+                'icon' => 'warning',
+                'title' => __('Revisa el formulario'),
+                'text' => $firstError,
+            ]);
+            throw $e;
+        }
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
@@ -57,12 +67,19 @@ new #[Layout('layouts.guest')] class extends Component
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status != Password::PASSWORD_RESET) {
-            $this->addError('email', __($status));
+            $msg = __($status);
+            $this->addError('email', $msg);
+            $this->dispatch('swal.fire', [
+                'icon' => 'error',
+                'title' => __('Error al restablecer contraseña'),
+                'text' => $msg,
+            ]);
 
             return;
         }
 
         session()->flash('status', __($status));
+        session()->flash('success', __('¡Tu contraseña ha sido restablecida exitosamente!'));
 
         $this->redirectRoute('login', navigate: true);
     }

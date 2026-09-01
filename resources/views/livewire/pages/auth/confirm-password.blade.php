@@ -14,16 +14,31 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function confirmPassword(): void
     {
-        $this->validate([
-            'password' => ['required', 'string'],
-        ]);
+        try {
+            $this->validate([
+                'password' => ['required', 'string'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('swal.fire', [
+                'icon' => 'warning',
+                'title' => __('Campo requerido'),
+                'text' => __('Por favor ingresa tu contraseña.'),
+            ]);
+            throw $e;
+        }
 
         if (! Auth::guard('web')->validate([
             'email' => Auth::user()->email,
             'password' => $this->password,
         ])) {
+            $msg = __('auth.password');
+            $this->dispatch('swal.fire', [
+                'icon' => 'error',
+                'title' => __('Contraseña incorrecta'),
+                'text' => $msg,
+            ]);
             throw ValidationException::withMessages([
-                'password' => __('auth.password'),
+                'password' => $msg,
             ]);
         }
 

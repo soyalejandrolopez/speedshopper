@@ -20,11 +20,21 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function register(): void
     {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try {
+            $validated = $this->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstError = collect($e->validator->errors()->all())->first() ?? __('Por favor revisa los campos del formulario.');
+            $this->dispatch('swal.fire', [
+                'icon' => 'error',
+                'title' => __('Error en el registro'),
+                'text' => $firstError,
+            ]);
+            throw $e;
+        }
 
         $validated['password'] = Hash::make($validated['password']);
 
@@ -35,6 +45,7 @@ new #[Layout('layouts.guest')] class extends Component
         Auth::login($user);
 
         session()->flash('swal_auth', 'register');
+        session()->flash('success', __('¡Cuenta creada con éxito! Bienvenido a SpeedShopper.'));
 
         $this->redirect(route('portal.dashboard', absolute: false), navigate: true);
     }

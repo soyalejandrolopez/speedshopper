@@ -49,9 +49,22 @@ class AuthenticationTest extends TestCase
 
         $component
             ->assertHasErrors()
+            ->assertDispatched('swal.fire')
             ->assertNoRedirect();
 
         $this->assertGuest();
+    }
+
+    public function test_users_receive_sweetalert_flash_on_successful_login(): void
+    {
+        $user = User::factory()->create();
+
+        Volt::test('pages.auth.login')
+            ->set('form.email', $user->email)
+            ->set('form.password', 'password')
+            ->call('login')
+            ->assertHasNoErrors()
+            ->assertSessionHas('swal_auth', 'login');
     }
 
     public function test_navigation_menu_can_be_rendered(): void

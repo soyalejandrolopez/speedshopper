@@ -21,6 +21,11 @@ new #[Layout('layouts.guest')] class extends Component
         Auth::user()->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
+        $this->dispatch('swal.fire', [
+            'icon' => 'success',
+            'title' => __('¡Correo enviado!'),
+            'text' => __('Se ha enviado un nuevo enlace de verificación a tu correo electrónico.'),
+        ]);
     }
 
     /**

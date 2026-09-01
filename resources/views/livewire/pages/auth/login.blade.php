@@ -15,13 +15,23 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function login(): void
     {
-        $this->validate();
-
-        $this->form->authenticate();
+        try {
+            $this->validate();
+            $this->form->authenticate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstError = collect($e->validator->errors()->all())->first() ?? __('auth.failed');
+            $this->dispatch('swal.fire', [
+                'icon' => 'error',
+                'title' => __('Error de inicio de sesión'),
+                'text' => $firstError,
+            ]);
+            throw $e;
+        }
 
         Session::regenerate();
 
         session()->flash('swal_auth', 'login');
+        session()->flash('success', __('¡Bienvenido! Has iniciado sesión correctamente.'));
 
         $this->redirectIntended(default: Auth::user()->dashboardRoute(), navigate: true);
     }

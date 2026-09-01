@@ -15,6 +15,12 @@ namespace App\Concerns;
  */
 trait SwalNotifies
 {
+    /** Fire a custom modal alert. */
+    public function swalFire(string $title = '', string $text = '', string $icon = 'success'): void
+    {
+        $this->dispatch('swal.fire', title: $title, text: $text, icon: $icon);
+    }
+
     /** Fire a success toast. */
     public function swalSuccess(string $text = '', string $title = ''): void
     {
@@ -25,6 +31,12 @@ trait SwalNotifies
     public function swalError(string $text = '', string $title = ''): void
     {
         $this->dispatch('swal.error', text: $text, title: $title);
+    }
+
+    /** Fire a warning toast. */
+    public function swalWarning(string $text = '', string $title = ''): void
+    {
+        $this->dispatch('swal.warning', text: $text, title: $title);
     }
 
     /** Fire an info toast. */

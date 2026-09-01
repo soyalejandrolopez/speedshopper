@@ -135,18 +135,73 @@ export function toastLogin()    { Toast.fire({ icon: 'success', title: t.login_o
 export function toastLogout()   { Toast.fire({ icon: 'info',    title: t.logout_title,      text: t.logout_text }); }
 export function toastRegister() { Toast.fire({ icon: 'success', title: t.register_title,    text: t.register_text }); }
 
+window.Swal = Swal;
+window.Toast = Toast;
+window.Confirm = Confirm;
+
+function normalizeDetail(detail) {
+    if (!detail) return {};
+    if (Array.isArray(detail)) return detail[0] || {};
+    if (typeof detail === 'object') return detail;
+    return { text: String(detail) };
+}
+
+/** Show generic modal with Swal.fire */
+export function fireAlert(options = {}) {
+    const opts = normalizeDetail(options);
+    return Swal.fire({
+        title: opts.title || '',
+        text: opts.text || '',
+        html: opts.html || undefined,
+        icon: opts.icon || 'info',
+        confirmButtonText: opts.confirmButtonText || (locale === 'es' ? 'Aceptar' : 'OK'),
+        cancelButtonText: opts.cancelButtonText || (locale === 'es' ? 'Cancelar' : 'Cancel'),
+        showCancelButton: Boolean(opts.showCancelButton),
+        customClass: {
+            popup: 'swal-confirm-popup',
+            confirmButton: 'swal-btn-primary',
+            cancelButton: 'swal-btn-cancel',
+        },
+        buttonsStyling: false,
+    });
+}
+window.fireAlert = fireAlert;
+
 /* ─────────────────────────────────────────
    Livewire event listeners
-   Dispatched from PHP: $this->dispatch('swal.success')
+   Dispatched from PHP: $this->dispatch('swal.fire', title: '...', text: '...', icon: 'success')
 ───────────────────────────────────────── */
 function bindLivewireEvents() {
-    window.addEventListener('swal.success',    (e) => toastSuccess(e.detail?.text, e.detail?.title));
-    window.addEventListener('swal.error',      (e) => toastError(e.detail?.text, e.detail?.title));
-    window.addEventListener('swal.info',       (e) => toastInfo(e.detail?.text, e.detail?.title));
-    window.addEventListener('swal.saved',      ()  => toastSuccess(t.saved_text, t.saved_title));
-    window.addEventListener('swal.updated',    ()  => toastSuccess(t.updated_text, t.updated_title));
+    window.addEventListener('swal.fire',       (e) => fireAlert(e.detail));
+    window.addEventListener('swal.success',    (e) => {
+        const d = normalizeDetail(e.detail);
+        toastSuccess(d.text || t.saved_text, d.title || t.saved_title);
+    });
+    window.addEventListener('swal.error',      (e) => {
+        const d = normalizeDetail(e.detail);
+        toastError(d.text || t.error_text, d.title || t.error_title);
+    });
+    window.addEventListener('swal.warning',    (e) => {
+        const d = normalizeDetail(e.detail);
+        Toast.fire({ icon: 'warning', title: d.title || '', text: d.text || '' });
+    });
+    window.addEventListener('swal.info',       (e) => {
+        const d = normalizeDetail(e.detail);
+        toastInfo(d.text || '', d.title || '');
+    });
+    window.addEventListener('swal.saved',      (e) => {
+        const d = normalizeDetail(e.detail);
+        toastSuccess(d.text || t.saved_text, d.title || t.saved_title);
+    });
+    window.addEventListener('swal.updated',    (e) => {
+        const d = normalizeDetail(e.detail);
+        toastSuccess(d.text || t.updated_text, d.title || t.updated_title);
+    });
     window.addEventListener('swal.deleted',    ()  => toastSuccess(t.deleted_text, t.deleted_title));
-    window.addEventListener('swal.validation', (e) => alertValidation(e.detail?.errors ?? []));
+    window.addEventListener('swal.validation', (e) => {
+        const d = normalizeDetail(e.detail);
+        alertValidation(d.errors ?? []);
+    });
     window.addEventListener('swal.login',      ()  => toastLogin());
     window.addEventListener('swal.logout',     ()  => toastLogout());
     window.addEventListener('swal.register',   ()  => toastRegister());
@@ -165,14 +220,9 @@ window.swalConfirmDelete = async function (callback) {
 };
 
 /* ─────────────────────────────────────────
-   Boot
+   Process Session Flashes (Toast & Auth)
 ───────────────────────────────────────── */
-document.addEventListener('livewire:init', () => {
-    bindLivewireEvents();
-});
-
-// Also bind on SPA navigations
-document.addEventListener('livewire:navigated', () => {
+function processFlashes() {
     // Handle regular session flash toasts
     const flashEl = document.getElementById('swal-flash');
     if (flashEl) {
@@ -187,9 +237,31 @@ document.addEventListener('livewire:navigated', () => {
     const authFlash = document.getElementById('swal-auth-flash');
     if (authFlash) {
         const event = authFlash.dataset.event;
-        if (event) window.dispatchEvent(new CustomEvent(event));
+        if (event) {
+            window.dispatchEvent(new CustomEvent(event));
+        }
         authFlash.remove();
     }
+}
+
+/* ─────────────────────────────────────────
+   Boot
+───────────────────────────────────────── */
+bindLivewireEvents();
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', processFlashes);
+} else {
+    processFlashes();
+}
+
+document.addEventListener('livewire:init', () => {
+    bindLivewireEvents();
+    processFlashes();
+});
+
+document.addEventListener('livewire:navigated', () => {
+    processFlashes();
 });
 
 export { Swal, Toast, Confirm, t };
