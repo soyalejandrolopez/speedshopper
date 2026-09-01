@@ -27,7 +27,7 @@
     <div class="relative mb-6 overflow-hidden rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm animate-fade-up" style="animation-delay: 80ms">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('Outstanding Balance') }}</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('Balance Pendiente') }}</p>
                 <p class="mt-1 text-3xl font-extrabold tracking-tight text-gray-900">
                     <span data-count="{{ $balanceDue }}" data-prefix="$">{{ money($balanceDue) }}</span>
                 </p>
