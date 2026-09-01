@@ -226,3 +226,47 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
+
+/* ---------- Print layout handlers ---------- */
+
+document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-print-btn]')) {
+        window.print();
+    }
+});
+
+function handleAutoPrint() {
+    if (document.body && document.body.dataset.autoprint === 'true') {
+        setTimeout(() => window.print(), 350);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', handleAutoPrint);
+document.addEventListener('livewire:navigated', handleAutoPrint);
+
+/* ---------- Dynamic Theme Color Application (CSP compliant via CSSOM) ---------- */
+
+function applyThemeColors() {
+    const meta = document.querySelector('meta[name="theme-color-custom"]');
+    if (! meta) {
+        return;
+    }
+
+    const cssContent = meta.getAttribute('content') || '';
+    const declarations = cssContent.split(';').map((s) => s.trim()).filter(Boolean);
+
+    declarations.forEach((decl) => {
+        const parts = decl.split(':');
+        if (parts.length >= 2) {
+            const prop = parts[0].trim();
+            const val = parts.slice(1).join(':').trim();
+            if (prop && val) {
+                document.documentElement.style.setProperty(prop, val);
+            }
+        }
+    });
+}
+
+applyThemeColors();
+document.addEventListener('DOMContentLoaded', applyThemeColors);
+document.addEventListener('livewire:navigated', applyThemeColors);

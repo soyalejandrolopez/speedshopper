@@ -732,3 +732,18 @@ button[type="submit"].border[data-loading]::after {
     background: #10b981 !important;
     height: 3px !important;
 }
+
+/* Print layout rules */
+@page {
+    margin: 12mm;
+}
+
+@media print {
+    body {
+        background: #fff !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}

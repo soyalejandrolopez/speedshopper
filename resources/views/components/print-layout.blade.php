@@ -23,32 +23,16 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <x-theme-color />
-
-        <style>
-            @page {
-                margin: 12mm;
-            }
-
-            @media print {
-                body {
-                    background: #fff !important;
-                }
-
-                .no-print {
-                    display: none !important;
-                }
-            }
-        </style>
     </head>
-    <body class="font-sans antialiased bg-gray-100 text-gray-800 print:bg-white">
+    <body class="font-sans antialiased bg-gray-100 text-gray-800 print:bg-white" data-autoprint="{{ !empty($autoPrint) ? 'true' : 'false' }}">
         <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
             <div class="no-print mb-4 flex items-center justify-between">
                 <a href="{{ $backUrl }}" wire:navigate class="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 transition-colors hover:text-emerald-900">
                     <i class="fa-solid fa-arrow-left text-base"></i>
                     {{ __('Back') }}
                 </a>
-                <button type="button" onclick="window.print()"
-                        class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700">
+                <button type="button" data-print-btn
+                        class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700 cursor-pointer">
                     <i class="fa-solid fa-print text-base"></i>
                     {{ __('Print / Save PDF') }}
                 </button>
@@ -98,11 +82,5 @@
                 </div>
             </div>
         </div>
-
-        @isset($autoPrint)
-            <script>
-                window.addEventListener('load', () => setTimeout(() => window.print(), 350));
-            </script>
-        @endisset
     </body>
 </html>
