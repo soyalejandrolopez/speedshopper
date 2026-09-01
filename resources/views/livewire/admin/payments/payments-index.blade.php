@@ -1,6 +1,49 @@
 <div>
     <x-slot name="header">{{ __('Payments') }}</x-slot>
 
+    <!-- Payments Summary KPI Cards -->
+    <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Balance') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 text-amber-700 text-xs">
+                    <i class="fa-solid fa-clock"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold sm:text-lg {{ $totalBalanceDue > 0 ? 'text-amber-600' : 'text-emerald-600' }}">{{ money($totalBalanceDue) }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Cobrado / Pagado') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 text-xs">
+                    <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-emerald-600 sm:text-lg">{{ money($totalCollected) }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Total Facturado') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ money($totalInvoiced) }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Transacciones') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 text-xs">
+                    <i class="fa-solid fa-receipt"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ $totalTransactions }}</p>
+        </div>
+    </div>
+
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
             <x-search-input model="search" placeholder="{{ __('Buscar por N° pago, cliente, método, referencia...') }}" class="w-full sm:max-w-md" />

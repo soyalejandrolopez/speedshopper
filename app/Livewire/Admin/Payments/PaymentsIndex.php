@@ -5,7 +5,9 @@ namespace App\Livewire\Admin\Payments;
 use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\PaymentMethod;
+use App\Enums\RequestStatus;
 use App\Http\Requests\StorePaymentRequest;
+use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
@@ -172,10 +174,25 @@ class PaymentsIndex extends Component
             ->latest()
             ->paginate(10);
 
+        $totalInvoiced = (float) CostItem::where(function ($q) {
+            $q->where('costable_type', PurchaseRequest::class)
+                ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
+        })->orWhere(function ($q) {
+            $q->where('costable_type', Shipment::class)
+                ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
+        })->sum('amount');
+
+        $totalCollected = (float) Payment::sum('amount_paid');
+        $totalBalanceDue = max(0.0, $totalInvoiced - $totalCollected);
+
         return view('livewire.admin.payments.payments-index', [
             'payments' => $payments,
             'customers' => Customer::orderBy('name')->get(),
             'methods' => PaymentMethod::cases(),
+            'totalTransactions' => Payment::count(),
+            'totalCollected' => $totalCollected,
+            'totalInvoiced' => $totalInvoiced,
+            'totalBalanceDue' => $totalBalanceDue,
         ]);
     }
 }

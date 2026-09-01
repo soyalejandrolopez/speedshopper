@@ -121,6 +121,10 @@ class CustomersIndex extends Component
 
         return view('livewire.admin.customers.customers-index', [
             'customers' => $customers,
+            'totalCustomers' => Customer::count(),
+            'customersWithRequests' => Customer::whereHas('purchaseRequests')->count(),
+            'customersWithPackages' => Customer::whereHas('packages')->count(),
+            'customersWithShipments' => Customer::whereHas('shipments')->count(),
         ]);
     }
 }

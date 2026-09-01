@@ -20,8 +20,10 @@ class RequestsIndex extends Component
 {
     use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
+    #[Url]
     public string $search = '';
 
+    #[Url]
     public string $status = 'all';
 
     #[Url]
@@ -57,6 +59,12 @@ class RequestsIndex extends Component
 
     public function updatedStatus(): void
     {
+        $this->resetPage();
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
         $this->resetPage();
     }
 
@@ -126,7 +134,13 @@ class RequestsIndex extends Component
         $requests = PurchaseRequest::query()
             ->with('customer')
             ->when($this->customer, fn ($q) => $q->where('customer_id', $this->customer))
-            ->when($this->status !== 'all', fn ($q) => $q->where('status', $this->status))
+            ->when($this->status !== 'all', function ($q) {
+                if ($this->status === 'open') {
+                    $q->whereNotIn('status', [RequestStatus::Delivered->value, RequestStatus::Cancelled->value]);
+                } else {
+                    $q->where('status', $this->status);
+                }
+            })
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('number', 'like', "%{$this->search}%")
@@ -142,6 +156,10 @@ class RequestsIndex extends Component
             'requests' => $requests,
             'statuses' => RequestStatus::cases(),
             'customers' => Customer::orderBy('name')->get(),
+            'totalCount' => PurchaseRequest::count(),
+            'openCount' => PurchaseRequest::whereNotIn('status', [RequestStatus::Delivered->value, RequestStatus::Cancelled->value])->count(),
+            'deliveredCount' => PurchaseRequest::where('status', RequestStatus::Delivered->value)->count(),
+            'cancelledCount' => PurchaseRequest::where('status', RequestStatus::Cancelled->value)->count(),
         ]);
     }
 }

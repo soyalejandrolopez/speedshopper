@@ -1,6 +1,53 @@
 <div>
     <x-slot name="header">{{ __('Purchase Requests') }}</x-slot>
 
+    <!-- Requests Quick Filter Badges -->
+    <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        <button type="button" wire:click="setStatus('all')"
+                class="flex items-center justify-between rounded-xl border p-3 text-left transition-all {{ $status === 'all' ? 'border-emerald-500 bg-emerald-50/50 ring-1 ring-emerald-500' : 'border-gray-200 bg-white hover:border-gray-300' }}">
+            <div>
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Total Requests') }}</p>
+                <p class="text-base font-bold text-gray-900 sm:text-lg">{{ $totalCount }}</p>
+            </div>
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 text-xs">
+                <i class="fa-solid fa-list-check"></i>
+            </span>
+        </button>
+
+        <button type="button" wire:click="setStatus('open')"
+                class="flex items-center justify-between rounded-xl border p-3 text-left transition-all {{ $status === 'open' ? 'border-amber-500 bg-amber-50/50 ring-1 ring-amber-500' : 'border-gray-200 bg-white hover:border-gray-300' }}">
+            <div>
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Open Requests') }}</p>
+                <p class="text-base font-bold text-gray-900 sm:text-lg">{{ $openCount }}</p>
+            </div>
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 text-amber-700 text-xs">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </span>
+        </button>
+
+        <button type="button" wire:click="setStatus('delivered')"
+                class="flex items-center justify-between rounded-xl border p-3 text-left transition-all {{ $status === 'delivered' ? 'border-blue-500 bg-blue-50/50 ring-1 ring-blue-500' : 'border-gray-200 bg-white hover:border-gray-300' }}">
+            <div>
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Delivered') }}</p>
+                <p class="text-base font-bold text-gray-900 sm:text-lg">{{ $deliveredCount }}</p>
+            </div>
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs">
+                <i class="fa-solid fa-circle-check"></i>
+            </span>
+        </button>
+
+        <button type="button" wire:click="setStatus('cancelled')"
+                class="flex items-center justify-between rounded-xl border p-3 text-left transition-all {{ $status === 'cancelled' ? 'border-red-500 bg-red-50/50 ring-1 ring-red-500' : 'border-gray-200 bg-white hover:border-gray-300' }}">
+            <div>
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Cancelled') }}</p>
+                <p class="text-base font-bold text-gray-900 sm:text-lg">{{ $cancelledCount }}</p>
+            </div>
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-red-100 text-red-700 text-xs">
+                <i class="fa-solid fa-ban"></i>
+            </span>
+        </button>
+    </div>
+
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center flex-1 min-w-0">
@@ -10,8 +57,9 @@
                     <select name="status" wire:model.live="status" aria-label="{{ __('Filter by status') }}"
                             class="filter-select border border-gray-200/90 bg-gray-50/70 font-medium text-gray-700 transition-all hover:border-gray-300 hover:bg-white focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/15 shadow-2xs cursor-pointer">
                         <option value="all">{{ __('All statuses') }}</option>
-                        @foreach ($statuses as $status)
-                            <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                        <option value="open">{{ __('Open Requests') }}</option>
+                        @foreach ($statuses as $statusOption)
+                            <option value="{{ $statusOption->value }}">{{ $statusOption->label() }}</option>
                         @endforeach
                     </select>
 

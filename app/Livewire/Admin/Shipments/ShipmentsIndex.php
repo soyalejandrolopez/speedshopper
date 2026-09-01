@@ -11,6 +11,7 @@ use App\Models\Package;
 use App\Models\Shipment;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,8 +21,10 @@ class ShipmentsIndex extends Component
 {
     use SwalNotifies, ValidatesWithFormRequest, WithPagination;
 
+    #[Url]
     public string $search = '';
 
+    #[Url]
     public string $status = 'all';
 
     public bool $showForm = false;
@@ -55,6 +58,12 @@ class ShipmentsIndex extends Component
 
     public function updatedStatus(): void
     {
+        $this->resetPage();
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
         $this->resetPage();
     }
 
@@ -167,6 +176,10 @@ class ShipmentsIndex extends Component
             'statuses' => ShipmentStatus::cases(),
             'customers' => Customer::orderBy('name')->get(),
             'availablePackages' => $availablePackages,
+            'totalCount' => Shipment::count(),
+            'inTransitCount' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
+            'readyCount' => Shipment::where('status', ShipmentStatus::Ready->value)->count(),
+            'deliveredCount' => Shipment::where('status', ShipmentStatus::Delivered->value)->count(),
         ]);
     }
 }

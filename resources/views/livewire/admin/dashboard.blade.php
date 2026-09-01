@@ -14,7 +14,7 @@
             </p>
         </a>
 
-        <a href="{{ route('admin.requests.index') }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 60ms">
+        <a href="{{ route('admin.requests.index', ['status' => 'open']) }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 60ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Open Requests') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 transition-transform duration-200 group-hover:scale-110">
@@ -26,7 +26,7 @@
             </p>
         </a>
 
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 120ms">
+        <a href="{{ route('admin.packages.index', ['filter' => 'today']) }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 120ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages received today') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-transform duration-200 group-hover:scale-110">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 220ms">
+        <a href="{{ route('admin.packages.index', ['filter' => 'stored']) }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 220ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Stored Packages') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600 transition-transform duration-200 group-hover:scale-110">
@@ -63,7 +63,7 @@
                 <span data-count="{{ $storedPackages }}">{{ $storedPackages }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.shipments.index') }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 260ms">
+        <a href="{{ route('admin.shipments.index', ['status' => 'in_transit']) }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 260ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Shipments in transit') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-transform duration-200 group-hover:scale-110">
@@ -74,7 +74,7 @@
                 <span data-count="{{ $shipmentsInTransit }}">{{ $shipmentsInTransit }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 300ms">
+        <a href="{{ route('admin.packages.index', ['filter' => 'ready']) }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 300ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages ready to ship') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 transition-transform duration-200 group-hover:scale-110">
@@ -85,7 +85,7 @@
                 <span data-count="{{ $readyShipments }}">{{ $readyShipments }}</span>
             </p>
         </a>
-        <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 340ms">
+        <a href="{{ route('admin.inquiries.index', ['status' => 'unread']) }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 340ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Mensajes de Contacto') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 transition-transform duration-200 group-hover:scale-110">

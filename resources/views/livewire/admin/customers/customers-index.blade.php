@@ -1,6 +1,49 @@
 <div>
     <x-slot name="header">{{ __('Customers') }}</x-slot>
 
+    <!-- Customers Summary KPI Cards -->
+    <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Total Customers') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 text-xs">
+                    <i class="fa-solid fa-users"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ $totalCustomers }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Con Solicitudes') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 text-amber-700 text-xs">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ $customersWithRequests }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Con Paquetes') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-100 text-teal-700 text-xs">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ $customersWithPackages }}</p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-white p-3">
+            <div class="flex items-center justify-between">
+                <p class="text-[11px] font-medium text-gray-500">{{ __('Con Envíos') }}</p>
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs">
+                    <i class="fa-solid fa-plane-departure"></i>
+                </span>
+            </div>
+            <p class="mt-1 text-base font-bold text-gray-900 sm:text-lg">{{ $customersWithShipments }}</p>
+        </div>
+    </div>
+
     <div class="rounded-xl border border-gray-200 bg-white">
         <div class="flex flex-col gap-3 border-b border-gray-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
             <x-search-input model="search" placeholder="{{ __('Buscar por nombre, código CUST, email, teléfono...') }}" class="w-full sm:max-w-md" />

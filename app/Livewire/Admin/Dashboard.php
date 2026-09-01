@@ -53,6 +53,17 @@ class Dashboard extends Component
             ->limit(5)
             ->pluck('total', 'carrier');
 
+        $totalInvoiced = (float) CostItem::where(function ($q) {
+            $q->where('costable_type', PurchaseRequest::class)
+                ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
+        })->orWhere(function ($q) {
+            $q->where('costable_type', Shipment::class)
+                ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
+        })->sum('amount');
+
+        $totalPaid = (float) Payment::sum('amount_paid');
+        $totalBalanceDue = max(0.0, $totalInvoiced - $totalPaid);
+
         return view('livewire.admin.dashboard', [
             'totalCustomers' => Customer::count(),
             'openRequests' => PurchaseRequest::whereNotIn('status', [
@@ -62,8 +73,8 @@ class Dashboard extends Component
             'packagesReceivedToday' => Package::whereDate('received_at', today())->count(),
             'storedPackages' => Package::whereIn('status', ['received', 'storing', 'packing', 'ready'])->count(),
             'shipmentsInTransit' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
-            'readyShipments' => Shipment::where('status', ShipmentStatus::Ready->value)->count(),
-            'totalBalanceDue' => max(0.0, (float) CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', PurchaseRequest::billed()->pluck('id'))->sum('amount') - (float) Payment::sum('amount_paid')),
+            'readyShipments' => Package::where('status', 'ready')->count() ?: Shipment::where('status', ShipmentStatus::Ready->value)->count(),
+            'totalBalanceDue' => $totalBalanceDue,
             'unreadInquiriesCount' => ContactInquiry::unread()->count(),
             'recentInquiries' => ContactInquiry::latest()->limit(6)->get(),
             'recentRequests' => PurchaseRequest::with('customer')->latest()->limit(5)->get(),

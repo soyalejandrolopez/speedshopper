@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Package;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -20,9 +21,14 @@ class PackagesIndex extends Component
 {
     use SwalNotifies, ValidatesWithFormRequest, WithFileUploads, WithPagination;
 
+    #[Url]
     public string $search = '';
 
+    #[Url]
     public string $status = 'all';
+
+    #[Url]
+    public string $filter = 'all';
 
     public bool $showForm = false;
 
@@ -54,6 +60,20 @@ class PackagesIndex extends Component
 
     public function updatedStatus(): void
     {
+        $this->filter = 'all';
+        $this->resetPage();
+    }
+
+    public function updatedFilter(): void
+    {
+        $this->status = 'all';
+        $this->resetPage();
+    }
+
+    public function setFilter(string $filter): void
+    {
+        $this->filter = $filter;
+        $this->status = 'all';
         $this->resetPage();
     }
 
@@ -131,6 +151,9 @@ class PackagesIndex extends Component
     {
         $packages = Package::query()
             ->with('customer')
+            ->when($this->filter === 'today', fn ($q) => $q->whereDate('received_at', today()))
+            ->when($this->filter === 'stored', fn ($q) => $q->whereIn('status', ['received', 'storing', 'packing', 'ready']))
+            ->when($this->filter === 'ready', fn ($q) => $q->where('status', 'ready'))
             ->when($this->status !== 'all', fn ($q) => $q->where('status', $this->status))
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
@@ -147,6 +170,10 @@ class PackagesIndex extends Component
             'packages' => $packages,
             'statuses' => PackageStatus::cases(),
             'customers' => Customer::orderBy('name')->get(),
+            'totalCount' => Package::count(),
+            'receivedTodayCount' => Package::whereDate('received_at', today())->count(),
+            'storedCount' => Package::whereIn('status', ['received', 'storing', 'packing', 'ready'])->count(),
+            'readyCount' => Package::where('status', 'ready')->count(),
         ]);
     }
 }
