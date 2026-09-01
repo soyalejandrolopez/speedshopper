@@ -56,7 +56,7 @@
         <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs col-span-2 lg:col-span-1">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Facturas Emitidas') }}</p>
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Solicitudes de Compra') }}</p>
                     <p class="mt-0.5 text-xl font-bold text-gray-900">{{ $requests->total() }}</p>
                 </div>
                 <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
