@@ -9,6 +9,7 @@
             }
         }
     @endphp
+    <style>:root { {{ $css }} }</style>
     <meta name="theme-color-custom" content="{{ $css }}">
 @endunless
 

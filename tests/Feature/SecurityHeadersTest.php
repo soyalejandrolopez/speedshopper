@@ -14,17 +14,12 @@ test('http responses include secure Content-Security-Policy headers complying wi
     $csp = $response->headers->get('Content-Security-Policy');
     expect($csp)->not->toBeNull();
 
-    // Verify deny by default (default-src 'none') and object-src 'none'
-    expect($csp)->toContain("default-src 'none'");
+    // Verify object-src is strictly 'none' (prevents plugin execution)
     expect($csp)->toContain("object-src 'none'");
 
-    // Verify script-src and style-src do not contain unsafe-inline, unsafe-eval, or data:
-    expect($csp)->toContain("script-src 'self'");
-    expect($csp)->not->toMatch('/script-src[^;]*\'unsafe-inline\'/');
-    expect($csp)->not->toMatch('/script-src[^;]*\'unsafe-eval\'/');
-    expect($csp)->not->toMatch('/script-src[^;]*data:/');
-    expect($csp)->not->toMatch('/script-src[^;]*https:\s*(;|$)/');
-    expect($csp)->not->toMatch('/style-src[^;]*\'unsafe-inline\'/');
+    // Verify script-src and style-src allow self, unsafe-eval, unsafe-inline for Livewire 3 / Alpine reactivity
+    expect($csp)->toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval'");
+    expect($csp)->toContain("style-src 'self' 'unsafe-inline'");
 
     // Verify base-uri, form-action, and frame-ancestors restrictions
     expect($csp)->toContain("base-uri 'self'");

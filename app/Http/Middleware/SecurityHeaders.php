@@ -24,19 +24,16 @@ class SecurityHeaders
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
 
         $csp = [
-            "default-src 'none'",
+            "default-src 'self'",
             "base-uri 'self'",
             "form-action 'self'",
             "frame-ancestors 'self'",
             "object-src 'none'",
-            "script-src 'self'",
-            "style-src 'self' https://fonts.bunny.net",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net",
             "font-src 'self' data: https://fonts.bunny.net",
-            "img-src 'self' data: blob:",
+            "img-src 'self' data: blob: https:",
             "connect-src 'self'",
-            "manifest-src 'self'",
-            "media-src 'self'",
-            "frame-src 'self'",
         ];
 
         if ($request->isSecure()) {
