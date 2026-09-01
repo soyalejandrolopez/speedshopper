@@ -291,16 +291,19 @@
                                     <label class="block text-[11px] font-medium text-gray-500">{{ __('Producto / Descripción') }} *</label>
                                     <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.product_name" placeholder="{{ __('ej. Zapatos Nike Air Max') }}"
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
+                                    @error('invoiceForm.items.'.$index.'.product_name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label class="block text-[11px] font-medium text-gray-500">{{ __('Tienda / Proveedor') }}</label>
                                     <input type="text" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.store" placeholder="{{ __('ej. Amazon / Nike') }}"
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs focus:border-emerald-500">
+                                    @error('invoiceForm.items.'.$index.'.store') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label class="block text-[11px] font-medium text-gray-500">{{ __('Cant.') }}</label>
                                     <input type="number" min="1" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.quantity"
                                            class="mt-1 w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-center focus:border-emerald-500">
+                                    @error('invoiceForm.items.'.$index.'.quantity') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="sm:col-span-2 relative">
                                     <label class="block text-[11px] font-medium text-gray-500">
@@ -315,10 +318,12 @@
                                             </button>
                                         @endif
                                     </div>
+                                    @error('invoiceForm.items.'.$index.'.unit_price') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                         @endforeach
                     </div>
+                    @error('invoiceForm.items') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- 3. Cargos y Tarifas Organizados por Preguntas --}}
@@ -967,6 +972,7 @@
                         <label class="mb-1 block text-xs font-semibold text-gray-700">{{ __('Monto a Abonar ($)') }} *</label>
                         <input type="number" step="0.01" min="0.01" wire:model="paymentForm.amount_paid"
                                class="w-full rounded-xl border border-gray-300 p-2.5 text-sm font-bold text-emerald-700 focus:border-emerald-500">
+                        @error('paymentForm.amount_paid') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -979,12 +985,14 @@
                             <option value="paypal">PayPal</option>
                             <option value="other">{{ __('Otro') }}</option>
                         </select>
+                        @error('paymentForm.payment_method') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="mb-1 block text-xs font-semibold text-gray-700">{{ __('Referencia de Pago') }}</label>
                         <input type="text" wire:model="paymentForm.reference" placeholder="{{ __('ej. Zelle confirmación #3921') }}"
                                class="w-full rounded-xl border border-gray-300 p-2 text-xs">
+                        @error('paymentForm.reference') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">

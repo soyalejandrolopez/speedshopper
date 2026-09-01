@@ -151,12 +151,13 @@
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="payment_method-{{ $this->getId() }}">{{ __('Payment Method') }}</label>
-                                <select id="payment_method-{{ $this->getId() }}" name="payment_method" wire:model="form.payment_method" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="payment_method-{{ $this->getId() }}" name="payment_method" wire:model="form.payment_method" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     @foreach ($methods as $method)
                                         <option value="{{ $method->value }}">{{ $method->label() }}</option>
                                     @endforeach
                                 </select>
+                                @error('form.payment_method') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             {{-- Invoice Total: only required for first-time payments --}}
                             @if ($pendingBalance)
@@ -198,16 +199,19 @@
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="paid_at-{{ $this->getId() }}">{{ __('Paid At') }}</label>
                                 <input id="paid_at-{{ $this->getId() }}" name="paid_at" type="date" wire:model="form.paid_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.paid_at') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="reference-{{ $this->getId() }}">{{ __('Related to') }}</label>
                                 <input id="reference-{{ $this->getId() }}" name="reference" type="text" wire:model="form.reference"
                                     placeholder="{{ __('e.g. Request #, invoice, shipment…') }}"
                                     class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.reference') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
                                 <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
+                                @error('form.notes') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </x-modal-body>
 

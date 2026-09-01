@@ -54,6 +54,7 @@
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Additional Store Visit Fee ($ USD)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.extra_store_fee"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.extra_store_fee') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -69,31 +70,37 @@
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Small Heavy Duty ($)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.box_small_heavy_duty"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.box_small_heavy_duty') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Medium Heavy Duty ($)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.box_medium_heavy_duty"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.box_medium_heavy_duty') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('1 Box Large Heavy Duty ($)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.box_large_heavy_duty"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.box_large_heavy_duty') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Warehouse Commission (%)') }}</label>
                             <input type="number" step="0.5" min="0" max="100" wire:model="rates.warehouse_percent"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.warehouse_percent') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Box Drop-off at Warehouse ($)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.warehouse_delivery_fee"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.warehouse_delivery_fee') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="mb-1 block text-xs font-medium text-gray-700">{{ __('Monthly Storage Fee ($/month after 30 days)') }}</label>
                             <input type="number" step="0.01" min="0" wire:model="rates.monthly_storage_fee"
                                    class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            @error('rates.monthly_storage_fee') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>

@@ -172,7 +172,7 @@
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="carrier-{{ $this->getId() }}">{{ __('Carrier') }}</label>
-                                <select id="carrier-{{ $this->getId() }}" name="carrier" wire:model="form.carrier" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="carrier-{{ $this->getId() }}" name="carrier" wire:model="form.carrier" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     <option value="DHL Express">DHL Express</option>
                                     <option value="FedEx">FedEx</option>
@@ -180,39 +180,47 @@
                                     <option value="USPS">USPS</option>
                                     <option value="Other">{{ __('Other') }}</option>
                                 </select>
+                                @error('form.carrier') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="destination_country-{{ $this->getId() }}">{{ __('Destination Country') }}</label>
-                                <select id="destination_country-{{ $this->getId() }}" name="destination_country" wire:model="form.destination_country" class="w-full rounded-lg border border-gray-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <select id="destination_country-{{ $this->getId() }}" name="destination_country" wire:model="form.destination_country" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                     <option value="">—</option>
                                     @foreach (['VE', 'CO', 'EC', 'PE', 'CL', 'CR', 'PA', 'DO', 'SV', 'HN', 'MX', 'US'] as $code)
                                         <option value="{{ $code }}">{{ country_name($code) }}</option>
                                     @endforeach
                                 </select>
+                                @error('form.destination_country') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="final_weight_lb-{{ $this->getId() }}">{{ __('Final Weight (lb)') }}</label>
                                 <input id="final_weight_lb-{{ $this->getId() }}" name="final_weight_lb" type="number" step="0.01" min="0" wire:model="form.final_weight_lb" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.final_weight_lb') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="dimensions-{{ $this->getId() }}">{{ __('Dimensions') }}</label>
                                 <input id="dimensions-{{ $this->getId() }}" name="dimensions" type="text" wire:model="form.dimensions" placeholder="12x10x8 in" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.dimensions') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="international_tracking-{{ $this->getId() }}">{{ __('International Tracking') }}</label>
                                 <input id="international_tracking-{{ $this->getId() }}" name="international_tracking" type="text" wire:model="form.international_tracking" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.international_tracking') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="shipping_cost-{{ $this->getId() }}">{{ __('Shipping Cost') }} (USD)</label>
                                 <input id="shipping_cost-{{ $this->getId() }}" name="shipping_cost" type="number" step="0.01" min="0" wire:model="form.shipping_cost" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.shipping_cost') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="shipped_at-{{ $this->getId() }}">{{ __('Shipped At') }}</label>
                                 <input id="shipped_at-{{ $this->getId() }}" name="shipped_at" type="date" wire:model="form.shipped_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.shipped_at') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="delivered_at-{{ $this->getId() }}">{{ __('Delivered At') }}</label>
                                 <input id="delivered_at-{{ $this->getId() }}" name="delivered_at" type="date" wire:model="form.delivered_at" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                @error('form.delivered_at') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700">{{ __('Consolidate Packages') }}</label>
@@ -231,10 +239,12 @@
                                         </p>
                                     @endforelse
                                 </div>
+                                @error('form.package_ids') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="notes-{{ $this->getId() }}">{{ __('Notes') }}</label>
                                 <textarea id="notes-{{ $this->getId() }}" name="notes" wire:model="form.notes" rows="2" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"></textarea>
+                                @error('form.notes') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </x-modal-body>
 
