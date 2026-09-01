@@ -1,7 +1,9 @@
 <div class="space-y-4 sm:space-y-6 min-w-0 w-full">
     <x-slot name="header">{{ __('Dashboard') }}</x-slot>
 
+    <!-- Row 1: Operaciones Principales -->
     <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
+        {{-- 1. Clientes --}}
         <a href="{{ route('admin.customers.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total Customers') }}</p>
@@ -12,92 +14,146 @@
             <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
                 <span data-count="{{ $totalCustomers }}">{{ $totalCustomers }}</span>
             </p>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('Clientes registrados') }}</p>
         </a>
 
-        <a href="{{ route('admin.requests.index', ['status' => 'open']) }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 60ms">
+        {{-- 2. Solicitudes --}}
+        <a href="{{ route('admin.requests.index') }}" wire:navigate class="stat-card group text-amber-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 60ms">
             <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Open Requests') }}</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total Requests') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 transition-transform duration-200 group-hover:scale-110">
                     <i class="fa-solid fa-clipboard-list text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $openRequests }}">{{ $openRequests }}</span>
-            </p>
+            <div class="mt-2 flex items-baseline justify-between gap-1">
+                <p class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
+                    <span data-count="{{ $totalRequests }}">{{ $totalRequests }}</span>
+                </p>
+                @if ($openRequests > 0)
+                    <span class="inline-flex items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 shrink-0">
+                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>{{ $openRequests }} {{ __('abiertas') }}
+                    </span>
+                @else
+                    <span class="text-[10px] text-gray-400 shrink-0">{{ __('Todas al día') }}</span>
+                @endif
+            </div>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('Solicitudes de compra') }}</p>
         </a>
 
-        <a href="{{ route('admin.packages.index', ['filter' => 'today']) }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 120ms">
+        {{-- 3. Paquetes --}}
+        <a href="{{ route('admin.packages.index') }}" wire:navigate class="stat-card group text-blue-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 120ms">
             <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages received today') }}</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total Packages') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-transform duration-200 group-hover:scale-110">
                     <i class="fa-solid fa-box text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $packagesReceivedToday }}">{{ $packagesReceivedToday }}</span>
-            </p>
+            <div class="mt-2 flex items-baseline justify-between gap-1">
+                <p class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
+                    <span data-count="{{ $totalPackages }}">{{ $totalPackages }}</span>
+                </p>
+                @if ($storedPackages > 0)
+                    <span class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 shrink-0">
+                        <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>{{ $storedPackages }} {{ __('en bodega') }}
+                    </span>
+                @else
+                    <span class="text-[10px] text-gray-400 shrink-0">{{ __('Sin paquetes en espera') }}</span>
+                @endif
+            </div>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('En casillero y bodega') }}</p>
         </a>
 
-        <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group text-emerald-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 180ms">
+        {{-- 4. Envíos --}}
+        <a href="{{ route('admin.shipments.index') }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 180ms">
             <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Balance') }}</p>
-                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-money-bill text-base sm:text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $totalBalanceDue }}" data-prefix="$">{{ money($totalBalanceDue) }}</span>
-            </p>
-        </a>
-    </div>
-
-    <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
-        <a href="{{ route('admin.packages.index', ['filter' => 'stored']) }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 220ms">
-            <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Stored Packages') }}</p>
-                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-box text-base sm:text-xl"></i>
-                </span>
-            </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $storedPackages }}">{{ $storedPackages }}</span>
-            </p>
-        </a>
-        <a href="{{ route('admin.shipments.index', ['status' => 'in_transit']) }}" wire:navigate class="stat-card group text-purple-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 260ms">
-            <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Shipments in transit') }}</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Total Shipments') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-transform duration-200 group-hover:scale-110">
                     <i class="fa-solid fa-truck-fast text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $shipmentsInTransit }}">{{ $shipmentsInTransit }}</span>
-            </p>
+            <div class="mt-2 flex items-baseline justify-between gap-1">
+                <p class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
+                    <span data-count="{{ $totalShipments }}">{{ $totalShipments }}</span>
+                </p>
+                @if ($shipmentsInTransit > 0)
+                    <span class="inline-flex items-center gap-1 rounded-md bg-purple-50 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 shrink-0">
+                        <span class="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse"></span>{{ $shipmentsInTransit }} {{ __('en tránsito') }}
+                    </span>
+                @else
+                    <span class="text-[10px] text-gray-400 shrink-0">{{ __('Sin envíos en tránsito') }}</span>
+                @endif
+            </div>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('Despachos internacionales') }}</p>
         </a>
-        <a href="{{ route('admin.packages.index', ['filter' => 'ready']) }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 300ms">
+    </div>
+
+    <!-- Row 2: Pagos, Facturación, Balance y Mensajes -->
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 min-w-0">
+        {{-- 5. Pagos --}}
+        <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group text-teal-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 220ms">
             <div class="flex items-center justify-between gap-2">
-                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Packages ready to ship') }}</p>
-                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 transition-transform duration-200 group-hover:scale-110">
-                    <i class="fa-solid fa-shield-halved text-base sm:text-xl"></i>
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Pagos') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-credit-card text-base sm:text-xl"></i>
                 </span>
             </div>
             <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
-                <span data-count="{{ $readyShipments }}">{{ $readyShipments }}</span>
+                <span data-count="{{ $totalPayments }}">{{ $totalPayments }}</span>
+            </p>
+            <p class="mt-1 text-[11px] text-teal-700 font-medium truncate">{{ __('Cobrado') }}: <strong>{{ money($totalPaid) }}</strong></p>
+        </a>
+
+        {{-- 6. Facturación --}}
+        <a href="{{ route('admin.billing.index') }}" wire:navigate class="stat-card group text-cyan-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 260ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Facturación') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-file-invoice-dollar text-base sm:text-xl"></i>
+                </span>
+            </div>
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
+                <span data-count="{{ $totalInvoiced }}" data-prefix="$">{{ money($totalInvoiced) }}</span>
+            </p>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('Cotizaciones y Envíos') }}</p>
+        </a>
+
+        {{-- 7. Balance Pendiente --}}
+        <a href="{{ route('admin.payments.index') }}" wire:navigate class="stat-card group {{ $totalBalanceDue > 0 ? 'text-rose-600' : 'text-emerald-600' }} animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 300ms">
+            <div class="flex items-center justify-between gap-2">
+                <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Balance Pendiente') }}</p>
+                <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg {{ $totalBalanceDue > 0 ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600' }} transition-transform duration-200 group-hover:scale-110">
+                    <i class="fa-solid fa-money-bill-wave text-base sm:text-xl"></i>
+                </span>
+            </div>
+            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight {{ $totalBalanceDue > 0 ? 'text-rose-600' : 'text-gray-900' }} truncate">
+                <span data-count="{{ $totalBalanceDue }}" data-prefix="$">{{ money($totalBalanceDue) }}</span>
+            </p>
+            <p class="mt-1 text-[11px] {{ $totalBalanceDue > 0 ? 'text-rose-600 font-semibold' : 'text-emerald-600 font-medium' }} truncate">
+                {{ $totalBalanceDue > 0 ? __('Por cobrar') : __('Al día') }}
             </p>
         </a>
-        <a href="{{ route('admin.inquiries.index', ['status' => 'unread']) }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 340ms">
+
+        {{-- 8. Mensajes de Contacto --}}
+        <a href="{{ route('admin.inquiries.index') }}" wire:navigate class="stat-card group text-indigo-600 animate-fade-up min-w-0 !p-3.5 sm:!p-5" style="animation-delay: 340ms">
             <div class="flex items-center justify-between gap-2">
                 <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">{{ __('Mensajes de Contacto') }}</p>
                 <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 transition-transform duration-200 group-hover:scale-110">
                     <i class="fa-solid fa-envelope text-base sm:text-xl"></i>
                 </span>
             </div>
-            <p class="mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 flex items-center gap-2 truncate">
-                <span data-count="{{ $unreadInquiriesCount }}">{{ $unreadInquiriesCount }}</span>
+            <div class="mt-2 flex items-baseline justify-between gap-1">
+                <p class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 truncate">
+                    <span data-count="{{ $totalInquiries }}">{{ $totalInquiries }}</span>
+                </p>
                 @if ($unreadInquiriesCount > 0)
-                    <span class="text-[10px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0">{{ __('sin leer') }}</span>
+                    <span class="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10px] font-bold text-indigo-600 shrink-0">
+                        <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>{{ $unreadInquiriesCount }} {{ __('sin leer') }}
+                    </span>
+                @else
+                    <span class="text-[10px] text-gray-400 shrink-0">{{ __('Bandeja al día') }}</span>
                 @endif
-            </p>
+            </div>
+            <p class="mt-1 text-[11px] text-gray-400 truncate">{{ __('Consultas de contacto') }}</p>
         </a>
     </div>
 

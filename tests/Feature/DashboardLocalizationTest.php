@@ -21,11 +21,13 @@ test('admin dashboard renders in english when locale is en', function () {
         ->get(route('dashboard'))
         ->assertOk()
         ->assertSee('Total Customers')
-        ->assertSee('Open Requests')
-        ->assertSee('Packages received today')
-        ->assertSee('Stored Packages')
-        ->assertSee('Shipments in transit')
-        ->assertSee('Packages ready to ship');
+        ->assertSee('Total Requests')
+        ->assertSee('Total Packages')
+        ->assertSee('Total Shipments')
+        ->assertSee('Payments')
+        ->assertSee('Invoicing')
+        ->assertSee('Pending Balance')
+        ->assertSee('Contact Messages');
 });
 
 test('client portal dashboard renders in english when locale is en', function () {

@@ -1454,5 +1454,18 @@
     "Ready to ship": "Listos para enviar",
     "Buscar por N° paquete, tracking, cliente, tienda...": "Buscar por N° paquete, tracking, cliente, tienda...",
     "Back to Home": "Volver al Inicio",
-    "services": "servicios"
+    "services": "servicios",
+    "Clientes registrados": "Clientes registrados",
+    "abiertas": "abiertas",
+    "Todas al día": "Todas al día",
+    "en bodega": "en bodega",
+    "Sin paquetes en espera": "Sin paquetes en espera",
+    "en tránsito": "en tránsito",
+    "Sin envíos en tránsito": "Sin envíos en tránsito",
+    "Pagos": "Pagos",
+    "Cotizaciones y Envíos": "Cotizaciones y Envíos",
+    "Por cobrar": "Por cobrar",
+    "Al día": "Al día",
+    "Bandeja al día": "Bandeja al día",
+    "Total Pagos": "Total Pagos"
 }

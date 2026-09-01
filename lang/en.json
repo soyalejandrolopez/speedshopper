@@ -423,7 +423,7 @@
     "Factura :number actualizada y notificada por correo.": "Invoice :number updated and email notification sent.",
     "Factura :number creada correctamente con sus productos y tarifas aplicadas.": "Invoice :number created successfully with products and applied rates.",
     "Factura :number creada correctamente con sus tarifas organizadas.": "Invoice :number created successfully with organized rates.",
-    "Facturación": "Billing",
+    "Facturación": "Invoicing",
     "Facturación y Tarifario": "Billing & Rate Sheet",
     "FACTURA OFICIAL": "OFFICIAL INVOICE",
     "Factura Pagada": "Invoice Paid",
@@ -1455,5 +1455,18 @@
     "Ready to ship": "Ready to ship",
     "Buscar por N° paquete, tracking, cliente, tienda...": "Search by package #, tracking, customer, store...",
     "Back to Home": "Back to Home",
-    "services": "services"
+    "services": "services",
+    "Clientes registrados": "Registered customers",
+    "abiertas": "open",
+    "Todas al día": "All up to date",
+    "en bodega": "in warehouse",
+    "Sin paquetes en espera": "No pending packages",
+    "en tránsito": "in transit",
+    "Sin envíos en tránsito": "No shipments in transit",
+    "Pagos": "Payments",
+    "Cotizaciones y Envíos": "Quotes & Shipments",
+    "Por cobrar": "To collect",
+    "Al día": "All settled",
+    "Bandeja al día": "Inbox clear",
+    "Total Pagos": "Total Payments"
 }

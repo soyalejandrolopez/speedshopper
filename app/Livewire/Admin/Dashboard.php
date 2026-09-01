@@ -71,13 +71,12 @@ class Dashboard extends Component
 
         return view('livewire.admin.dashboard', [
             'totalCustomers' => Customer::count(),
+            'totalRequests' => PurchaseRequest::count(),
             'openRequests' => PurchaseRequest::whereNotIn('status', [
                 RequestStatus::Delivered->value,
                 RequestStatus::Cancelled->value,
             ])->count(),
-            'packagesReceivedToday' => Package::whereDate('received_at', today())
-                ->orWhere(fn ($q) => $q->whereNull('received_at')->whereDate('created_at', today()))
-                ->count(),
+            'totalPackages' => Package::count(),
             'storedPackages' => Package::whereIn('status', [
                 PackageStatus::Received->value,
                 PackageStatus::Storing->value,
@@ -85,9 +84,13 @@ class Dashboard extends Component
                 PackageStatus::Ready->value,
                 'received', 'storing', 'packing', 'ready',
             ])->count(),
+            'totalShipments' => Shipment::count(),
             'shipmentsInTransit' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
-            'readyShipments' => Package::whereIn('status', [PackageStatus::Ready->value, 'ready'])->count(),
+            'totalPayments' => Payment::count(),
+            'totalPaid' => $totalPaid,
+            'totalInvoiced' => $totalInvoiced,
             'totalBalanceDue' => $totalBalanceDue,
+            'totalInquiries' => ContactInquiry::count(),
             'unreadInquiriesCount' => ContactInquiry::unread()->count(),
             'recentInquiries' => ContactInquiry::latest()->limit(6)->get(),
             'recentRequests' => PurchaseRequest::with('customer')->latest()->limit(5)->get(),
