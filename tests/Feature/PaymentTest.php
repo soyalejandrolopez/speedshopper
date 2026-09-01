@@ -112,6 +112,6 @@ it('auto-populates invoice total from pending balance when selecting customer fo
     expect(Payment::count())->toBe(2);
 
     $secondPayment = Payment::latest('id')->first();
-    expect((float) $secondPayment->invoice_total)->toBe(500.0)
+    expect((float) $secondPayment->invoice_total)->toBe(0.0)
         ->and((float) $secondPayment->amount_paid)->toBe(500.0);
 });

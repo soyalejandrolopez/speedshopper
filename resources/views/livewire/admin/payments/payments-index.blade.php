@@ -162,9 +162,8 @@
                             {{-- Invoice Total: only required for first-time payments --}}
                             @if ($pendingBalance)
                                 {{-- Balance pendiente detectado: Invoice Total se asume automáticamente --}}
-                                {{-- Keep a sr-only input so Livewire keeps the binding; save() enforces the value before validating --}}
-                                <input type="number" step="0.01" wire:model="form.invoice_total"
-                                       class="sr-only" aria-hidden="true" tabindex="-1" readonly>
+                                {{-- Keep a hidden input so Livewire keeps the binding; save() enforces the value before validating --}}
+                                <input type="hidden" wire:model="form.invoice_total">
 
                                 {{-- Info strip --}}
                                 <div class="sm:col-span-2 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">

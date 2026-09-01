@@ -136,6 +136,11 @@ class PaymentsIndex extends Component
 
         $data = $this->validatedData();
 
+        // Si estamos abonando a un balance pendiente, no es una nueva factura.
+        if (! $this->editingId && $this->pendingBalance !== null && empty($data['billable_type'])) {
+            $data['invoice_total'] = 0;
+        }
+
         // Campos opcionales: vacío → null/0 (evita error de cast a enum, morphTo o NOT NULL).
         $data['payment_method'] = $data['payment_method'] ?: null;
         $data['amount_paid'] = $data['amount_paid'] ?: 0;

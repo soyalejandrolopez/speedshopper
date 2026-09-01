@@ -40,7 +40,7 @@ test('client portal dashboard renders in english when locale is en', function ()
         ->assertOk()
         ->assertSee('My Account')
         ->assertSee('Client Portal')
-        ->assertSee('Outstanding Balance')
+        ->assertSee('Pending Balance')
         ->assertSee('Pay Balance')
         ->assertSee('Your orders')
         ->assertSee('Your boxes');
