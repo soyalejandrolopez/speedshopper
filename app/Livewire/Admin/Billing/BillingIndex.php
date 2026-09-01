@@ -1158,19 +1158,15 @@ class BillingIndex extends Component
             ->get()
             ->groupBy('billable_id');
 
-        $financeMetrics = app(FinanceService::class)->getMetrics();
-        $totalInvoiced = $financeMetrics['total_invoiced'];
-        $totalEarnings = $financeMetrics['total_earnings'];
-        $totalCollected = $financeMetrics['total_collected'];
-        $totalPending = $financeMetrics['total_balance_due'];
+        $finance = app(FinanceService::class);
 
         return view('livewire.admin.billing.billing-index', [
             'requests' => $requests,
             'paymentsByRequest' => $paymentsByRequest,
-            'totalInvoiced' => $totalInvoiced,
-            'totalEarnings' => $totalEarnings,
-            'totalCollected' => $totalCollected,
-            'totalPending' => $totalPending,
+            'totalInvoiced' => $finance->getRequestsTotalInvoiced(),
+            'totalEarnings' => $finance->getRequestsTotalEarnings(),
+            'totalCollected' => $finance->getRequestsTotalCollected(),
+            'totalPending' => $finance->getRequestsTotalBalanceDue(),
             'customers' => Customer::orderBy('name')->get(['id', 'name', 'phone', 'email', 'country']),
         ]);
     }

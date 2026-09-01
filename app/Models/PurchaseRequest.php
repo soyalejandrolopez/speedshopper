@@ -63,6 +63,11 @@ class PurchaseRequest extends Model
         return $this->hasMany(Package::class);
     }
 
+    public function payments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Payment::class, 'billable');
+    }
+
     public function scopeBilled($query)
     {
         return $query->whereNotIn('status', [

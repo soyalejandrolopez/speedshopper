@@ -102,4 +102,48 @@ class FinanceService
             'total_earnings' => $totalServiceEarnings,
         ];
     }
+
+    /**
+     * Get the total invoiced amount for PurchaseRequests only.
+     */
+    public function getRequestsTotalInvoiced(): float
+    {
+        return (float) PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)
+            ->with('costItems')
+            ->get()
+            ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);
+    }
+
+    /**
+     * Get the total service earnings for PurchaseRequests only.
+     */
+    public function getRequestsTotalEarnings(): float
+    {
+        return (float) CostItem::where('costable_type', PurchaseRequest::class)
+            ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'))
+            ->where('type', '!=', CostType::ProductCost)
+            ->sum('amount');
+    }
+
+    /**
+     * Get the total collected / paid for PurchaseRequests only.
+     */
+    public function getRequestsTotalCollected(): float
+    {
+        return (float) Payment::where('billable_type', PurchaseRequest::class)->sum('amount_paid');
+    }
+
+    /**
+     * Get the total outstanding balance for PurchaseRequests only.
+     */
+    public function getRequestsTotalBalanceDue(): float
+    {
+        return (float) PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)
+            ->with(['costItems', 'payments'])
+            ->get()
+            ->sum(function (PurchaseRequest $r) {
+                $paid = $r->payments->sum('amount_paid');
+                return max(0.0, (float) $r->total_cost - $paid);
+            });
+    }
 }
