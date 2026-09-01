@@ -134,7 +134,7 @@
 
         <div class="card animate-fade-up" style="animation-delay: 280ms">
             <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ __('Saldo Pendiente por Cliente') }}</h2>
+                <h2 class="text-sm font-semibold text-gray-900">{{ __('Balance Pendiente por Cliente') }}</h2>
             </div>
             <div class="space-y-4 p-5">
                 @forelse ($balanceByCustomer as $row)

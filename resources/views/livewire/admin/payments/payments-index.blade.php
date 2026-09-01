@@ -63,7 +63,7 @@
                         <th class="px-4 py-3">{{ __('Customer') }}</th>
                         <th class="px-4 py-3">{{ __('Invoice Total') }}</th>
                         <th class="px-4 py-3">{{ __('Amount Paid') }}</th>
-                        <th class="px-4 py-3">{{ __('Balance Due') }}</th>
+                        <th class="px-4 py-3">{{ __('Balance Pendiente') }}</th>
                         <th class="px-4 py-3">{{ __('Payment Method') }}</th>
                         <th class="px-4 py-3">{{ __('Paid At') }}</th>
                         <th class="px-4 py-3 text-end">{{ __('Actions') }}</th>
@@ -172,7 +172,7 @@
                                         <i class="fa-solid fa-circle-info text-xs text-emerald-600"></i>
                                     </div>
                                     <p class="text-sm text-emerald-800">
-                                        {{ __('Balance due') }}:
+                                        {{ __('Balance Pendiente') }}:
                                         <span class="font-semibold">{{ money($pendingBalance) }}</span>
                                     </p>
                                 </div>

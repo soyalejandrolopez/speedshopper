@@ -4,7 +4,7 @@
     <div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-5">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-amber-800">{{ __('Your balance due') }}</p>
+                <p class="text-sm font-medium text-amber-800">{{ __('Tu Balance Pendiente') }}</p>
                 <p class="mt-1 text-2xl font-semibold text-amber-900">{{ money($balanceDue) }}</p>
             </div>
             @php $wa = \App\Models\Setting::get('whatsapp_phone'); @endphp
@@ -26,7 +26,7 @@
                         <th class="px-4 py-3">{{ __('Number') }}</th>
                         <th class="px-4 py-3">{{ __('Invoice Total') }}</th>
                         <th class="px-4 py-3">{{ __('Amount Paid') }}</th>
-                        <th class="px-4 py-3">{{ __('Balance Due') }}</th>
+                        <th class="px-4 py-3">{{ __('Balance Pendiente') }}</th>
                         <th class="px-4 py-3">{{ __('Payment Method') }}</th>
                         <th class="px-4 py-3">{{ __('Paid At') }}</th>
                     </tr>

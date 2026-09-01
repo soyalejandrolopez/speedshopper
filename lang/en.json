@@ -1468,5 +1468,8 @@
     "Por cobrar": "To collect",
     "Al día": "All settled",
     "Bandeja al día": "Inbox clear",
-    "Total Pagos": "Total Payments"
+    "Total Pagos": "Total Payments",
+    "Tu Balance Pendiente": "Your Pending Balance",
+    "Balance Pendiente por Cliente": "Pending Balance by Customer",
+    "Balance pendiente:": "Pending balance:"
 }

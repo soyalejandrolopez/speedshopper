@@ -44,7 +44,7 @@
         <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-2xs">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Saldo por Cobrar') }}</p>
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ __('Balance Pendiente') }}</p>
                     <p class="mt-0.5 text-xl font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ money($totalPending) }}</p>
                 </div>
                 <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
@@ -664,7 +664,7 @@
                                        class="w-full sm:w-40 rounded-xl border border-emerald-400 px-3 py-2 text-sm font-bold text-emerald-700 focus:ring-emerald-500 bg-white">
                                 @if ($this->pendingBalance > 0)
                                     <p class="text-xs font-semibold text-amber-600">
-                                        {{ __('Saldo pendiente:') }} {{ money($this->pendingBalance) }}
+                                        {{ __('Balance pendiente:') }} {{ money($this->pendingBalance) }}
                                     </p>
                                 @else
                                     <p class="text-xs font-bold text-emerald-700">
@@ -965,7 +965,7 @@
                         <p><strong>{{ __('Cliente:') }}</strong> {{ $paymentForm['customer_name'] ?? '' }}</p>
                         <p><strong>{{ __('Total Factura:') }}</strong> {{ money($paymentForm['invoice_total'] ?? 0) }}</p>
                         <p><strong>{{ __('Ya Pagado:') }}</strong> {{ money($paymentForm['already_paid'] ?? 0) }}</p>
-                        <p class="text-amber-700 font-bold"><strong>{{ __('Saldo Pendiente:') }}</strong> {{ money($paymentForm['pending_balance'] ?? 0) }}</p>
+                        <p class="text-amber-700 font-bold"><strong>{{ __('Balance Pendiente:') }}</strong> {{ money($paymentForm['pending_balance'] ?? 0) }}</p>
                     </div>
 
                     <div>

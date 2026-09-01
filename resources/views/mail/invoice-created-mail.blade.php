@@ -102,7 +102,7 @@
                         </tr>
                         <tr style="border-top: 1px dashed #d1d5db;">
                             <td style="padding: 8px 0 0 0; font-weight: bold; color: {{ $balance > 0 ? '#b45309' : '#059669' }};">
-                                {{ $locale === 'es' ? 'Saldo por Pagar:' : 'Balance Due:' }}
+                                {{ $locale === 'es' ? 'Balance Pendiente:' : 'Pending Balance:' }}
                             </td>
                             <td style="padding: 8px 0 0 0; text-align: right; font-weight: bold; font-size: 14px; color: {{ $balance > 0 ? '#b45309' : '#059669' }};">
                                 ${{ number_format($balance, 2) }}

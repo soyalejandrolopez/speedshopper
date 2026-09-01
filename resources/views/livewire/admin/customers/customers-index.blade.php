@@ -64,7 +64,7 @@
                         <th class="px-4 py-3">{{ __('Email') }}</th>
                         <th class="px-4 py-3">{{ __('WhatsApp') }}</th>
                         <th class="px-4 py-3">{{ __('Country') }}</th>
-                        <th class="px-4 py-3">{{ __('Balance Due') }}</th>
+                        <th class="px-4 py-3">{{ __('Balance Pendiente') }}</th>
                         <th class="px-4 py-3 text-end">{{ __('Actions') }}</th>
                     </tr>
                 </thead>

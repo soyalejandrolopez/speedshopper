@@ -52,7 +52,7 @@
                     <dd class="font-medium text-gray-900">{{ $customer->registered_at?->format('Y-m-d') ?? '—' }}</dd>
                 </div>
                 <div class="flex justify-between gap-2">
-                    <dt class="text-gray-500">{{ __('Balance Due') }}</dt>
+                    <dt class="text-gray-500">{{ __('Balance Pendiente') }}</dt>
                     <dd class="font-semibold {{ $customer->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">{{ money($customer->balance_due) }}</dd>
                 </div>
             </dl>

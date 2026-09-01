@@ -18,7 +18,7 @@
                     </div>
                     @if ($payment->balance_due > 0)
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">
-                            {{ __('Balance due') }}: {{ money($payment->balance_due) }}
+                            {{ __('Balance Pendiente') }}: {{ money($payment->balance_due) }}
                         </span>
                     @else
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
@@ -49,7 +49,7 @@
                         <dd class="font-medium text-emerald-600">{{ money($payment->amount_paid) }}</dd>
                     </div>
                     <div class="flex justify-between gap-2">
-                        <dt class="text-gray-500">{{ __('Balance due') }}</dt>
+                        <dt class="text-gray-500">{{ __('Balance Pendiente') }}</dt>
                         <dd class="font-medium {{ $payment->balance_due > 0 ? 'text-amber-600' : 'text-emerald-600' }}">{{ money($payment->balance_due) }}</dd>
                     </div>
                     <div class="flex justify-between gap-2">
