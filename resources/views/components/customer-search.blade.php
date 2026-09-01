@@ -45,7 +45,9 @@
     }
 }">
     <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute start-3.5 top-3 text-xs text-gray-400 group-focus-within:text-emerald-600 transition-colors"></i>
+        <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 text-gray-400 group-focus-within:text-emerald-600 transition-colors">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </div>
         <input type="text"
                x-model="search"
                @focus="open = true"
@@ -53,13 +55,13 @@
                @blur="setTimeout(() => open = false, 250)"
                placeholder="{{ __('Search customer by name, number, email, phone...') }}"
                autocomplete="off"
-               class="w-full rounded-xl border border-gray-300 bg-white ps-9 pe-9 py-2.5 text-xs text-gray-900 placeholder:text-gray-400 transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 shadow-2xs">
+               class="w-full rounded-xl border border-gray-300 bg-white ps-10 pe-10 py-2.5 text-xs text-gray-900 placeholder:text-gray-400 transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 shadow-2xs">
 
         <button type="button"
                 x-show="search && search.length > 0"
                 x-cloak
                 @click="clear()"
-                class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-gray-600 transition-colors">
+                class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-gray-400 hover:text-gray-600 transition-colors">
             <i class="fa-solid fa-circle-xmark text-xs"></i>
         </button>
     </div>
