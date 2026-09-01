@@ -13,10 +13,7 @@
         <x-seo />
 
         <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" media="print" onload="this.media='all'" />
-        <noscript>
-            <link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" />
-        </noscript>
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
