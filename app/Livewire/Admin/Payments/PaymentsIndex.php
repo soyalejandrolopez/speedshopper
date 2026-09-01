@@ -174,7 +174,7 @@ class PaymentsIndex extends Component
             ->latest()
             ->paginate(10);
 
-        $totalInvoiced = (float) CostItem::where(function ($q) {
+        $costItemsTotal = (float) CostItem::where(function ($q) {
             $q->where('costable_type', PurchaseRequest::class)
                 ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
         })->orWhere(function ($q) {
@@ -182,8 +182,12 @@ class PaymentsIndex extends Component
                 ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
         })->sum('amount');
 
+        $paymentsInvoiced = (float) Payment::sum('invoice_total');
+        $totalInvoiced = max($costItemsTotal, $paymentsInvoiced);
         $totalCollected = (float) Payment::sum('amount_paid');
-        $totalBalanceDue = max(0.0, $totalInvoiced - $totalCollected);
+
+        $customerBalanceSum = (float) Customer::all()->sum('balance_due');
+        $totalBalanceDue = $customerBalanceSum > 0 ? $customerBalanceSum : max(0.0, $totalInvoiced - $totalCollected);
 
         return view('livewire.admin.payments.payments-index', [
             'payments' => $payments,

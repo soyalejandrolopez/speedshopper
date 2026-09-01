@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Enums\PackageStatus;
 use App\Enums\RequestStatus;
 use App\Enums\ShipmentStatus;
 use App\Models\ContactInquiry;
@@ -53,7 +54,7 @@ class Dashboard extends Component
             ->limit(5)
             ->pluck('total', 'carrier');
 
-        $totalInvoiced = (float) CostItem::where(function ($q) {
+        $costItemsTotal = (float) CostItem::where(function ($q) {
             $q->where('costable_type', PurchaseRequest::class)
                 ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
         })->orWhere(function ($q) {
@@ -61,8 +62,12 @@ class Dashboard extends Component
                 ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
         })->sum('amount');
 
+        $paymentsInvoiced = (float) Payment::sum('invoice_total');
+        $totalInvoiced = max($costItemsTotal, $paymentsInvoiced);
         $totalPaid = (float) Payment::sum('amount_paid');
-        $totalBalanceDue = max(0.0, $totalInvoiced - $totalPaid);
+
+        $customerBalanceSum = (float) Customer::all()->sum('balance_due');
+        $totalBalanceDue = $customerBalanceSum > 0 ? $customerBalanceSum : max(0.0, $totalInvoiced - $totalPaid);
 
         return view('livewire.admin.dashboard', [
             'totalCustomers' => Customer::count(),
@@ -70,10 +75,18 @@ class Dashboard extends Component
                 RequestStatus::Delivered->value,
                 RequestStatus::Cancelled->value,
             ])->count(),
-            'packagesReceivedToday' => Package::whereDate('received_at', today())->count(),
-            'storedPackages' => Package::whereIn('status', ['received', 'storing', 'packing', 'ready'])->count(),
+            'packagesReceivedToday' => Package::whereDate('received_at', today())
+                ->orWhere(fn ($q) => $q->whereNull('received_at')->whereDate('created_at', today()))
+                ->count(),
+            'storedPackages' => Package::whereIn('status', [
+                PackageStatus::Received->value,
+                PackageStatus::Storing->value,
+                PackageStatus::Packing->value,
+                PackageStatus::Ready->value,
+                'received', 'storing', 'packing', 'ready',
+            ])->count(),
             'shipmentsInTransit' => Shipment::where('status', ShipmentStatus::InTransit->value)->count(),
-            'readyShipments' => Package::where('status', 'ready')->count() ?: Shipment::where('status', ShipmentStatus::Ready->value)->count(),
+            'readyShipments' => Package::whereIn('status', [PackageStatus::Ready->value, 'ready'])->count(),
             'totalBalanceDue' => $totalBalanceDue,
             'unreadInquiriesCount' => ContactInquiry::unread()->count(),
             'recentInquiries' => ContactInquiry::latest()->limit(6)->get(),

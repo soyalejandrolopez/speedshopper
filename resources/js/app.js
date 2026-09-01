@@ -96,6 +96,9 @@ function animateCounters() {
         el.dataset.counted = 'true';
 
         const target = parseFloat(el.dataset.count);
+        if (isNaN(target)) {
+            return;
+        }
         const decimals = (el.dataset.count.split('.')[1] || '').length;
         const prefix = el.dataset.prefix || '';
         const duration = 1200;
