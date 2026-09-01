@@ -70,6 +70,18 @@
                                 @if ($request->size_color)
                                     <span class="block text-xs text-gray-400">{{ $request->size_color }} · ×{{ $request->quantity }}</span>
                                 @endif
+                                @if (! empty($request->services))
+                                    <div class="mt-1 flex flex-wrap gap-1">
+                                        @foreach (service_definitions() as $sKey => $sDef)
+                                            @if (in_array($sKey, $request->services, true))
+                                                <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
+                                                    <i class="fa-solid {{ $sDef['icon'] }} text-[9px] text-gray-500"></i>
+                                                    {{ $sDef['title'] }}
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
                             </td>
                             <td class="px-4 py-3 text-xs">{{ $request->store ?? '—' }}</td>
                             <td class="px-4 py-3 text-xs font-medium text-gray-600">{{ $productCost > 0 ? money($productCost) : '—' }}</td>

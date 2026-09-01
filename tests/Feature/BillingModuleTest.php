@@ -695,3 +695,49 @@ test('billing index correctly computes online shopping and repack service invoic
         ->assertSet('invoicedTotal', 80.0) // $15 + $20 + $25 + $20 = $80
         ->assertSet('invoicedEarnings', 80.0);
 });
+
+test('billing index supports multi-service selection combining personal shopper and repack', function () {
+    $admin = createAdmin();
+
+    $customer = Customer::create([
+        'name' => 'Carlos Multi',
+        'email' => 'carlos.multi@example.com',
+    ]);
+
+    $component = Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('openCreateForm')
+        ->assertSet('selectedServices', ['personal_shopper'])
+        ->call('toggleService', 'repack')
+        ->assertSet('selectedServices', ['personal_shopper', 'repack'])
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceForm.items.0.product_name', 'Zapatos Nike')
+        ->set('invoiceForm.items.0.unit_price', 100.0)
+        ->set('guidedQuestions.boxes_small_count', 2) // 2 * $15 = $30
+        ->set('guidedQuestions.warehouse_delivery_count', 1) // $20
+        ->call('syncGuidedQuestionsToCosts');
+
+    // Subtotal products: $100
+    // Personal Shopper commission (20%): $20
+    // Small boxes: $30
+    // Delivery fee: $20
+    // Total invoiced: $100 + $20 + $30 + $20 = $170
+    // Earnings: $20 + $30 + $20 = $70
+    expect($component->get('invoicedTotal'))->toBe(170.0)
+        ->and($component->get('invoicedEarnings'))->toBe(70.0);
+
+    $component->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+    expect($request)->not->toBeNull()
+        ->and($request->services)->toBe(['personal_shopper', 'repack'])
+        ->and((float) $request->total_cost)->toBe(170.0);
+
+    // Edit invoice and ensure services are correctly preserved
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('editInvoice', $request->id)
+        ->assertSet('selectedServices', ['personal_shopper', 'repack'])
+        ->assertSet('invoicedTotal', 170.0);
+});

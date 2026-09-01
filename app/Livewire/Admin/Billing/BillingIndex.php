@@ -47,6 +47,8 @@ class BillingIndex extends Component
 
     public string $serviceType = 'shopper'; // 'shopper', 'online', 'repack'
 
+    public array $selectedServices = ['personal_shopper'];
+
     public string $invoiceType = 'cotizacion'; // 'cotizacion', 'pendiente', 'pagado'
 
     public array $guidedQuestions = [
@@ -67,7 +69,14 @@ class BillingIndex extends Component
         'customer_search' => '',
         'invoice_type' => 'cotizacion',
         'notes' => '',
-        'items' => [],
+        'items' => [
+            [
+                'product_name' => '',
+                'store' => '',
+                'quantity' => 1,
+                'unit_price' => 0.0,
+            ],
+        ],
         'costs' => [],
         'amount_paid' => 0.0,
         'payment_method' => 'zelle',
@@ -85,6 +94,103 @@ class BillingIndex extends Component
         'paid_at' => null,
         'notes' => '',
     ];
+
+    /** @return array<string, array{key: string, title: string, subtitle: string, icon: string}> */
+    public function serviceDefinitions(): array
+    {
+        return service_definitions();
+    }
+
+    public function isServiceActive(string $key): bool
+    {
+        $map = [
+            'shopper' => 'personal_shopper',
+            'online' => 'online_shopping',
+            'repack' => 'repack',
+            'personal_shopper' => 'personal_shopper',
+            'online_shopping' => 'online_shopping',
+        ];
+        $normalizedKey = $map[$key] ?? $key;
+
+        return in_array($normalizedKey, $this->selectedServices, true);
+    }
+
+    public function toggleService(string $key): void
+    {
+        $map = [
+            'shopper' => 'personal_shopper',
+            'online' => 'online_shopping',
+            'repack' => 'repack',
+            'personal_shopper' => 'personal_shopper',
+            'online_shopping' => 'online_shopping',
+        ];
+        $normalizedKey = $map[$key] ?? $key;
+
+        if (in_array($normalizedKey, $this->selectedServices, true)) {
+            if (count($this->selectedServices) > 1) {
+                $this->selectedServices = array_values(array_diff($this->selectedServices, [$normalizedKey]));
+            }
+        } else {
+            $this->selectedServices[] = $normalizedKey;
+        }
+
+        $this->syncServiceTypeState();
+    }
+
+    public function setServiceType(string $type): void
+    {
+        $this->serviceType = in_array($type, ['shopper', 'online', 'repack'], true) ? $type : 'shopper';
+
+        if ($this->serviceType === 'online') {
+            $this->selectedServices = ['online_shopping'];
+        } elseif ($this->serviceType === 'repack') {
+            $this->selectedServices = ['repack'];
+        } else {
+            $this->selectedServices = ['personal_shopper'];
+        }
+
+        $this->syncServiceTypeState();
+    }
+
+    public function syncServiceTypeState(): void
+    {
+        $hasShopper = in_array('personal_shopper', $this->selectedServices, true);
+        $hasOnline = in_array('online_shopping', $this->selectedServices, true);
+        $hasRepack = in_array('repack', $this->selectedServices, true);
+
+        if ($hasShopper && ! $hasOnline && ! $hasRepack) {
+            $this->serviceType = 'shopper';
+        } elseif ($hasOnline && ! $hasShopper && ! $hasRepack) {
+            $this->serviceType = 'online';
+        } elseif ($hasRepack && ! $hasShopper && ! $hasOnline) {
+            $this->serviceType = 'repack';
+        } else {
+            $this->serviceType = $hasShopper ? 'shopper' : ($hasOnline ? 'online' : 'repack');
+        }
+
+        if ($hasShopper) {
+            $this->guidedQuestions['apply_shopper_commission'] = true;
+        } else {
+            $this->guidedQuestions['apply_shopper_commission'] = false;
+        }
+
+        if ($hasOnline) {
+            $this->guidedQuestions['apply_warehouse_commission'] = true;
+            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
+        } else {
+            $this->guidedQuestions['apply_warehouse_commission'] = false;
+        }
+
+        if ($hasRepack) {
+            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
+        }
+
+        if (! $hasOnline && ! $hasRepack && ! $hasShopper) {
+            $this->guidedQuestions['warehouse_delivery_count'] = 0;
+        }
+
+        $this->syncGuidedQuestionsToCosts();
+    }
 
     // Keep $showCreateModal as alias for backward compatibility with tests
     public function getShowCreateModalProperty(): bool
@@ -131,6 +237,7 @@ class BillingIndex extends Component
         $this->editingRequestId = null;
         $this->editingRequestNumber = null;
         $this->serviceType = 'shopper';
+        $this->selectedServices = ['personal_shopper'];
 
         $this->guidedQuestions = [
             'apply_shopper_commission' => true,
@@ -181,26 +288,6 @@ class BillingIndex extends Component
         }
     }
 
-    public function setServiceType(string $type): void
-    {
-        $this->serviceType = in_array($type, ['shopper', 'online', 'repack'], true) ? $type : 'shopper';
-
-        if ($this->serviceType === 'online') {
-            $this->guidedQuestions['apply_shopper_commission'] = false;
-            $this->guidedQuestions['apply_warehouse_commission'] = true;
-            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
-        } elseif ($this->serviceType === 'repack') {
-            $this->guidedQuestions['apply_shopper_commission'] = false;
-            $this->guidedQuestions['apply_warehouse_commission'] = false;
-            $this->guidedQuestions['warehouse_delivery_count'] = max(1, (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0));
-        } else {
-            $this->guidedQuestions['apply_shopper_commission'] = true;
-            $this->guidedQuestions['apply_warehouse_commission'] = false;
-        }
-
-        $this->syncGuidedQuestionsToCosts();
-    }
-
     public function editInvoice(int $requestId): void
     {
         $this->resetValidation();
@@ -212,28 +299,51 @@ class BillingIndex extends Component
         $this->editingRequestId = $request->id;
         $this->editingRequestNumber = $request->number;
 
-        // Detect service type based on cost items
-        $hasReceivingCommission = $request->costItems->where('type', CostType::ReceivingFee)->filter(fn ($c) => stripos($c->description, 'Comisión') !== false)->isNotEmpty();
-        $hasShopperFee = $request->costItems->where('type', CostType::ShopperFee)->isNotEmpty();
-        $hasBoxesOrDelivery = $request->costItems->whereIn('type', [CostType::PackingFee, CostType::ReceivingFee])->isNotEmpty();
-        $productCosts = $request->costItems->where('type', CostType::ProductCost);
-        $productTotal = (float) $productCosts->sum('amount');
-
-        if ($hasReceivingCommission) {
-            $this->serviceType = 'online';
-        } elseif ($hasBoxesOrDelivery && ($productTotal === 0.0 || ! $hasShopperFee)) {
-            $this->serviceType = 'repack';
-        } else {
-            $this->serviceType = 'shopper';
+        // Detect services from request or cost items
+        $services = [];
+        if (! empty($request->services) && is_array($request->services)) {
+            foreach ($request->services as $s) {
+                if (in_array($s, ['personal_shopper', 'online_shopping', 'repack'], true)) {
+                    $services[] = $s;
+                } elseif ($s === 'shopper') {
+                    $services[] = 'personal_shopper';
+                } elseif ($s === 'online') {
+                    $services[] = 'online_shopping';
+                }
+            }
         }
+
+        if (empty($services)) {
+            $hasReceivingCommission = $request->costItems->where('type', CostType::ReceivingFee)->filter(fn ($c) => stripos($c->description, 'Comisión') !== false)->isNotEmpty();
+            $hasShopperFee = $request->costItems->where('type', CostType::ShopperFee)->isNotEmpty();
+            $hasBoxesOrDelivery = $request->costItems->whereIn('type', [CostType::PackingFee, CostType::ReceivingFee])->isNotEmpty();
+            $productCosts = $request->costItems->where('type', CostType::ProductCost);
+            $productTotal = (float) $productCosts->sum('amount');
+
+            if ($hasReceivingCommission) {
+                $services[] = 'online_shopping';
+            }
+            if ($hasShopperFee || ($productTotal > 0 && ! $hasReceivingCommission)) {
+                $services[] = 'personal_shopper';
+            }
+            if ($hasBoxesOrDelivery) {
+                $services[] = 'repack';
+            }
+            if (empty($services)) {
+                $services = ['personal_shopper'];
+            }
+        }
+
+        $this->selectedServices = array_values(array_unique($services));
 
         // Populate items
         $items = [];
+        $productCosts = $request->costItems->where('type', CostType::ProductCost);
         if ($productCosts->isNotEmpty()) {
             foreach ($productCosts as $cost) {
                 // Extract price if format contains "(Comprado online - Pagado en internet: $XX.XX)"
                 $unitPrice = (float) $cost->amount;
-                if (($this->serviceType === 'online' || $this->serviceType === 'repack') && preg_match('/Pagado en internet:\s*\$([0-9\.,]+)/i', $cost->description ?? '', $m)) {
+                if ((! $this->isServiceActive('personal_shopper')) && preg_match('/Pagado en internet:\s*\$([0-9\.,]+)/i', $cost->description ?? '', $m)) {
                     $unitPrice = (float) str_replace(',', '', $m[1]);
                 }
 
@@ -255,15 +365,15 @@ class BillingIndex extends Component
             ];
         }
 
-        // Initialize guided questions based on existing non-product cost items
+        // Initialize guided questions based on active services
         $this->guidedQuestions = [
-            'apply_shopper_commission' => $this->serviceType === 'shopper',
+            'apply_shopper_commission' => $this->isServiceActive('personal_shopper'),
             'extra_stores_count' => 0,
             'boxes_small_count' => 0,
             'boxes_medium_count' => 0,
             'boxes_large_count' => 0,
-            'apply_warehouse_commission' => $this->serviceType === 'online',
-            'warehouse_delivery_count' => ($this->serviceType === 'online' || $this->serviceType === 'repack') ? 1 : 0,
+            'apply_warehouse_commission' => $this->isServiceActive('online_shopping'),
+            'warehouse_delivery_count' => ($this->isServiceActive('online_shopping') || $this->isServiceActive('repack')) ? 1 : 0,
             'storage_months_count' => 0,
         ];
         $this->customCosts = [];
@@ -274,7 +384,7 @@ class BillingIndex extends Component
             $desc = $cost->description ?? '';
             $amount = (float) $cost->amount;
 
-            if (stripos($desc, 'Personal Shopper') !== false || $cost->type === CostType::ShopperFee && stripos($desc, 'Comisión') !== false) {
+            if (stripos($desc, 'Personal Shopper') !== false || ($cost->type === CostType::ShopperFee && stripos($desc, 'Comisión') !== false)) {
                 $this->guidedQuestions['apply_shopper_commission'] = true;
             } elseif (stripos($desc, 'Tienda Adicional') !== false || stripos($desc, 'Additional Store') !== false) {
                 $unitFee = (float) ($this->rates['extra_store_fee'] ?? 20.0);
@@ -337,7 +447,7 @@ class BillingIndex extends Component
             'paid_at' => now()->toDateString(),
         ];
 
-        $this->syncGuidedQuestionsToCosts();
+        $this->syncServiceTypeState();
         $this->showCreateForm = true;
     }
 
@@ -482,9 +592,12 @@ class BillingIndex extends Component
         $costs = [];
         $subtotal = $this->productsSubtotal;
         $calc = $this->shopperCommissionCalculation;
+        $hasShopper = $this->isServiceActive('personal_shopper');
+        $hasOnline = $this->isServiceActive('online_shopping');
+        $hasRepack = $this->isServiceActive('repack');
 
-        // 1. Comisión Personal Shopper (solo compras físicas)
-        if ($this->serviceType === 'shopper' && ! empty($this->guidedQuestions['apply_shopper_commission'])) {
+        // 1. Comisión Personal Shopper (solo si Personal Shopper está activo)
+        if ($hasShopper && ! empty($this->guidedQuestions['apply_shopper_commission'])) {
             $costs[] = [
                 'preset' => 'shopper_commission',
                 'type' => 'shopper_fee',
@@ -495,7 +608,7 @@ class BillingIndex extends Component
 
         // 2. Tiendas adicionales (solo compras físicas)
         $extraStores = (int) ($this->guidedQuestions['extra_stores_count'] ?? 0);
-        if ($this->serviceType === 'shopper' && $extraStores > 0) {
+        if ($hasShopper && $extraStores > 0) {
             $rate = (float) ($this->rates['extra_store_fee'] ?? 20.0);
             $costs[] = [
                 'preset' => 'extra_store',
@@ -505,7 +618,7 @@ class BillingIndex extends Component
             ];
         }
 
-        // 3. Cajas Heavy Duty (aplica a cualquier servicio de reempaque)
+        // 3. Cajas Heavy Duty (aplica a cualquier servicio de reempaque o cajas agregadas)
         $boxSmall = (int) ($this->guidedQuestions['boxes_small_count'] ?? 0);
         if ($boxSmall > 0) {
             $rate = (float) ($this->rates['box_small_heavy_duty'] ?? 15.0);
@@ -539,8 +652,8 @@ class BillingIndex extends Component
             ];
         }
 
-        // 4. Comisión Almacén / Compras Online (15% sobre el valor del pedido online - no aplica en reempaque)
-        if ($this->serviceType === 'online' || ($this->serviceType !== 'repack' && ! empty($this->guidedQuestions['apply_warehouse_commission']))) {
+        // 4. Comisión Almacén / Compras Online (15% sobre el valor del pedido online)
+        if ($hasOnline || (! $hasRepack && ! empty($this->guidedQuestions['apply_warehouse_commission']))) {
             $pct = (float) ($this->rates['warehouse_percent'] ?? 15.0);
             $costs[] = [
                 'preset' => 'warehouse_commission',
@@ -552,7 +665,7 @@ class BillingIndex extends Component
 
         // 5. Traslado de caja al Almacén (Fijo $20 en compras online y reempaque)
         $delivery = (int) ($this->guidedQuestions['warehouse_delivery_count'] ?? 0);
-        if (($this->serviceType === 'online' || $this->serviceType === 'repack') && $delivery === 0) {
+        if (($hasOnline || $hasRepack) && $delivery === 0) {
             $delivery = 1;
             $this->guidedQuestions['warehouse_delivery_count'] = 1;
         }
@@ -643,8 +756,9 @@ class BillingIndex extends Component
 
     public function getInvoicedTotalProperty(): float
     {
-        // En compras online, lo que el cliente pagó en internet no se suma al total a cobrar en la factura
-        $itemsTotal = $this->serviceType === 'shopper' ? $this->productsSubtotal : 0.0;
+        // En compras online o reempaque sin personal shopper, lo que el cliente pagó en internet no se suma al total de factura
+        $hasShopper = $this->isServiceActive('personal_shopper');
+        $itemsTotal = $hasShopper ? $this->productsSubtotal : 0.0;
         $costsTotal = 0.0;
         foreach ($this->invoiceForm['costs'] as $cost) {
             $costsTotal += (float) ($cost['amount'] ?? 0);
@@ -655,13 +769,13 @@ class BillingIndex extends Component
 
     public function getInvoicedEarningsProperty(): float
     {
-        // En compras online y reempaque, el producto fue pagado directamente en internet por el cliente.
-        // Todo lo facturado corresponde a la ganancia por servicios prestados (comisión almacén, traslados, cajas).
-        if ($this->serviceType === 'online' || $this->serviceType === 'repack') {
+        $hasShopper = $this->isServiceActive('personal_shopper');
+        // Si no incluye Personal Shopper (solo online o repack), todo lo facturado son comisiones / servicios de la empresa
+        if (! $hasShopper) {
             return (float) $this->invoicedTotal;
         }
 
-        // En Personal Shopper, la ganancia de la empresa corresponde a todos los cargos por servicio (comisiones, cajas, tiendas extra, etc.)
+        // Si incluye Personal Shopper, la ganancia de la empresa son los cargos por servicio (comisiones, cajas, tiendas, etc.)
         $earnings = 0.0;
         foreach ($this->invoiceForm['costs'] as $cost) {
             $type = $cost['type'] ?? '';
@@ -718,6 +832,8 @@ class BillingIndex extends Component
             default => RequestStatus::Quoted,
         };
 
+        $hasShopper = $this->isServiceActive('personal_shopper');
+
         if ($this->isEditing && $this->editingRequestId) {
             $purchaseRequest = PurchaseRequest::findOrFail($this->editingRequestId);
 
@@ -726,7 +842,8 @@ class BillingIndex extends Component
                 'product_name' => count($this->invoiceForm['items']) > 1 ? $allProductsSummary : $firstItem['product_name'],
                 'store' => $firstItem['store'] ?? null,
                 'quantity' => $firstItem['quantity'] ?? 1,
-                'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
+                'unit_price' => $hasShopper ? ($firstItem['unit_price'] ?? null) : 0.0,
+                'services' => $this->selectedServices,
                 'status' => $targetStatus,
                 'notes' => $this->invoiceForm['notes'] ?? null,
             ]);
@@ -742,7 +859,7 @@ class BillingIndex extends Component
                 $price = (float) ($item['unit_price'] ?? 0);
                 $subtotal = $qty * $price;
 
-                if ($this->serviceType === 'shopper') {
+                if ($hasShopper) {
                     if ($subtotal > 0) {
                         CostItem::create([
                             'costable_type' => PurchaseRequest::class,
@@ -753,7 +870,7 @@ class BillingIndex extends Component
                         ]);
                     }
                 } else {
-                    // Online purchase: $0 billable amount
+                    // Online purchase / repack: $0 billable amount
                     CostItem::create([
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $purchaseRequest->id,
@@ -819,7 +936,8 @@ class BillingIndex extends Component
             'product_name' => count($this->invoiceForm['items']) > 1 ? $allProductsSummary : $firstItem['product_name'],
             'store' => $firstItem['store'] ?? null,
             'quantity' => $firstItem['quantity'] ?? 1,
-            'unit_price' => $this->serviceType === 'shopper' ? ($firstItem['unit_price'] ?? null) : 0.0,
+            'unit_price' => $hasShopper ? ($firstItem['unit_price'] ?? null) : 0.0,
+            'services' => $this->selectedServices,
             'status' => $targetStatus,
             'notes' => $this->invoiceForm['notes'] ?? null,
         ]);
@@ -830,7 +948,7 @@ class BillingIndex extends Component
             $price = (float) ($item['unit_price'] ?? 0);
             $subtotal = $qty * $price;
 
-            if ($this->serviceType === 'shopper') {
+            if ($hasShopper) {
                 if ($subtotal > 0) {
                     CostItem::create([
                         'costable_type' => PurchaseRequest::class,

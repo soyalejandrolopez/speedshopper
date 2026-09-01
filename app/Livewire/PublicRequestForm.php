@@ -19,6 +19,7 @@ class PublicRequestForm extends Component
         'name' => '',
         'email' => '',
         'whatsapp' => '',
+        'services' => ['personal_shopper'],
         'create_account' => false,
         'password' => '',
         'password_confirmation' => '',
@@ -42,6 +43,12 @@ class PublicRequestForm extends Component
         $this->items = [
             $this->emptyItem(),
         ];
+    }
+
+    /** @return array<string, array{key: string, title: string, subtitle: string, icon: string}> */
+    public function serviceDefinitions(): array
+    {
+        return service_definitions();
     }
 
     public function getRatesProperty(): array
@@ -108,6 +115,8 @@ class PublicRequestForm extends Component
             'form.name' => ['required', 'string', 'max:255'],
             'form.email' => ['required', 'email', 'max:255'],
             'form.whatsapp' => ['nullable', 'string', 'max:50'],
+            'form.services' => ['required', 'array', 'min:1'],
+            'form.services.*' => ['string'],
             'form.create_account' => ['nullable', 'boolean'],
             'form.password' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4', 'same:form.password_confirmation'],
             'form.password_confirmation' => [$hasPassword ? 'required' : 'nullable', 'string', 'min:4'],
@@ -129,6 +138,7 @@ class PublicRequestForm extends Component
             'form.name' => __('name'),
             'form.email' => __('email'),
             'form.whatsapp' => __('phone or WhatsApp'),
+            'form.services' => __('services'),
             'form.password' => __('password'),
             'form.password_confirmation' => __('confirm password'),
         ];
@@ -211,9 +221,10 @@ class PublicRequestForm extends Component
         $smallRate = (float) ($rates['box_small_heavy_duty'] ?? 15.0);
         $mediumRate = (float) ($rates['box_medium_heavy_duty'] ?? 20.0);
         $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
+        $deliveryRate = (float) ($rates['warehouse_delivery_fee'] ?? 20.0);
 
-        $services = ['personal_shopper'];
-        if ($this->boxes_small > 0 || $this->boxes_medium > 0 || $this->boxes_large > 0) {
+        $services = ! empty($validated['form']['services']) ? $validated['form']['services'] : ['personal_shopper'];
+        if (($this->boxes_small > 0 || $this->boxes_medium > 0 || $this->boxes_large > 0) && ! in_array('repack', $services, true) && ! in_array('packing', $services, true)) {
             $services[] = 'repack';
             $services[] = 'packing';
         }
@@ -222,6 +233,7 @@ class PublicRequestForm extends Component
         foreach ($validated['items'] as $index => $item) {
             $unitPrice = ! empty($item['unit_price']) ? (float) $item['unit_price'] : null;
             $qty = ! empty($item['quantity']) ? (int) $item['quantity'] : 1;
+            $itemSubtotal = $unitPrice !== null ? ($unitPrice * $qty) : 0.0;
 
             $req = PurchaseRequest::create([
                 'customer_id' => $customer->id,
@@ -233,14 +245,73 @@ class PublicRequestForm extends Component
                 'services' => $services,
             ]);
 
-            if ($unitPrice !== null && $unitPrice > 0) {
-                CostItem::create([
-                    'costable_type' => PurchaseRequest::class,
-                    'costable_id' => $req->id,
-                    'type' => CostType::ProductCost,
-                    'description' => 'Valor de Producto: '.$item['product_name'],
-                    'amount' => $unitPrice * $qty,
-                ]);
+            // 1. Personal Shopper Cost Items
+            if (in_array('personal_shopper', $services, true) || empty($services)) {
+                if ($itemSubtotal > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ProductCost,
+                        'description' => 'Valor de Producto: '.$item['product_name'].($qty > 1 ? " ({$qty} x $".number_format($unitPrice, 2).')' : ''),
+                        'amount' => $itemSubtotal,
+                    ]);
+
+                    $percent = $itemSubtotal >= 700 ? 15.0 : 20.0;
+                    $commAmount = round($itemSubtotal * ($percent / 100), 2);
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ShopperFee,
+                        'description' => "Comisión Personal Shopper ({$percent}%)",
+                        'amount' => $commAmount,
+                    ]);
+                }
+            }
+
+            // 2. Buy Online Cost Items
+            if (in_array('online_shopping', $services, true)) {
+                if ($itemSubtotal > 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ProductCost,
+                        'description' => 'Valor Pagado en Internet: $'.number_format($itemSubtotal, 2).' (No se cobra en factura)',
+                        'amount' => $itemSubtotal,
+                    ]);
+
+                    $onlinePercent = (float) ($rates['warehouse_percent'] ?? 15.0);
+                    $commAmount = round($itemSubtotal * ($onlinePercent / 100), 2);
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ReceivingFee,
+                        'description' => "Comisión Almacén / Compras Online ({$onlinePercent}% sobre $".number_format($itemSubtotal, 2).')',
+                        'amount' => $commAmount,
+                    ]);
+                }
+
+                if ($index === 0) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ReceivingFee,
+                        'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($deliveryRate, 2).')',
+                        'amount' => $deliveryRate,
+                    ]);
+                }
+            }
+
+            // 3. Repackaging Cost Items
+            if (in_array('repack', $services, true) && $index === 0) {
+                if (! in_array('online_shopping', $services, true)) {
+                    CostItem::create([
+                        'costable_type' => PurchaseRequest::class,
+                        'costable_id' => $req->id,
+                        'type' => CostType::ReceivingFee,
+                        'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($deliveryRate, 2).')',
+                        'amount' => $deliveryRate,
+                    ]);
+                }
             }
 
             // Add packing cost items to the first request if multiple items
@@ -250,7 +321,7 @@ class PublicRequestForm extends Component
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $req->id,
                         'type' => CostType::PackingFee,
-                        'description' => "Caja Small Heavy Duty ({$this->boxes_small} x $".number_format($smallRate, 2).')',
+                        'description' => "1 Caja Small Heavy Duty ({$this->boxes_small} x $".number_format($smallRate, 2).')',
                         'amount' => $this->boxes_small * $smallRate,
                     ]);
                 }
@@ -259,7 +330,7 @@ class PublicRequestForm extends Component
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $req->id,
                         'type' => CostType::PackingFee,
-                        'description' => "Caja Mediana Heavy Duty ({$this->boxes_medium} x $".number_format($mediumRate, 2).')',
+                        'description' => "1 Caja Mediana Heavy Duty ({$this->boxes_medium} x $".number_format($mediumRate, 2).')',
                         'amount' => $this->boxes_medium * $mediumRate,
                     ]);
                 }
@@ -268,7 +339,7 @@ class PublicRequestForm extends Component
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $req->id,
                         'type' => CostType::PackingFee,
-                        'description' => "Caja Larga Heavy Duty ({$this->boxes_large} x $".number_format($largeRate, 2).')',
+                        'description' => "1 Caja Larga Heavy Duty ({$this->boxes_large} x $".number_format($largeRate, 2).')',
                         'amount' => $this->boxes_large * $largeRate,
                     ]);
                 }

@@ -89,47 +89,45 @@
             </div>
 
             <form wire:submit="saveInvoice" class="space-y-6">
-                {{-- Selector de Modalidad / Tipo de Servicio (3 Opciones) --}}
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {{-- 1. Personal Shopper --}}
-                    <button type="button" wire:click="setServiceType('shopper')"
-                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'shopper' ? 'border-emerald-600 bg-emerald-50/80 text-emerald-950 shadow-xs ring-1 ring-emerald-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'shopper' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500' }}">
-                            <i class="fa-solid fa-cart-shopping text-sm"></i>
+                {{-- Selector de Modalidad / Tipo de Servicio (Selección múltiple de 1 o más opciones) --}}
+                <div>
+                    <div class="mb-2.5 flex items-center justify-between">
+                        <div>
+                            <label class="text-xs font-bold text-gray-900 uppercase tracking-wider">{{ __('Modalidades de Servicio') }} *</label>
+                            <p class="text-[11px] text-gray-500">{{ __('Selecciona una o más opciones para calcular la factura') }}</p>
                         </div>
-                        <div class="min-w-0">
-                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Personal Shopper') }}</p>
-                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Compras físicas + comisión por tramos (20% - 15%)') }}</p>
-                        </div>
-                    </button>
-
-                    {{-- 2. Comprar Online --}}
-                    <button type="button" wire:click="setServiceType('online')"
-                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'online' ? 'border-blue-600 bg-blue-50/80 text-blue-950 shadow-xs ring-1 ring-blue-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'online' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500' }}">
-                            <i class="fa-solid fa-globe text-sm"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Comprar Online') }}</p>
-                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Comisión 15% + traslado fijo $20 (no se cobra el producto)') }}</p>
-                        </div>
-                    </button>
-
-                    {{-- 3. Reempaque --}}
-                    <button type="button" wire:click="setServiceType('repack')"
-                            class="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all text-start {{ $serviceType === 'repack' ? 'border-teal-600 bg-teal-50/80 text-teal-950 shadow-xs ring-1 ring-teal-500' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
-                        <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $serviceType === 'repack' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500' }}">
-                            <i class="fa-solid fa-boxes-packing text-sm"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-xs font-bold text-gray-900 truncate">{{ __('Reempaque') }}</p>
-                            <p class="text-[10.5px] text-gray-500 line-clamp-2 leading-tight mt-0.5">{{ __('Cajas Small $15, Med $20, Larga $25 + traslado $20') }}</p>
-                        </div>
-                    </button>
+                        <span class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
+                            {{ count($selectedServices) }} {{ count($selectedServices) === 1 ? __('modalidad activa') : __('modalidades activas') }}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        @foreach ($this->serviceDefinitions() as $key => $svc)
+                            @php
+                                $isActive = $this->isServiceActive($key);
+                            @endphp
+                            <button type="button" wire:click="toggleService('{{ $key }}')"
+                                    class="relative flex flex-col justify-between p-3.5 rounded-2xl border-2 transition-all text-start cursor-pointer hover:shadow-xs {{ $isActive ? 'border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-1 ring-emerald-500 shadow-2xs' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300' }}">
+                                <div class="flex items-start justify-between w-full gap-2">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-xl shrink-0 {{ $isActive ? 'bg-emerald-600 text-white shadow-2xs' : 'bg-gray-100 text-gray-500' }}">
+                                        <i class="fa-solid {{ $svc['icon'] }} text-sm"></i>
+                                    </div>
+                                    <div class="flex h-5 w-5 items-center justify-center rounded-md border transition-colors {{ $isActive ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-gray-300 bg-white' }}">
+                                        @if ($isActive)
+                                            <i class="fa-solid fa-check text-[10px]"></i>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mt-2.5 min-w-0">
+                                    <p class="text-xs font-bold text-gray-900">{{ $svc['title'] }}</p>
+                                    <p class="text-[11px] text-gray-500 leading-relaxed mt-0.5">{{ $svc['subtitle'] }}</p>
+                                </div>
+                            </button>
+                        @endforeach
+                    </div>
                 </div>
 
                 {{-- Banner Informativo para Compras Online --}}
-                @if ($serviceType === 'online')
+                @if ($this->isServiceActive('online_shopping'))
                     <div class="rounded-xl border border-blue-200 bg-blue-50/90 p-3.5 flex items-start gap-2.5 text-xs text-blue-900 shadow-2xs">
                         <i class="fa-solid fa-circle-info text-blue-600 mt-0.5 text-sm shrink-0"></i>
                         <div>
@@ -142,7 +140,7 @@
                 @endif
 
                 {{-- Banner Informativo y Precios Prediseñados para Reempaque --}}
-                @if ($serviceType === 'repack')
+                @if ($this->isServiceActive('repack'))
                     <div class="rounded-2xl border-2 border-teal-300 bg-teal-50/80 p-4 shadow-2xs">
                         <div class="flex items-start gap-3">
                             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shrink-0 shadow-xs">
@@ -258,25 +256,25 @@
                         <div class="flex items-center gap-2">
                             <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">2</span>
                             <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800">
-                                @if ($serviceType === 'repack')
-                                    {{ __('Paquetes Recibidos para Reempaque') }}
-                                @elseif ($serviceType === 'online')
+                                @if ($this->isServiceActive('personal_shopper'))
+                                    {{ __('Productos y Artículos') }}
+                                @elseif ($this->isServiceActive('online_shopping'))
                                     {{ __('Artículos / Compras por Internet') }}
                                 @else
-                                    {{ __('Productos y Artículos') }}
+                                    {{ __('Paquetes Recibidos para Reempaque') }}
                                 @endif
                             </h3>
-                            @if ($serviceType === 'repack')
-                                <span class="text-xs font-bold bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-lg">
-                                    {{ __('Valor Declarado: :amount (Pagado en internet por el cliente)', ['amount' => money($this->productsSubtotal)]) }}
+                            @if ($this->isServiceActive('personal_shopper'))
+                                <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-lg">
+                                    {{ __('Subtotal Productos: :amount', ['amount' => money($this->productsSubtotal)]) }}
                                 </span>
-                            @elseif ($serviceType === 'online')
+                            @elseif ($this->isServiceActive('online_shopping'))
                                 <span class="text-xs font-bold bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-lg">
                                     {{ __('Valor Online: :amount (Pagado en internet)', ['amount' => money($this->productsSubtotal)]) }}
                                 </span>
                             @else
-                                <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-lg">
-                                    {{ __('Subtotal Productos: :amount', ['amount' => money($this->productsSubtotal)]) }}
+                                <span class="text-xs font-bold bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-lg">
+                                    {{ __('Valor Declarado: :amount (Pagado en internet por el cliente)', ['amount' => money($this->productsSubtotal)]) }}
                                 </span>
                             @endif
                         </div>
@@ -306,7 +304,7 @@
                                 </div>
                                 <div class="sm:col-span-2 relative">
                                     <label class="block text-[11px] font-medium text-gray-500">
-                                        {{ ($serviceType === 'online' || $serviceType === 'repack') ? __('Valor en Internet ($)') : __('Precio ($)') }}
+                                        {{ $this->isServiceActive('personal_shopper') ? __('Precio ($)') : __('Valor en Internet ($)') }}
                                     </label>
                                     <div class="flex items-center gap-1 mt-1">
                                         <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="invoiceForm.items.{{ $index }}.unit_price"
@@ -331,8 +329,8 @@
                     </div>
 
                     <div class="space-y-4">
-                        {{-- Pregunta 1: Personal Shopper (Solo modo Shopper) --}}
-                        @if ($serviceType === 'shopper')
+                        {{-- Pregunta 1: Personal Shopper (Si Personal Shopper está seleccionado) --}}
+                        @if ($this->isServiceActive('personal_shopper'))
                             <div class="rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xs">
                                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div class="flex items-start gap-3">
@@ -383,7 +381,7 @@
                         @endif
 
                         {{-- Pregunta 2: Reempaque en Cajas Heavy Duty --}}
-                        <div class="rounded-2xl border transition-all {{ $serviceType === 'repack' ? 'border-teal-300 bg-teal-50/30' : 'border-teal-100 bg-white' }} p-4 shadow-2xs">
+                        <div class="rounded-2xl border transition-all {{ $this->isServiceActive('repack') ? 'border-teal-300 bg-teal-50/30' : 'border-teal-100 bg-white' }} p-4 shadow-2xs">
                             <div class="flex items-start gap-3 mb-3">
                                 <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-100 text-teal-700 shrink-0">
                                     <i class="fa-solid fa-box text-xs"></i>
@@ -476,8 +474,8 @@
                             </div>
 
                             <div class="space-y-3">
-                                {{-- Comisión Almacén Compras Online (Solo visible si no es Reempaque) --}}
-                                @if ($serviceType !== 'repack')
+                                {{-- Comisión Almacén Compras Online --}}
+                                @if ($this->isServiceActive('online_shopping') || ! $this->isServiceActive('repack'))
                                     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
                                         <div>
                                             <p class="text-xs font-bold text-gray-800">
@@ -486,12 +484,12 @@
                                             <p class="text-[11px] text-gray-500">
                                                 {{ $rates['warehouse_percent'] ?? 15 }}% de {{ money($this->productsSubtotal) }} =
                                                 <strong class="text-blue-700 font-bold">{{ money($this->productsSubtotal * (($rates['warehouse_percent'] ?? 15) / 100)) }}</strong>
-                                                @if ($serviceType === 'online')
+                                                @if ($this->isServiceActive('online_shopping'))
                                                     <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Automática en compras online') }})</span>
                                                 @endif
                                             </p>
                                         </div>
-                                        @if ($serviceType === 'online')
+                                        @if ($this->isServiceActive('online_shopping'))
                                             <span class="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-3 py-1 text-xs font-bold text-white">
                                                 <i class="fa-solid fa-check text-xs"></i> {{ __('Activada (15%)') }}
                                             </span>
@@ -511,20 +509,20 @@
                                         <p class="text-xs font-bold text-gray-800">{{ __('Servicio de Traslado de Caja al Almacén') }}</p>
                                         <p class="text-[11px] text-gray-500">
                                             <strong class="text-gray-900">{{ money($rates['warehouse_delivery_fee'] ?? 20) }} {{ __('fijo por caja') }}</strong>
-                                            @if ($serviceType === 'online' || $serviceType === 'repack')
+                                            @if ($this->isServiceActive('online_shopping') || $this->isServiceActive('repack'))
                                                 <span class="text-xs font-semibold text-blue-600 ms-1">({{ __('Fijo automático $20') }})</span>
                                             @endif
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" wire:click="decrementQuestion('warehouse_delivery_count')"
-                                                class="h-6 w-6 rounded-md border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                                            <i class="fa-solid fa-minus text-[9px]"></i>
+                                                class="h-7 w-7 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-100">
+                                            <i class="fa-solid fa-minus text-[10px]"></i>
                                         </button>
-                                        <span class="w-6 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['warehouse_delivery_count'] }}</span>
+                                        <span class="w-8 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['warehouse_delivery_count'] }}</span>
                                         <button type="button" wire:click="incrementQuestion('warehouse_delivery_count')"
-                                                class="h-6 w-6 rounded-md border border-blue-300 bg-blue-50 flex items-center justify-center text-blue-700 hover:bg-blue-100">
-                                            <i class="fa-solid fa-plus text-[9px]"></i>
+                                                class="h-7 w-7 rounded-lg border border-blue-300 bg-blue-50 flex items-center justify-center text-blue-700 hover:bg-blue-100">
+                                            <i class="fa-solid fa-plus text-[10px]"></i>
                                         </button>
                                         <span class="text-xs font-bold text-blue-700 min-w-[70px] text-end">
                                             {{ money($guidedQuestions['warehouse_delivery_count'] * ($rates['warehouse_delivery_fee'] ?? 20)) }}
@@ -532,21 +530,21 @@
                                     </div>
                                 </div>
 
-                                {{-- Almacenaje por más de 30 días --}}
+                                {{-- Almacenaje mensual tras 30 días --}}
                                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
                                     <div>
-                                        <p class="text-xs font-bold text-gray-800">{{ __('¿Almacenaje por un mes o más (tras 30 días)?') }}</p>
-                                        <p class="text-[11px] text-gray-500">{{ money($rates['monthly_storage_fee'] ?? 15) }}/mes por cada mes adicional</p>
+                                        <p class="text-xs font-bold text-gray-800">{{ __('Almacenaje (tras 30 días)') }}</p>
+                                        <p class="text-[11px] text-gray-500">{{ money($rates['monthly_storage_fee'] ?? 15) }} por mes adicional en almacén</p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" wire:click="decrementQuestion('storage_months_count')"
-                                                class="h-6 w-6 rounded-md border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                                            <i class="fa-solid fa-minus text-[9px]"></i>
+                                                class="h-7 w-7 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-100">
+                                            <i class="fa-solid fa-minus text-[10px]"></i>
                                         </button>
-                                        <span class="w-8 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['storage_months_count'] }} m</span>
+                                        <span class="w-8 text-center text-xs font-bold text-gray-900">{{ $guidedQuestions['storage_months_count'] }}</span>
                                         <button type="button" wire:click="incrementQuestion('storage_months_count')"
-                                                class="h-6 w-6 rounded-md border border-blue-300 bg-blue-50 flex items-center justify-center text-blue-700 hover:bg-blue-100">
-                                            <i class="fa-solid fa-plus text-[9px]"></i>
+                                                class="h-7 w-7 rounded-lg border border-blue-300 bg-blue-50 flex items-center justify-center text-blue-700 hover:bg-blue-100">
+                                            <i class="fa-solid fa-plus text-[10px]"></i>
                                         </button>
                                         <span class="text-xs font-bold text-blue-700 min-w-[70px] text-end">
                                             {{ money($guidedQuestions['storage_months_count'] * ($rates['monthly_storage_fee'] ?? 15)) }}
@@ -556,47 +554,62 @@
                             </div>
                         </div>
 
-                        {{-- Pregunta 4: Otros Cargos o Envío Libre --}}
-                        <div class="flex items-center justify-between pt-1">
-                            <span class="text-xs font-semibold text-gray-700">{{ __('¿Deseas agregar otro cargo manual o envío internacional?') }}</span>
-                            <button type="button" wire:click="addCustomCost"
-                                    class="inline-flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">
-                                <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Cargo Manual') }}
-                            </button>
+                        {{-- Cargos Personalizados Libres --}}
+                        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-2xs">
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <h4 class="text-xs font-bold text-gray-900">{{ __('Cargos Adicionales Personalizados') }}</h4>
+                                    <p class="text-[11px] text-gray-500">{{ __('Agrega cualquier otro cobro o ajuste específico') }}</p>
+                                </div>
+                                <button type="button" wire:click="addCustomCost"
+                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-2xs">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> {{ __('Agregar Cargo') }}
+                                </button>
+                            </div>
+
+                            @if (! empty($customCosts))
+                                <div class="space-y-2">
+                                    @foreach ($customCosts as $index => $custom)
+                                        <div class="grid gap-2 rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 sm:grid-cols-12 items-center">
+                                            <div class="sm:col-span-3">
+                                                <select wire:model.live="customCosts.{{ $index }}.type" class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs">
+                                                    <option value="shopper_fee">{{ __('Personal Shopper') }}</option>
+                                                    <option value="packing_fee">{{ __('Empaque / Cajas') }}</option>
+                                                    <option value="receiving_fee">{{ __('Almacén / Traslado') }}</option>
+                                                    <option value="other">{{ __('Otro / General') }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="sm:col-span-6">
+                                                <input type="text" wire:model.live.debounce.300ms="customCosts.{{ $index }}.description" placeholder="{{ __('Descripción del cobro') }}"
+                                                       class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs">
+                                            </div>
+                                            <div class="sm:col-span-2">
+                                                <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="customCosts.{{ $index }}.amount" placeholder="0.00"
+                                                       class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-xs font-semibold">
+                                            </div>
+                                            <div class="sm:col-span-1 text-center">
+                                                <button type="button" wire:click="removeCustomCost({{ $index }})" class="text-red-400 hover:text-red-600 p-1">
+                                                    <i class="fa-solid fa-trash text-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
 
-                        @if (count($customCosts) > 0)
-                            <div class="space-y-2">
-                                @foreach ($customCosts as $cIdx => $custom)
-                                    <div class="grid gap-2 grid-cols-12 items-center bg-white p-2.5 rounded-xl border border-gray-200">
-                                        <div class="col-span-7">
-                                            <input type="text" wire:model.live.debounce.300ms="customCosts.{{ $cIdx }}.description"
-                                                   placeholder="{{ __('Descripción del cargo adicional') }}"
-                                                   class="w-full rounded-lg border border-gray-300 p-1.5 text-xs">
-                                        </div>
-                                        <div class="col-span-5 flex items-center gap-1">
-                                            <input type="number" step="0.01" min="0" wire:model.live.debounce.300ms="customCosts.{{ $cIdx }}.amount"
-                                                   placeholder="$ 0.00"
-                                                   class="w-full rounded-lg border border-gray-300 p-1.5 text-xs text-end font-bold">
-                                            <button type="button" wire:click="removeCustomCost({{ $cIdx }})" class="text-red-400 hover:text-red-600 p-1">
-                                                <i class="fa-solid fa-trash text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                @endforeach
+                        {{-- Resumen en vivo de cargos generados --}}
+                        <div class="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-3.5 shadow-2xs">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-emerald-900 uppercase tracking-wider">{{ __('Desglose de Cargos Calculados') }}</span>
+                                <span class="text-xs font-bold text-emerald-800">
+                                    {{ count($invoiceForm['costs']) }} {{ count($invoiceForm['costs']) === 1 ? __('cargo') : __('cargos') }}
+                                </span>
                             </div>
-                        @endif
-
-                        {{-- Resumen de Desglose de Cargos Calculados --}}
-                        <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3.5">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-900 mb-2">
-                                <i class="fa-solid fa-receipt text-emerald-700 mr-1"></i>
-                                {{ __('Desglose de Cargos Aplicados a la Factura:') }}
-                            </p>
-                            <div class="space-y-1.5">
+                            <div class="space-y-1">
                                 @forelse ($invoiceForm['costs'] as $cost)
-                                    <div class="flex items-center justify-between text-xs text-emerald-950 font-medium">
-                                        <span>• {{ $cost['description'] }}</span>
+                                    <div class="flex items-center justify-between text-xs text-emerald-950 py-0.5 border-b border-emerald-100 last:border-0">
+                                        <span class="text-emerald-800">{{ $cost['description'] ?? 'Cargo' }}</span>
                                         <span class="font-bold">{{ money($cost['amount']) }}</span>
                                     </div>
                                 @empty
@@ -614,10 +627,10 @@
                         {{ __('Datos de Cobro y Pago (Lo que paga el cliente)') }}
                     </h3>
 
-                    @if ($serviceType === 'online' || $serviceType === 'repack')
-                        <div class="mb-4 rounded-xl border {{ $serviceType === 'repack' ? 'border-teal-200 text-teal-900' : 'border-blue-200 text-blue-900' }} bg-white p-3 text-xs flex items-center justify-between shadow-2xs">
+                    @if (! $this->isServiceActive('personal_shopper'))
+                        <div class="mb-4 rounded-xl border border-blue-200 text-blue-900 bg-white p-3 text-xs flex items-center justify-between shadow-2xs">
                             <div class="flex items-center gap-2">
-                                <i class="fa-solid {{ $serviceType === 'repack' ? 'fa-boxes-packing text-teal-600' : 'fa-globe text-blue-600' }}"></i>
+                                <i class="fa-solid fa-globe text-blue-600"></i>
                                 <span>{{ __('Valor Pagado por el Cliente en Internet (No se cobra en esta factura):') }}</span>
                             </div>
                             <span class="font-bold text-gray-500 line-through">{{ money($this->productsSubtotal) }}</span>

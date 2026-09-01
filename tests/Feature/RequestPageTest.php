@@ -332,9 +332,9 @@ it('calculates packaging sum and creates cost items in PublicRequestForm', funct
     $request = PurchaseRequest::where('customer_id', $customer->id)->first();
 
     expect($request)->not->toBeNull()
-        ->and($request->services)->toContain('packing')
-        ->and((float) $request->total_cost)->toBe(40.0)
-        ->and($request->costItems)->toHaveCount(2);
+        ->and($request->services)->toContain('repack')
+        ->and((float) $request->total_cost)->toBe(60.0)
+        ->and($request->costItems)->toHaveCount(3);
 });
 
 it('allows customer to create a user account during ClientRegistrationForm submission', function () {
@@ -428,4 +428,35 @@ it('accepts 4 character minimum password in registration form and rejects less t
         ->set('form.password_confirmation', '1234')
         ->call('next')
         ->assertHasNoErrors(['form.password', 'form.password_confirmation']);
+});
+
+it('allows multi-service selection in PublicRequestForm and creates all corresponding cost items', function () {
+    Livewire::test(PublicRequestForm::class)
+        ->set('form.name', 'Sofia Multi')
+        ->set('form.email', 'sofia.multi@example.com')
+        ->set('form.whatsapp', '+50255557777')
+        ->set('form.services', ['personal_shopper', 'online_shopping', 'repack'])
+        ->set('items.0.product_name', 'Vestido y Accesorios')
+        ->call('incrementBox', 'medium') // $20
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('sent', true);
+
+    $customer = Customer::where('email', 'sofia.multi@example.com')->first();
+    expect($customer)->not->toBeNull();
+
+    $request = PurchaseRequest::where('customer_id', $customer->id)->first();
+    expect($request)->not->toBeNull()
+        ->and($request->services)->toBe(['personal_shopper', 'online_shopping', 'repack'])
+        ->and($request->costItems->count())->toBeGreaterThan(0);
+});
+
+it('requires at least one service selected in PublicRequestForm', function () {
+    Livewire::test(PublicRequestForm::class)
+        ->set('form.name', 'Test User')
+        ->set('form.email', 'test@example.com')
+        ->set('form.services', [])
+        ->set('items.0.product_name', 'Producto Test')
+        ->call('submit')
+        ->assertHasErrors(['form.services']);
 });

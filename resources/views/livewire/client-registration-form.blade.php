@@ -279,6 +279,21 @@
                             </div>
                         </div>
 
+                        {{-- Sección Informativa Compras Online --}}
+                        @if (in_array('online_shopping', $form['services'], true))
+                            <div class="rounded-2xl border border-blue-200 bg-blue-50/80 p-3.5 text-xs text-blue-900 shadow-2xs">
+                                <div class="flex items-start gap-2.5">
+                                    <i class="fa-solid fa-circle-info text-blue-600 mt-0.5 text-sm shrink-0"></i>
+                                    <div>
+                                        <p class="font-bold text-blue-950">{{ __('Comprar Online (Comisión 15% + traslado fijo $20)') }}</p>
+                                        <p class="mt-0.5 text-blue-800 text-[11px] leading-relaxed">
+                                            {{ __('Si realizas la compra tú mismo en tiendas online, el costo del producto no se factura aquí. Cobramos 15% de comisión por recepción/inspección y $20 por el traslado de la caja al almacén.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Sección de Embalaje y Cajas Heavy Duty --}}
                         <div class="rounded-2xl border-2 border-teal-200 bg-gradient-to-br from-teal-50/90 via-emerald-50/50 to-white p-4 shadow-sm">
                             <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
