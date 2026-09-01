@@ -1,21 +1,19 @@
 <div x-data="{
-    open: @entangle('isOpen'),
-    init() {
-        window.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                this.open = true;
-                $nextTick(() => this.$refs.modalSearchInput?.focus());
-            }
-            if (e.key === 'Escape' && this.open) {
-                this.open = false;
-            }
+    open: false,
+    openModal() {
+        this.open = true;
+        this.$nextTick(() => {
+            document.getElementById('globalSearchModalInput')?.focus();
         });
     }
-}" class="relative flex items-center">
+}"
+@keydown.window.cmd.k.prevent="openModal()"
+@keydown.window.ctrl.k.prevent="openModal()"
+@keydown.window.escape="open = false"
+class="relative flex items-center">
     {{-- Mobile Search Icon Button (< md) --}}
     <button type="button"
-            @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
+            @click="openModal()"
             class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50/80 text-gray-500 transition-all hover:border-emerald-300 hover:bg-white hover:text-emerald-700 shadow-xs md:hidden"
             aria-label="{{ __('Search') }}"
             title="{{ __('Search') }} (⌘K)">
@@ -25,7 +23,7 @@
     {{-- Desktop Search Trigger (>= md) --}}
     <div class="hidden md:flex items-center gap-1.5 w-60 lg:w-72 xl:w-80">
         <button type="button"
-                @click="open = true; $nextTick(() => $refs.modalSearchInput?.focus())"
+                @click="openModal()"
                 class="group flex flex-1 items-center justify-between gap-2 rounded-xl border border-gray-200/90 bg-gray-50/80 px-3.5 py-1.5 text-xs text-gray-400 transition-all duration-200 hover:border-emerald-300 hover:bg-white hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-xs">
             <span class="flex items-center gap-2 truncate">
                 <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs group-hover:text-emerald-600 transition-colors"></i>
@@ -65,7 +63,7 @@
                         <i class="fa-solid fa-magnifying-glass text-sm"></i>
                     </span>
 
-                    <input x-ref="modalSearchInput"
+                    <input id="globalSearchModalInput"
                            type="text"
                            wire:model.live.debounce.250ms="query"
                            placeholder="{{ __('Search people, customers, orders, packages, shipments, payments...') }}"
