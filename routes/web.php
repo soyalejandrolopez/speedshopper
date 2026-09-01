@@ -23,6 +23,7 @@ use App\Livewire\Portal\Billing\PortalBillingIndex;
 use App\Livewire\Portal\Packages\MyPackages;
 use App\Livewire\Portal\Payments\MyPayments;
 use App\Livewire\Portal\PortalDashboard;
+use App\Livewire\Portal\Requests\CreateRequest;
 use App\Livewire\Portal\Requests\MyRequests;
 use App\Livewire\Portal\Requests\MyRequestShow;
 use App\Livewire\Portal\Shipments\MyShipments;
@@ -91,7 +92,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', PortalDashboard::class)->name('dashboard');
 
         Route::get('/requests', MyRequests::class)->name('requests.index');
-        Route::get('/requests/create', \App\Livewire\Portal\Requests\CreateRequest::class)->name('requests.create');
+        Route::get('/requests/create', CreateRequest::class)->name('requests.create');
         Route::get('/requests/{purchaseRequest}', MyRequestShow::class)->name('requests.show');
         Route::get('/requests/{purchaseRequest}/print', [PrintController::class, 'requestQuote'])->name('requests.print');
 

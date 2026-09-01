@@ -20,6 +20,7 @@ it('renders the contact page with header, footer and the contact form', function
 });
 
 it('lists the 11 required destination countries in ClientRegistrationForm', function () {
+    app()->setLocale('es');
     $component = Livewire::test(ClientRegistrationForm::class);
     $countries = $component->instance()->countries();
 
@@ -50,6 +51,8 @@ it('lists the 11 destination countries in ContactForm', function () {
 });
 
 it('displays the fee tiers in the client registration form', function () {
+    app()->setLocale('es');
+
     Livewire::test(ClientRegistrationForm::class)
         ->set('step', 2)
         ->assertSee('Compras de $100 a $699')
@@ -107,7 +110,7 @@ it('shows contact inquiries in the admin dashboard', function () {
         ->assertOk()
         ->assertSee('Ana Morales')
         ->assertSee('ana@example.com')
-        ->assertSee('Mensajes de Contacto');
+        ->assertSee(__('Mensajes de Contacto'));
 });
 
 it('allows admin to manage inquiries in the admin inquiries page', function () {

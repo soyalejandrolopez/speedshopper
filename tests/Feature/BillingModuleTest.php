@@ -26,6 +26,7 @@ test('admin can view dedicated rate sheet configuration page', function () {
 });
 
 test('admin can view billing invoice management page', function () {
+    app()->setLocale('es');
     $admin = createAdmin();
 
     $this->actingAs($admin)
@@ -38,6 +39,7 @@ test('admin can view billing invoice management page', function () {
 test('admin can create a full invoice with customer, products, and initial payment and sends email in active locale', function () {
     Mail::fake();
     Setting::set('admin_notification_email', 'admin@speedingshopper.com');
+    app()->setLocale('es');
 
     $admin = createAdmin();
     $customer = Customer::factory()->create(['email' => 'customer@example.com']);
@@ -561,6 +563,7 @@ test('invoice pdf renders payment methods and instructions for pending and quote
 test('updating an invoice automatically sends updated email to customer and admin', function () {
     Mail::fake();
     Setting::set('admin_notification_email', 'admin@speedingshopper.com');
+    app()->setLocale('es');
 
     $admin = createAdmin();
     $customer = Customer::factory()->create(['email' => 'client.update@example.com']);
@@ -619,6 +622,8 @@ test('billing automatically links budget value to unit price and calculates earn
         'amount' => 50.0,
     ]);
 
+    app()->setLocale('es');
+
     Livewire::actingAs($admin)
         ->test(BillingIndex::class)
         ->call('editInvoice', $request->id)
@@ -636,6 +641,7 @@ test('unauthenticated users are redirected from billing and rates routes', funct
 });
 
 test('service_definitions returns the 3 main services: Personal Shopper, Comprar Online, and Reempaque', function () {
+    app()->setLocale('es');
     $services = service_definitions();
 
     expect($services)->toHaveKeys(['personal_shopper', 'online_shopping', 'repack'])

@@ -15,10 +15,15 @@ test('money handles string and integer inputs', function () {
 });
 
 test('country_name returns the country name for known codes', function () {
+    app()->setLocale('es');
     expect(country_name('MX'))->toBe('México')
         ->and(country_name('GT'))->toBe('Guatemala')
         ->and(country_name('US'))->toBe('Estados Unidos')
         ->and(country_name('CO'))->toBe('Colombia');
+
+    app()->setLocale('en');
+    expect(country_name('MX'))->toBe('Mexico')
+        ->and(country_name('US'))->toBe('United States');
 });
 
 test('country_name returns dash for null input', function () {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\GeneratesNumbers;
+use App\Enums\RequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,12 +72,12 @@ class Customer extends Model
     public function getBalanceDueAttribute(): float
     {
         $hasActiveRequests = $this->purchaseRequests()
-            ->where('status', '!=', \App\Enums\RequestStatus::Cancelled->value)
+            ->where('status', '!=', RequestStatus::Cancelled->value)
             ->exists();
 
         if ($hasActiveRequests || $this->shipments()->where('status', '!=', 'cancelled')->exists()) {
             $requestsInvoiced = (float) $this->purchaseRequests()
-                ->where('status', '!=', \App\Enums\RequestStatus::Cancelled->value)
+                ->where('status', '!=', RequestStatus::Cancelled->value)
                 ->with('costItems')
                 ->get()
                 ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\GeneratesNumbers;
+use App\Enums\CostType;
 use App\Enums\PaymentMethod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -121,7 +122,7 @@ class Payment extends Model
                 $billable->loadMissing('costItems');
                 $costItems = $billable->costItems;
                 if ($costItems->isNotEmpty()) {
-                    return (float) $costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                    return (float) $costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
                 }
 
                 $productCost = (float) ($billable->unit_price * max(1, $billable->quantity));
@@ -138,7 +139,7 @@ class Payment extends Model
                 $billable->loadMissing('costItems');
                 $costItems = $billable->costItems;
                 if ($costItems->isNotEmpty()) {
-                    return (float) $costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                    return (float) $costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
                 }
                 $totalCost = (float) $billable->total_cost;
                 $shippingCost = (float) $billable->shipping_cost;
@@ -156,7 +157,7 @@ class Payment extends Model
             if ($matchedReq) {
                 $costItems = $matchedReq->costItems;
                 if ($costItems->isNotEmpty()) {
-                    return (float) $costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                    return (float) $costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
                 }
             }
         }

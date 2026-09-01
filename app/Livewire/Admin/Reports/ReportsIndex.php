@@ -13,7 +13,6 @@ use App\Models\Shipment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -62,7 +61,7 @@ class ReportsIndex extends Component
             ->with(['customer', 'billable.costItems'])
             ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('created_at', [$start, $end])
-                  ->orWhereBetween('paid_at', [$start, $end]);
+                    ->orWhereBetween('paid_at', [$start, $end]);
             })
             ->get();
 
@@ -91,9 +90,9 @@ class ReportsIndex extends Component
         $thisMonthCollected = (float) Payment::query()
             ->where(function ($q) {
                 $q->whereBetween('paid_at', [now()->startOfMonth(), now()->endOfMonth()])
-                  ->orWhere(function ($q2) {
-                      $q2->whereNull('paid_at')->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()]);
-                  });
+                    ->orWhere(function ($q2) {
+                        $q2->whereNull('paid_at')->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()]);
+                    });
             })
             ->sum('amount_paid');
 
@@ -376,15 +375,20 @@ class ReportsIndex extends Component
             ->with(['customer', 'billable.costItems'])
             ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('created_at', [$start, $end])
-                  ->orWhereBetween('paid_at', [$start, $end]);
+                    ->orWhereBetween('paid_at', [$start, $end]);
             })
             ->orderBy('created_at')
             ->get();
 
         $invoiced = (float) $requests->sum(function (PurchaseRequest $r) {
             $costs = (float) $r->costItems->sum('amount');
-            if ($costs > 0) return $costs;
-            if ($r->unit_price) return (float) ($r->unit_price * max(1, $r->quantity));
+            if ($costs > 0) {
+                return $costs;
+            }
+            if ($r->unit_price) {
+                return (float) ($r->unit_price * max(1, $r->quantity));
+            }
+
             return 0.0;
         });
 
@@ -451,8 +455,13 @@ class ReportsIndex extends Component
             ->map(function (Customer $customer) {
                 $invoiced = (float) $customer->purchaseRequests->sum(function ($r) {
                     $costs = (float) $r->costItems->sum('amount');
-                    if ($costs > 0) return $costs;
-                    if ($r->unit_price) return (float) ($r->unit_price * max(1, $r->quantity));
+                    if ($costs > 0) {
+                        return $costs;
+                    }
+                    if ($r->unit_price) {
+                        return (float) ($r->unit_price * max(1, $r->quantity));
+                    }
+
                     return 0.0;
                 });
                 $paid = (float) $customer->payments->sum('amount_paid');

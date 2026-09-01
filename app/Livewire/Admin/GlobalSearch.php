@@ -12,6 +12,7 @@ use Livewire\Component;
 class GlobalSearch extends Component
 {
     public string $query = '';
+
     public bool $isOpen = false;
 
     public function open(): void
@@ -41,10 +42,10 @@ class GlobalSearch extends Component
             $results['customers'] = Customer::query()
                 ->where(function ($query) use ($q) {
                     $query->where('name', 'like', "%{$q}%")
-                          ->orWhere('number', 'like', "%{$q}%")
-                          ->orWhere('email', 'like', "%{$q}%")
-                          ->orWhere('phone', 'like', "%{$q}%")
-                          ->orWhere('whatsapp', 'like', "%{$q}%");
+                        ->orWhere('number', 'like', "%{$q}%")
+                        ->orWhere('email', 'like', "%{$q}%")
+                        ->orWhere('phone', 'like', "%{$q}%")
+                        ->orWhere('whatsapp', 'like', "%{$q}%");
                 })
                 ->limit(4)
                 ->get();
@@ -53,8 +54,8 @@ class GlobalSearch extends Component
                 ->with('customer')
                 ->where(function ($query) use ($q) {
                     $query->where('number', 'like', "%{$q}%")
-                          ->orWhere('product_name', 'like', "%{$q}%")
-                          ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
+                        ->orWhere('product_name', 'like', "%{$q}%")
+                        ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
                 })
                 ->limit(4)
                 ->get();
@@ -63,9 +64,9 @@ class GlobalSearch extends Component
                 ->with('customer')
                 ->where(function ($query) use ($q) {
                     $query->where('number', 'like', "%{$q}%")
-                          ->orWhere('tracking_number', 'like', "%{$q}%")
-                          ->orWhere('description', 'like', "%{$q}%")
-                          ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
+                        ->orWhere('tracking_number', 'like', "%{$q}%")
+                        ->orWhere('description', 'like', "%{$q}%")
+                        ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
                 })
                 ->limit(4)
                 ->get();
@@ -74,9 +75,9 @@ class GlobalSearch extends Component
                 ->with('customer')
                 ->where(function ($query) use ($q) {
                     $query->where('number', 'like', "%{$q}%")
-                          ->orWhere('tracking_number', 'like', "%{$q}%")
-                          ->orWhere('carrier', 'like', "%{$q}%")
-                          ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
+                        ->orWhere('tracking_number', 'like', "%{$q}%")
+                        ->orWhere('carrier', 'like', "%{$q}%")
+                        ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
                 })
                 ->limit(4)
                 ->get();
@@ -85,8 +86,8 @@ class GlobalSearch extends Component
                 ->with('customer')
                 ->where(function ($query) use ($q) {
                     $query->where('number', 'like', "%{$q}%")
-                          ->orWhere('reference', 'like', "%{$q}%")
-                          ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
+                        ->orWhere('reference', 'like', "%{$q}%")
+                        ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$q}%"));
                 })
                 ->limit(4)
                 ->get();

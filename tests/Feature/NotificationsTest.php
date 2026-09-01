@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
 use App\Models\User;
+use App\Notifications\ClientPurchaseRequestConfirmationNotification;
 use App\Notifications\NewContactInquiryNotification;
 use App\Notifications\NewPurchaseRequestNotification;
 use App\Notifications\StatusChangedNotification;
@@ -152,5 +153,5 @@ it('sends email notifications with pdf attached to both customer and admin when 
         ->assertHasNoErrors();
 
     Notification::assertSentOnDemand(NewPurchaseRequestNotification::class);
-    Notification::assertSentOnDemand(\App\Notifications\ClientPurchaseRequestConfirmationNotification::class);
+    Notification::assertSentOnDemand(ClientPurchaseRequestConfirmationNotification::class);
 });

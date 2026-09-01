@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ClientRegistrationForm;
 use App\Livewire\Portal\Packages\MyPackages;
 use App\Livewire\Portal\Payments\MyPayments;
 use App\Livewire\Portal\PortalDashboard;
@@ -65,9 +66,9 @@ test('client can create a purchase request via dedicated create form', function 
     $this->actingAs($client)
         ->get(route('portal.requests.create'))
         ->assertOk()
-        ->assertSeeLivewire(\App\Livewire\ClientRegistrationForm::class);
+        ->assertSeeLivewire(ClientRegistrationForm::class);
 
-    Livewire::actingAs($client)->test(\App\Livewire\ClientRegistrationForm::class)
+    Livewire::actingAs($client)->test(ClientRegistrationForm::class)
         ->assertOk()
         ->set('form.whatsapp', '+584121234567')
         ->set('form.products', 'Nike Air Max 90')

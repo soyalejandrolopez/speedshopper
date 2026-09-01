@@ -19,6 +19,8 @@ it('renders the request page with header, footer and the registration form', fun
 });
 
 it('registers a client and creates a request through the 3-step form', function () {
+    app()->setLocale('es');
+
     $component = Livewire::test(ClientRegistrationForm::class)
         ->assertSet('step', 1)
         ->set('form.name', 'María González')
