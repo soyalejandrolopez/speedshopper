@@ -6,12 +6,12 @@ use App\Enums\PackageStatus;
 use App\Enums\RequestStatus;
 use App\Enums\ShipmentStatus;
 use App\Models\ContactInquiry;
-use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Shipment;
+use App\Services\FinanceService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -54,20 +54,10 @@ class Dashboard extends Component
             ->limit(5)
             ->pluck('total', 'carrier');
 
-        $costItemsTotal = (float) CostItem::where(function ($q) {
-            $q->where('costable_type', PurchaseRequest::class)
-                ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
-        })->orWhere(function ($q) {
-            $q->where('costable_type', Shipment::class)
-                ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
-        })->sum('amount');
-
-        $paymentsInvoiced = (float) Payment::sum('invoice_total');
-        $totalInvoiced = max($costItemsTotal, $paymentsInvoiced);
-        $totalPaid = (float) Payment::sum('amount_paid');
-
-        $customerBalanceSum = (float) Customer::all()->sum('balance_due');
-        $totalBalanceDue = $customerBalanceSum > 0 ? $customerBalanceSum : max(0.0, $totalInvoiced - $totalPaid);
+        $financeMetrics = app(FinanceService::class)->getMetrics();
+        $totalInvoiced = $financeMetrics['total_invoiced'];
+        $totalPaid = $financeMetrics['total_collected'];
+        $totalBalanceDue = $financeMetrics['total_balance_due'];
 
         return view('livewire.admin.dashboard', [
             'totalCustomers' => Customer::count(),

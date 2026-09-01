@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
+use App\Services\FinanceService;
 use App\Services\InvoicePdfService;
 use App\Services\PricingRateService;
 use Illuminate\Support\Facades\Log;
@@ -1157,11 +1158,11 @@ class BillingIndex extends Component
             ->get()
             ->groupBy('billable_id');
 
-        $billedRequestIds = PurchaseRequest::billed()->pluck('id');
-        $totalInvoiced = CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', $billedRequestIds)->sum('amount');
-        $totalEarnings = CostItem::where('costable_type', PurchaseRequest::class)->whereIn('costable_id', $billedRequestIds)->where('type', '!=', CostType::ProductCost)->sum('amount');
-        $totalCollected = Payment::sum('amount_paid');
-        $totalPending = max(0.0, $totalInvoiced - $totalCollected);
+        $financeMetrics = app(FinanceService::class)->getMetrics();
+        $totalInvoiced = $financeMetrics['total_invoiced'];
+        $totalEarnings = $financeMetrics['total_earnings'];
+        $totalCollected = $financeMetrics['total_collected'];
+        $totalPending = $financeMetrics['total_balance_due'];
 
         return view('livewire.admin.billing.billing-index', [
             'requests' => $requests,

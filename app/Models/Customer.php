@@ -71,30 +71,27 @@ class Customer extends Model
 
     public function getBalanceDueAttribute(): float
     {
-        $hasActiveRequests = $this->purchaseRequests()
+        $requestsInvoiced = (float) $this->purchaseRequests()
             ->where('status', '!=', RequestStatus::Cancelled->value)
-            ->exists();
+            ->with('costItems')
+            ->get()
+            ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);
 
-        if ($hasActiveRequests || $this->shipments()->where('status', '!=', 'cancelled')->exists()) {
-            $requestsInvoiced = (float) $this->purchaseRequests()
-                ->where('status', '!=', RequestStatus::Cancelled->value)
-                ->with('costItems')
-                ->get()
-                ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);
+        $shipmentsInvoiced = (float) $this->shipments()
+            ->where('status', '!=', 'cancelled')
+            ->with('costItems')
+            ->get()
+            ->sum(fn (Shipment $s) => (float) $s->total_cost);
 
-            $shipmentsInvoiced = (float) $this->shipments()
-                ->where('status', '!=', 'cancelled')
-                ->with('costItems')
-                ->get()
-                ->sum(fn (Shipment $s) => (float) $s->total_cost);
+        $unlinkedPaymentsInvoiced = (float) $this->payments()
+            ->where(function ($q) {
+                $q->whereNull('billable_type')->orWhere('billable_type', '');
+            })
+            ->sum('invoice_total');
 
-            $paid = (float) $this->payments()->sum('amount_paid');
+        $totalInvoiced = $requestsInvoiced + $shipmentsInvoiced + $unlinkedPaymentsInvoiced;
+        $totalPaid = (float) $this->payments()->sum('amount_paid');
 
-            return max(0.0, ($requestsInvoiced + $shipmentsInvoiced) - $paid);
-        }
-
-        return (float) $this->payments()
-            ->selectRaw('COALESCE(SUM(invoice_total - amount_paid), 0) as balance')
-            ->value('balance');
+        return max(0.0, $totalInvoiced - $totalPaid);
     }
 }

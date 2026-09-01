@@ -3,13 +3,13 @@
 namespace App\Livewire\Admin\Reports;
 
 use App\Enums\CostType;
-use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Package;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
 use App\Models\Shipment;
+use App\Services\FinanceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -67,25 +67,11 @@ class ReportsIndex extends Component
 
         $allRequests = PurchaseRequest::billed()->with(['customer', 'costItems'])->get();
 
-        $totalInvoiced = (float) $allRequests->sum(function (PurchaseRequest $r) {
-            $costs = (float) $r->costItems->sum('amount');
-            if ($costs > 0) {
-                return $costs;
-            }
-            if ($r->unit_price) {
-                return (float) ($r->unit_price * max(1, $r->quantity));
-            }
-
-            return 0.0;
-        });
-
-        $totalEarnings = (float) CostItem::where('costable_type', PurchaseRequest::class)
-            ->whereIn('costable_id', $allRequests->pluck('id'))
-            ->where('type', '!=', CostType::ProductCost)
-            ->sum('amount');
-
-        $totalCollected = (float) Payment::sum('amount_paid');
-        $totalBalanceDue = max(0.0, $totalInvoiced - $totalCollected);
+        $financeMetrics = app(FinanceService::class)->getMetrics();
+        $totalInvoiced = $financeMetrics['total_invoiced'];
+        $totalEarnings = $financeMetrics['total_earnings'];
+        $totalCollected = $financeMetrics['total_collected'];
+        $totalBalanceDue = $financeMetrics['total_balance_due'];
 
         $thisMonthCollected = (float) Payment::query()
             ->where(function ($q) {

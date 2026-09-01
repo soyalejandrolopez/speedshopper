@@ -5,13 +5,12 @@ namespace App\Livewire\Admin\Payments;
 use App\Concerns\SwalNotifies;
 use App\Concerns\ValidatesWithFormRequest;
 use App\Enums\PaymentMethod;
-use App\Enums\RequestStatus;
 use App\Http\Requests\StorePaymentRequest;
-use App\Models\CostItem;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Shipment;
+use App\Services\FinanceService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -174,20 +173,10 @@ class PaymentsIndex extends Component
             ->latest()
             ->paginate(10);
 
-        $costItemsTotal = (float) CostItem::where(function ($q) {
-            $q->where('costable_type', PurchaseRequest::class)
-                ->whereIn('costable_id', PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)->pluck('id'));
-        })->orWhere(function ($q) {
-            $q->where('costable_type', Shipment::class)
-                ->whereIn('costable_id', Shipment::where('status', '!=', 'cancelled')->pluck('id'));
-        })->sum('amount');
-
-        $paymentsInvoiced = (float) Payment::sum('invoice_total');
-        $totalInvoiced = max($costItemsTotal, $paymentsInvoiced);
-        $totalCollected = (float) Payment::sum('amount_paid');
-
-        $customerBalanceSum = (float) Customer::all()->sum('balance_due');
-        $totalBalanceDue = $customerBalanceSum > 0 ? $customerBalanceSum : max(0.0, $totalInvoiced - $totalCollected);
+        $financeMetrics = app(FinanceService::class)->getMetrics();
+        $totalInvoiced = $financeMetrics['total_invoiced'];
+        $totalCollected = $financeMetrics['total_collected'];
+        $totalBalanceDue = $financeMetrics['total_balance_due'];
 
         return view('livewire.admin.payments.payments-index', [
             'payments' => $payments,
