@@ -384,9 +384,9 @@ class BillingIndex extends Component
             $desc = $cost->description ?? '';
             $amount = (float) $cost->amount;
 
-            if (stripos($desc, 'Personal Shopper') !== false || ($cost->type === CostType::ShopperFee && stripos($desc, 'Comisión') !== false)) {
+            if (stripos($desc, 'Personal Shopper') !== false || stripos($desc, 'Shopper') !== false || ($cost->type === CostType::ShopperFee && stripos($desc, 'Comisión') !== false)) {
                 $this->guidedQuestions['apply_shopper_commission'] = true;
-            } elseif (stripos($desc, 'Tienda Adicional') !== false || stripos($desc, 'Additional Store') !== false) {
+            } elseif (stripos($desc, 'Tienda Adicional') !== false || stripos($desc, 'Additional Store') !== false || stripos($desc, 'Extra Store') !== false) {
                 $unitFee = (float) ($this->rates['extra_store_fee'] ?? 20.0);
                 $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
                 $this->guidedQuestions['extra_stores_count'] += max(1, $qty);
@@ -402,9 +402,9 @@ class BillingIndex extends Component
                 $unitFee = (float) ($this->rates['box_large_heavy_duty'] ?? 25.0);
                 $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
                 $this->guidedQuestions['boxes_large_count'] += max(1, $qty);
-            } elseif (stripos($desc, 'Comisión Almacén') !== false || stripos($desc, 'Warehouse Commission') !== false) {
+            } elseif (stripos($desc, 'Comisión Almacén') !== false || stripos($desc, 'Warehouse Commission') !== false || stripos($desc, 'Warehouse / Online') !== false || stripos($desc, 'Online Shopping Commission') !== false) {
                 $this->guidedQuestions['apply_warehouse_commission'] = true;
-            } elseif (stripos($desc, 'Llevar') !== false || stripos($desc, 'Traslado') !== false || stripos($desc, 'Drop-off') !== false) {
+            } elseif (stripos($desc, 'Llevar') !== false || stripos($desc, 'Traslado') !== false || stripos($desc, 'Delivery') !== false || stripos($desc, 'Drop-off') !== false || stripos($desc, 'Transfer') !== false) {
                 $unitFee = (float) ($this->rates['warehouse_delivery_fee'] ?? 20.0);
                 $qty = $unitFee > 0 ? (int) round($amount / $unitFee) : 1;
                 $this->guidedQuestions['warehouse_delivery_count'] = max(1, $qty);
@@ -601,7 +601,11 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'shopper_commission',
                 'type' => 'shopper_fee',
-                'description' => "Comisión Personal Shopper ({$calc['percent']}% - {$calc['stores']} tiendas / {$calc['hours']} hrs)",
+                'description' => __('Comisión Personal Shopper (:percent% - :stores tiendas / :hours hrs)', [
+                    'percent' => $calc['percent'],
+                    'stores' => $calc['stores'],
+                    'hours' => $calc['hours'],
+                ]),
                 'amount' => $calc['amount'],
             ];
         }
@@ -613,7 +617,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'extra_store',
                 'type' => 'shopper_fee',
-                'description' => "Visita a Tienda Adicional ({$extraStores} x $".number_format($rate, 2).')',
+                'description' => __('Visita a Tienda Adicional (:count x $:rate)', [
+                    'count' => $extraStores,
+                    'rate' => number_format($rate, 2),
+                ]),
                 'amount' => round($extraStores * $rate, 2),
             ];
         }
@@ -625,7 +632,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'box_small',
                 'type' => 'packing_fee',
-                'description' => "1 Caja Small Heavy Duty ({$boxSmall} x $".number_format($rate, 2).')',
+                'description' => __('1 Caja Small Heavy Duty (:count x $:rate)', [
+                    'count' => $boxSmall,
+                    'rate' => number_format($rate, 2),
+                ]),
                 'amount' => round($boxSmall * $rate, 2),
             ];
         }
@@ -636,7 +646,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'box_medium',
                 'type' => 'packing_fee',
-                'description' => "1 Caja Mediana Heavy Duty ({$boxMed} x $".number_format($rate, 2).')',
+                'description' => __('1 Caja Mediana Heavy Duty (:count x $:rate)', [
+                    'count' => $boxMed,
+                    'rate' => number_format($rate, 2),
+                ]),
                 'amount' => round($boxMed * $rate, 2),
             ];
         }
@@ -647,7 +660,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'box_large',
                 'type' => 'packing_fee',
-                'description' => "1 Caja Larga Heavy Duty ({$boxLarge} x $".number_format($rate, 2).')',
+                'description' => __('1 Caja Larga Heavy Duty (:count x $:rate)', [
+                    'count' => $boxLarge,
+                    'rate' => number_format($rate, 2),
+                ]),
                 'amount' => round($boxLarge * $rate, 2),
             ];
         }
@@ -658,7 +674,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'warehouse_commission',
                 'type' => 'receiving_fee',
-                'description' => "Comisión Almacén / Compras Online ({$pct}% sobre $".number_format($subtotal, 2).')',
+                'description' => __('Comisión Almacén / Compras Online (:percent% sobre $:subtotal)', [
+                    'percent' => $pct,
+                    'subtotal' => number_format($subtotal, 2),
+                ]),
                 'amount' => round($subtotal * ($pct / 100), 2),
             ];
         }
@@ -675,7 +694,10 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'warehouse_delivery',
                 'type' => 'receiving_fee',
-                'description' => 'Servicio de Traslado de Caja al Almacén (Fijo $'.number_format($rate, 2).($delivery > 1 ? " x {$delivery}" : '').')',
+                'description' => __('Servicio de Traslado de Caja al Almacén (Fijo $:rate:multiplier)', [
+                    'rate' => number_format($rate, 2),
+                    'multiplier' => $delivery > 1 ? " x {$delivery}" : '',
+                ]),
                 'amount' => round($delivery * $rate, 2),
             ];
         }
@@ -687,7 +709,9 @@ class BillingIndex extends Component
             $costs[] = [
                 'preset' => 'monthly_storage',
                 'type' => 'other',
-                'description' => "Almacenaje en Almacén ({$storageMonths} mes(es) tras 30 días)",
+                'description' => __('Almacenaje en Almacén (:months mes(es) tras 30 días)', [
+                    'months' => $storageMonths,
+                ]),
                 'amount' => round($storageMonths * $rate, 2),
             ];
         }

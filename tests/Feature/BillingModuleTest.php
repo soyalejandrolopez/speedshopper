@@ -140,9 +140,9 @@ test('billing component automatically fetches charges and calculates commission 
     $costs = $component->get('invoiceForm.costs');
     expect($costs)->toHaveCount(3)
         ->and((float) $costs[1]['amount'])->toBe(20.0)
-        ->and($costs[1]['description'])->toContain('Visita a Tienda Adicional')
+        ->and($costs[1]['description'])->toMatch('/(Visita a Tienda Adicional|Additional Store Visit)/')
         ->and((float) $costs[2]['amount'])->toBe(15.0)
-        ->and($costs[2]['description'])->toContain('Caja Small Heavy Duty');
+        ->and($costs[2]['description'])->toMatch('/(Caja Small Heavy Duty|Small Heavy Duty Box)/');
 
     // Total invoiced should be 500 (products) + 100 (shopper) + 15 (box) + 20 (store) = 635.0
     expect((float) $component->get('invoicedTotal'))->toBe(635.0);

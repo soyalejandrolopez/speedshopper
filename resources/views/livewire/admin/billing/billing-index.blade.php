@@ -360,7 +360,7 @@
                                 <div class="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
                                         <p class="text-xs font-semibold text-gray-800">{{ __('¿Se visitaron tiendas adicionales?') }}</p>
-                                        <p class="text-[11px] text-gray-500">{{ money($rates['extra_store_fee'] ?? 20) }} por cada tienda adicional</p>
+                                        <p class="text-[11px] text-gray-500">{{ money($rates['extra_store_fee'] ?? 20) }} {{ __('por cada tienda adicional') }}</p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" wire:click="decrementQuestion('extra_stores_count')"
@@ -534,7 +534,7 @@
                                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl bg-gray-50/50 p-3">
                                     <div>
                                         <p class="text-xs font-bold text-gray-800">{{ __('Almacenaje (tras 30 días)') }}</p>
-                                        <p class="text-[11px] text-gray-500">{{ money($rates['monthly_storage_fee'] ?? 15) }} por mes adicional en almacén</p>
+                                        <p class="text-[11px] text-gray-500">{{ money($rates['monthly_storage_fee'] ?? 15) }} {{ __('por mes adicional en almacén') }}</p>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" wire:click="decrementQuestion('storage_months_count')"
