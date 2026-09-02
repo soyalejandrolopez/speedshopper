@@ -25,15 +25,17 @@
                 <source media="(max-width: 640px)" srcset="{{ asset('images/hero-bg-mobile.webp') }}" type="image/webp">
                 <source srcset="{{ asset('images/hero-bg.webp') }}" type="image/webp">
                 <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
-                     class="h-full w-full object-cover object-bottom" width="1920" height="1080" decoding="async" fetchpriority="high">
+                     class="h-full w-full object-cover hero-bg-cover" width="1920" height="1080" decoding="async" fetchpriority="high">
             </picture>
-            <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/15"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25"></div>
+            <!-- Top vignette for navbar visibility -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent via-20% to-transparent"></div>
+            <!-- Bottom gradient for high contrast behind text and buttons, keeping upper face area clear -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/75 via-45% to-transparent"></div>
         </div>
 
-        <div class="relative mx-auto flex min-h-[85vh] sm:min-h-screen max-w-4xl flex-col justify-center px-4 pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-44 lg:pb-24 text-center sm:px-6">
+        <div class="relative mx-auto flex min-h-[90vh] sm:min-h-screen max-w-4xl flex-col justify-end px-4 pt-32 pb-14 sm:pb-20 lg:pb-24 text-center sm:px-6">
             <div class="flex flex-col items-center">
-                <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur">
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
                     <span class="relative flex h-2 w-2">
                         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
@@ -41,24 +43,24 @@
                     {{ __('Personal Shopper in Baytown, TX') }}
                 </span>
 
-                <h1 class="mt-5 text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <h1 class="mt-3.5 sm:mt-5 text-xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight tracking-tight text-white drop-shadow-md max-w-lg sm:max-w-3xl">
                     {{ __('We buy, receive and ship') }}
                     <span class="text-white">{{ __('your products to Latin America') }}</span>
                 </h1>
 
-                <div class="mt-6 sm:mt-8 flex flex-wrap justify-center gap-3 w-full sm:w-auto">
-                    <a href="{{ route('request') }}" class="btn-primary w-full sm:w-auto px-6 py-3 text-base shadow-lg shadow-emerald-950/40">
+                <div class="mt-4 sm:mt-7 flex flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3.5">
+                    <a href="{{ route('request') }}" class="btn-primary inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3 text-sm sm:text-base shadow-lg shadow-emerald-950/40">
                         {{ __('New Order') }}
-                        <i class="fa-solid fa-arrow-right text-lg"></i>
+                        <i class="fa-solid fa-arrow-right text-base sm:text-lg"></i>
                     </a>
                     @guest
-                        <a href="{{ route('register') }}" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur transition-all duration-200 hover:bg-white/20">
+                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/15 px-5 py-2.5 sm:px-7 sm:py-3 text-sm sm:text-base font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/25 shadow-md">
                             {{ __('Create Account') }}
                         </a>
                     @endguest
                 </div>
 
-                <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-medium text-gray-200">
+                <div class="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-medium text-gray-200">
                     <span class="inline-flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
                         Zelle
@@ -430,32 +432,86 @@
                 <h2 class="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ __('Trusted by shoppers across Latin America') }}</h2>
             </div>
 
-            <div class="mt-12 grid gap-6 md:grid-cols-3">
-                @php $testimonials = [
-                    ['María G.', 'Guatemala', 'Compramos en Nike y Victoria\'s Secret. Todo llegó en una sola caja y en perfecto estado. El portal me muestra todo el proceso.'],
-                    ['Carlos P.', 'México', 'Encontraron un descuento que ni yo había visto. El tracking internacional funcionó perfecto hasta mi casa en CDMX.'],
-                    ['Sofía R.', 'El Salvador', 'El servicio por WhatsApp es rapidísimo. Me cotizaron todo antes de comprar y no hubo sorpresas con los precios.'],
-                ]; @endphp
+            <!-- Odometer Live Stats Bar -->
+            <div class="mt-10 mb-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" data-reveal>
+                <div class="stat-card text-center !p-5">
+                    <div class="text-3xl sm:text-4xl font-black text-emerald-600 tracking-tight flex items-center justify-center gap-0.5">
+                        <span class="odometer-counter" data-odometer-value="15420">0</span>
+                        <span>+</span>
+                    </div>
+                    <p class="mt-1.5 text-xs sm:text-sm font-semibold text-gray-600">{{ __('Paquetes entregados') }}</p>
+                </div>
+                <div class="stat-card text-center !p-5">
+                    <div class="text-3xl sm:text-4xl font-black text-emerald-600 tracking-tight flex items-center justify-center gap-0.5">
+                        <span class="odometer-counter" data-odometer-value="3850">0</span>
+                        <span>+</span>
+                    </div>
+                    <p class="mt-1.5 text-xs sm:text-sm font-semibold text-gray-600">{{ __('Clientes satisfechos') }}</p>
+                </div>
+                <div class="stat-card text-center !p-5">
+                    <div class="text-3xl sm:text-4xl font-black text-emerald-600 tracking-tight flex items-center justify-center gap-0.5">
+                        <span class="odometer-counter" data-odometer-value="12">0</span>
+                    </div>
+                    <p class="mt-1.5 text-xs sm:text-sm font-semibold text-gray-600">{{ __('Países con cobertura') }}</p>
+                </div>
+                <div class="stat-card text-center !p-5">
+                    <div class="text-3xl sm:text-4xl font-black text-emerald-600 tracking-tight flex items-center justify-center gap-0.5">
+                        <span class="odometer-counter" data-odometer-value="99">0</span>
+                        <span>.8%</span>
+                    </div>
+                    <p class="mt-1.5 text-xs sm:text-sm font-semibold text-gray-600">{{ __('Tasa de entregas a tiempo') }}</p>
+                </div>
+            </div>
 
-                @foreach ($testimonials as $index => $t)
-                    <figure class="card card-hover p-6" data-reveal style="--reveal-delay: {{ $index * 100 }}ms">
-                        <div class="flex gap-1 text-amber-400">
-                            @for ($i = 0; $i < 5; $i++)
-                                <i class="fa-solid fa-star text-lg"></i>
-                            @endfor
-                        </div>
-                        <blockquote class="mt-4 text-sm leading-relaxed text-gray-600">“{{ $t[2] }}”</blockquote>
-                        <figcaption class="mt-4 flex items-center gap-3">
-                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-sm font-bold text-white">
-                                {{ substr($t[0], 0, 1) }}
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-gray-900">{{ $t[0] }}</p>
-                                <p class="text-xs text-gray-500">{{ $t[1] }}</p>
+            <!-- Swiper Testimonials Carousel -->
+            <div class="relative px-2 sm:px-6" data-reveal>
+                <div class="swiper testimonials-swiper !pb-14">
+                    <div class="swiper-wrapper">
+                        @php $testimonials = [
+                            ['María G.', 'Guatemala', 'Compramos en Nike y Victoria\'s Secret. Todo llegó en una sola caja y en perfecto estado. El portal me muestra todo el proceso.'],
+                            ['Carlos P.', 'México', 'Encontraron un descuento que ni yo había visto. El tracking internacional funcionó perfecto hasta mi casa en CDMX.'],
+                            ['Sofía R.', 'El Salvador', 'El servicio por WhatsApp es rapidísimo. Me cotizaron todo antes de comprar y no hubo sorpresas con los precios.'],
+                            ['Andrés M.', 'Colombia', 'Excelente servicio. Compré repuestos difíciles de conseguir en Amazon y me los entregaron en Bogotá sin complicaciones.'],
+                            ['Lucía V.', 'Honduras', 'La consolidación de paquetes me ahorró más del 40% en el flete internacional. Súper recomendado.'],
+                            ['Diego T.', 'Costa Rica', 'Atención personalizada de primera. Me avisaron de cada paso con fotos de mis compras en bodega.'],
+                        ]; @endphp
+
+                        @foreach ($testimonials as $index => $t)
+                            <div class="swiper-slide h-auto">
+                                <figure class="card card-hover p-6 h-full flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex gap-1 text-amber-400">
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <i class="fa-solid fa-star text-base"></i>
+                                            @endfor
+                                        </div>
+                                        <blockquote class="mt-4 text-sm leading-relaxed text-gray-600">“{{ $t[2] }}”</blockquote>
+                                    </div>
+                                    <figcaption class="mt-6 flex items-center gap-3 border-t border-gray-100 pt-4">
+                                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-sm font-bold text-white shadow-sm">
+                                            {{ substr($t[0], 0, 1) }}
+                                        </span>
+                                        <div>
+                                            <p class="text-sm font-semibold text-gray-900">{{ $t[0] }}</p>
+                                            <p class="text-xs text-gray-500">{{ $t[1] }}</p>
+                                        </div>
+                                    </figcaption>
+                                </figure>
                             </div>
-                        </figcaption>
-                    </figure>
-                @endforeach
+                        @endforeach
+                    </div>
+
+                    <!-- Swiper Pagination -->
+                    <div class="swiper-pagination !bottom-0"></div>
+
+                    <!-- Swiper Navigation Buttons -->
+                    <button type="button" class="swiper-button-prev-custom absolute -start-2 sm:-start-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md border border-gray-100 text-gray-700 hover:text-emerald-600 hover:border-emerald-300 transition-all focus:outline-none" aria-label="{{ __('Anterior') }}">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button type="button" class="swiper-button-next-custom absolute -end-2 sm:-end-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md border border-gray-100 text-gray-700 hover:text-emerald-600 hover:border-emerald-300 transition-all focus:outline-none" aria-label="{{ __('Siguiente') }}">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </section>

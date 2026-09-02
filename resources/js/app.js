@@ -1,5 +1,32 @@
 import './swal.js';
 
+/* ---------- Global JavaScript Libraries ---------- */
+import $ from './jquery-global.js';
+
+import 'jquery-ui-dist/jquery-ui.js';
+import 'jquery-ui-dist/jquery-ui.min.css';
+
+import 'select2';
+import 'select2/dist/css/select2.min.css';
+
+import 'slick-carousel';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
+window.Swiper = Swiper;
+
+import Odometer from 'odometer';
+import 'odometer/themes/odometer-theme-default.css';
+window.Odometer = Odometer;
+
+import moment from 'moment';
+window.moment = moment;
+
+import Masonry from 'masonry-layout';
+window.Masonry = Masonry;
+
 /* ---------- Livewire progress bar ---------- */
 
 
@@ -273,3 +300,96 @@ function applyThemeColors() {
 applyThemeColors();
 document.addEventListener('DOMContentLoaded', applyThemeColors);
 document.addEventListener('livewire:navigated', applyThemeColors);
+
+/* ---------- Swiper Carousel (Testimonials) ---------- */
+
+function initSwiper() {
+    const swiperEl = document.querySelector('.testimonials-swiper');
+    if (!swiperEl || !window.Swiper) {
+        return;
+    }
+
+    if (swiperEl.swiper) {
+        swiperEl.swiper.destroy(true, true);
+    }
+
+    new window.Swiper('.testimonials-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 24,
+        loop: true,
+        grabCursor: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next-custom',
+            prevEl: '.swiper-button-prev-custom',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 28,
+            },
+        },
+    });
+}
+
+/* ---------- Odometer Counters ---------- */
+
+function initOdometers() {
+    if (!window.Odometer) {
+        return;
+    }
+
+    const odometers = document.querySelectorAll('.odometer-counter:not([data-odometer-initialized])');
+    if (!odometers.length) {
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                el.setAttribute('data-odometer-initialized', 'true');
+                const targetValue = parseInt(el.dataset.odometerValue, 10);
+
+                const od = new window.Odometer({
+                    el: el,
+                    value: 0,
+                    format: '(,ddd)',
+                    theme: 'default',
+                    duration: 1800,
+                });
+
+                setTimeout(() => {
+                    od.update(targetValue);
+                }, 200);
+
+                observer.unobserve(el);
+            }
+        });
+    }, { threshold: 0.25 });
+
+    odometers.forEach((el) => observer.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initSwiper();
+    initOdometers();
+});
+
+document.addEventListener('livewire:navigated', () => {
+    initSwiper();
+    initOdometers();
+});
+

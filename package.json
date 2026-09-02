@@ -22,7 +22,15 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7.3.1",
         "flowbite": "^4.0.2",
+        "jquery": "^4.0.0",
+        "jquery-ui-dist": "^1.13.3",
         "lucide": "^1.34.0",
-        "sweetalert2": "^11.26.25"
+        "masonry-layout": "^4.2.2",
+        "moment": "^2.30.1",
+        "odometer": "^0.4.8",
+        "select2": "^4.1.0",
+        "slick-carousel": "^1.8.1",
+        "sweetalert2": "^11.26.25",
+        "swiper": "^14.2.0"
     }
 }

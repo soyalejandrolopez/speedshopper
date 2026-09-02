@@ -3,6 +3,8 @@
 @import "@fortawesome/fontawesome-free/css/brands.min.css";
 @import "tailwindcss";
 @source "../views";
+@source "../js";
+@source "../../app";
 
 @theme {
     --color-brand-50: #ecfdf5;
@@ -747,3 +749,47 @@ button[type="submit"].border[data-loading]::after {
         display: none !important;
     }
 }
+
+/* ---------- Swiper UI Polish ---------- */
+.testimonials-swiper .swiper-pagination-bullet {
+    background: #d1fae5;
+    opacity: 0.8;
+    width: 8px;
+    height: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonials-swiper .swiper-pagination-bullet-active {
+    background: #059669 !important;
+    width: 24px;
+    border-radius: 999px;
+    opacity: 1;
+}
+
+/* ---------- Odometer UI Polish ---------- */
+.odometer.odometer-auto-theme,
+.odometer.odometer-theme-default {
+    font-family: inherit !important;
+    line-height: 1.1 !important;
+    vertical-align: baseline;
+}
+
+/* ---------- Hero Background Framing ---------- */
+.hero-bg-cover {
+    object-position: center top;
+}
+
+@media (min-width: 640px) {
+    .hero-bg-cover {
+        object-position: center 45%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-bg-cover {
+        object-position: center 52%;
+    }
+}
+
+
+

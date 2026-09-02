@@ -47,8 +47,8 @@ class PaymentsIndex extends Component
     {
         $rules = $this->rulesFrom(new StorePaymentRequest, []);
 
-        if (! $this->editingId && $this->pendingBalance !== null) {
-            $rules['form.amount_paid'] = array_merge($rules['form.amount_paid'], ['max:' . $this->pendingBalance]);
+        if (! $this->editingId && $this->pendingBalance !== null && empty($this->form['billable_type'])) {
+            $rules['form.amount_paid'] = array_merge($rules['form.amount_paid'], ['max:'.$this->pendingBalance]);
         }
 
         return $rules;

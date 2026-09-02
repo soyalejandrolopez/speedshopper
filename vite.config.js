@@ -10,4 +10,9 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    css: {
+        lightningcss: {
+            errorRecovery: true,
+        },
+    },
 });
