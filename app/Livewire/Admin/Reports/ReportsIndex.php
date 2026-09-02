@@ -83,29 +83,12 @@ class ReportsIndex extends Component
             ->sum('amount_paid');
 
         $balanceByCustomer = Customer::query()
-            ->with(['purchaseRequests' => fn ($q) => $q->billed()->with('costItems'), 'payments'])
             ->whereNull('deleted_at')
             ->get()
-            ->map(function (Customer $customer) {
-                $invoiced = (float) $customer->purchaseRequests->sum(function ($r) {
-                    $costs = (float) $r->costItems->sum('amount');
-                    if ($costs > 0) {
-                        return $costs;
-                    }
-                    if ($r->unit_price) {
-                        return (float) ($r->unit_price * max(1, $r->quantity));
-                    }
-
-                    return 0.0;
-                });
-                $paid = (float) $customer->payments->sum('amount_paid');
-                $balance = max(0.0, $invoiced - $paid);
-
-                return [
-                    'name' => $customer->name,
-                    'balance' => $balance,
-                ];
-            })
+            ->map(fn (Customer $customer) => [
+                'name' => $customer->name,
+                'balance' => (float) $customer->balance_due,
+            ])
             ->filter(fn (array $row) => $row['balance'] > 0.005)
             ->sortByDesc('balance')
             ->take(10)
@@ -435,29 +418,12 @@ class ReportsIndex extends Component
         $allRecords = $invoicesList->concat($standalonePayments)->sortByDesc('date')->values()->all();
 
         $balanceByCustomer = Customer::query()
-            ->with(['purchaseRequests' => fn ($q) => $q->billed()->with('costItems'), 'payments'])
             ->whereNull('deleted_at')
             ->get()
-            ->map(function (Customer $customer) {
-                $invoiced = (float) $customer->purchaseRequests->sum(function ($r) {
-                    $costs = (float) $r->costItems->sum('amount');
-                    if ($costs > 0) {
-                        return $costs;
-                    }
-                    if ($r->unit_price) {
-                        return (float) ($r->unit_price * max(1, $r->quantity));
-                    }
-
-                    return 0.0;
-                });
-                $paid = (float) $customer->payments->sum('amount_paid');
-                $balance = max(0.0, $invoiced - $paid);
-
-                return [
-                    'name' => $customer->name,
-                    'balance' => $balance,
-                ];
-            })
+            ->map(fn (Customer $customer) => [
+                'name' => $customer->name,
+                'balance' => (float) $customer->balance_due,
+            ])
             ->filter(fn (array $row) => $row['balance'] > 0.005)
             ->sortByDesc('balance')
             ->values()
