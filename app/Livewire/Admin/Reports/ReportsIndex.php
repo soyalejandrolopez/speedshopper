@@ -94,7 +94,7 @@ class ReportsIndex extends Component
             ->take(10)
             ->values();
 
-        $periodInvoiced = (float) $requests->sum(function (PurchaseRequest $r) {
+        $requestsInvoiced = (float) $requests->sum(function (PurchaseRequest $r) {
             $costs = (float) $r->costItems->sum('amount');
             if ($costs > 0) {
                 return $costs;
@@ -106,14 +106,31 @@ class ReportsIndex extends Component
             return 0.0;
         });
 
-        $periodEarnings = (float) $requests->sum(function (PurchaseRequest $r) {
+        $requestsEarnings = (float) $requests->sum(function (PurchaseRequest $r) {
             return (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
         });
 
+        // Standalone direct invoices in period
+        $standaloneInvoices = Payment::where(function ($q) {
+            $q->whereNull('billable_type')->orWhere('billable_type', '!=', PurchaseRequest::class);
+        })
+            ->where('invoice_total', '>', 0)
+            ->where(function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end])
+                    ->orWhereBetween('paid_at', [$start, $end]);
+            })
+            ->with('customer')
+            ->get();
+
+        $standaloneInvoiced = (float) $standaloneInvoices->sum('invoice_total');
+        $standaloneEarnings = (float) $standaloneInvoices->sum('invoiced_service_earnings');
+
+        $periodInvoiced = $requestsInvoiced + $standaloneInvoiced;
+        $periodEarnings = $requestsEarnings + $standaloneEarnings;
         $periodCollected = (float) $payments->sum('amount_paid');
         $periodBalance = max(0.0, $periodInvoiced - $periodCollected);
 
-        $invoicesList = $requests->map(function (PurchaseRequest $r) {
+        $requestsList = $requests->map(function (PurchaseRequest $r) {
             $totalCost = (float) $r->total_cost;
             if ($totalCost == 0.0 && $r->unit_price) {
                 $totalCost = (float) $r->unit_price * max(1, $r->quantity);
@@ -132,7 +149,24 @@ class ReportsIndex extends Component
                 'invoice_total' => $totalCost,
                 'service_profit' => $earnings,
             ];
-        })->sortByDesc('date')->values();
+        });
+
+        $standaloneInvoicesList = $standaloneInvoices->map(function (Payment $p) {
+            return [
+                'id' => null,
+                'number' => $p->number,
+                'customer' => $p->customer?->name ?? '—',
+                'customer_id' => $p->customer_id,
+                'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
+                'details' => $p->notes ?: __('Factura Directa'),
+                'status' => $p->balance_due <= 0.005 ? __('Pagado') : __('Pendiente'),
+                'status_color' => $p->balance_due <= 0.005 ? 'green' : 'amber',
+                'invoice_total' => (float) $p->invoice_total,
+                'service_profit' => (float) $p->invoiced_service_earnings,
+            ];
+        });
+
+        $invoicesList = $requestsList->concat($standaloneInvoicesList)->sortByDesc('date')->values();
 
         $customerPaymentsList = $payments->groupBy('customer_id')->map(function ($custPayments) {
             $first = $custPayments->first();
@@ -437,7 +471,7 @@ class ReportsIndex extends Component
             ->orderBy('created_at')
             ->get();
 
-        $invoiced = (float) $requests->sum(function (PurchaseRequest $r) {
+        $requestsInvoiced = (float) $requests->sum(function (PurchaseRequest $r) {
             $costs = (float) $r->costItems->sum('amount');
             if ($costs > 0) {
                 return $costs;
@@ -449,10 +483,27 @@ class ReportsIndex extends Component
             return 0.0;
         });
 
-        $earnings = (float) $requests->sum(function (PurchaseRequest $r) {
+        $requestsEarnings = (float) $requests->sum(function (PurchaseRequest $r) {
             return (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
         });
 
+        // Standalone direct invoices in period
+        $standaloneInvoices = Payment::where(function ($q) {
+            $q->whereNull('billable_type')->orWhere('billable_type', '!=', PurchaseRequest::class);
+        })
+            ->where('invoice_total', '>', 0)
+            ->where(function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end])
+                    ->orWhereBetween('paid_at', [$start, $end]);
+            })
+            ->with('customer')
+            ->get();
+
+        $standaloneInvoiced = (float) $standaloneInvoices->sum('invoice_total');
+        $standaloneEarnings = (float) $standaloneInvoices->sum('invoiced_service_earnings');
+
+        $invoiced = $requestsInvoiced + $standaloneInvoiced;
+        $earnings = $requestsEarnings + $standaloneEarnings;
         $collected = (float) $payments->sum('amount_paid');
         $balance = max(0.0, $invoiced - $collected);
 
@@ -462,7 +513,7 @@ class ReportsIndex extends Component
             ->get()
             ->groupBy('billable_id');
 
-        $invoicesList = $requests->map(function (PurchaseRequest $r) use ($paymentsByRequest) {
+        $requestsList = $requests->map(function (PurchaseRequest $r) use ($paymentsByRequest) {
             $totalCost = (float) $r->total_cost;
             if ($totalCost == 0.0 && $r->unit_price) {
                 $totalCost = (float) $r->unit_price * max(1, $r->quantity);
@@ -478,12 +529,31 @@ class ReportsIndex extends Component
                 'customer' => $r->customer?->name ?? '—',
                 'method' => $lastPaymentMethod,
                 'date' => $r->created_at?->format('Y-m-d') ?? '',
+                'details' => $r->product_name.($r->quantity > 1 ? " (x{$r->quantity})" : ''),
+                'status' => $r->status?->label() ?? ucfirst($r->status?->value ?? '—'),
                 'invoice_total' => $totalCost,
                 'service_profit' => $earnings,
                 'amount_paid' => $paid,
                 'balance' => $balance,
             ];
         });
+
+        $standaloneInvoicesList = $standaloneInvoices->map(function (Payment $p) {
+            return [
+                'number' => $p->number,
+                'customer' => $p->customer?->name ?? '—',
+                'method' => $p->payment_method?->label() ?? '—',
+                'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
+                'details' => $p->notes ?: __('Factura Directa'),
+                'status' => $p->balance_due <= 0.005 ? __('Pagado') : __('Pendiente'),
+                'invoice_total' => (float) $p->invoice_total,
+                'service_profit' => (float) $p->invoiced_service_earnings,
+                'amount_paid' => (float) $p->amount_paid,
+                'balance' => (float) $p->balance_due,
+            ];
+        });
+
+        $invoicesList = $requestsList->concat($standaloneInvoicesList)->sortByDesc('date')->values();
 
         $linkedPaymentIds = Payment::where('billable_type', PurchaseRequest::class)
             ->whereIn('billable_id', $requestIds)
@@ -575,7 +645,11 @@ class ReportsIndex extends Component
     protected function revenueBuckets($payments): array
     {
         $groupBy = $this->period === 'yearly' ? 'Y-m' : 'Y-m-d';
-        $buckets = $payments->groupBy(fn (Payment $p) => $p->created_at?->format($groupBy));
+        $buckets = $payments->groupBy(function (Payment $p) use ($groupBy) {
+            $date = $p->paid_at ?? $p->created_at;
+
+            return $date ? $date->format($groupBy) : now()->format($groupBy);
+        });
 
         $rows = [];
         foreach ($buckets as $key => $group) {
@@ -583,7 +657,7 @@ class ReportsIndex extends Component
                 'label' => $this->period === 'yearly'
                     ? Carbon::createFromFormat('Y-m', $key)->translatedFormat('M Y')
                     : Carbon::createFromFormat('Y-m-d', $key)->translatedFormat('M d'),
-                'total' => (float) $group->sum(fn (Payment $p) => $p->service_earnings),
+                'total' => (float) $group->sum('amount_paid'),
             ];
         }
 

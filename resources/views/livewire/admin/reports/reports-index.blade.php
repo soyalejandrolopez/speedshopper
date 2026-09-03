@@ -146,9 +146,16 @@
                     @forelse ($reportPeriod['invoicesList'] as $inv)
                         <tr class="hover:bg-gray-50/80 transition-colors">
                             <td class="px-4 py-2.5 font-mono font-bold text-gray-900 whitespace-nowrap">
-                                <a href="{{ route('admin.requests.show', $inv['id']) }}" wire:navigate class="hover:text-emerald-700 hover:underline">
-                                    {{ $inv['number'] }}
-                                </a>
+                                @if (! empty($inv['id']))
+                                    <a href="{{ route('admin.requests.show', $inv['id']) }}" wire:navigate class="hover:text-emerald-700 hover:underline">
+                                        {{ $inv['number'] }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('admin.payments.index', ['search' => $inv['number']]) }}" wire:navigate class="hover:text-teal-700 hover:underline inline-flex items-center gap-1">
+                                        {{ $inv['number'] }}
+                                        <span class="rounded bg-teal-100 text-teal-800 text-[9px] px-1 font-sans font-bold uppercase">{{ __('Directa') }}</span>
+                                    </a>
+                                @endif
                             </td>
                             <td class="px-4 py-2.5 font-medium text-gray-900 whitespace-nowrap">
                                 @if ($inv['customer_id'])

@@ -928,21 +928,29 @@ class BillingIndex extends Component
             if ($targetStatus === RequestStatus::Purchased && $amountPaid < $totalInvoiced) {
                 $amountPaid = $totalInvoiced;
             }
-            $alreadyPaid = (float) Payment::where('billable_type', PurchaseRequest::class)
-                ->where('billable_id', $purchaseRequest->id)
-                ->sum('amount_paid');
 
-            if ($amountPaid > $alreadyPaid) {
+            $existingPayment = Payment::where('billable_type', PurchaseRequest::class)
+                ->where('billable_id', $purchaseRequest->id)
+                ->first();
+
+            if ($existingPayment) {
+                $existingPayment->update([
+                    'invoice_total' => $totalInvoiced,
+                    'amount_paid' => max((float) $existingPayment->amount_paid, $amountPaid),
+                    'payment_method' => $this->invoiceForm['payment_method'] ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? $existingPayment->payment_method) : $existingPayment->payment_method,
+                    'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : ($existingPayment->paid_at ?? now())) : $existingPayment->paid_at,
+                ]);
+            } else {
                 Payment::create([
                     'customer_id' => $purchaseRequest->customer_id,
                     'billable_type' => PurchaseRequest::class,
                     'billable_id' => $purchaseRequest->id,
                     'invoice_total' => $totalInvoiced,
-                    'amount_paid' => $amountPaid - $alreadyPaid,
-                    'payment_method' => PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle,
-                    'reference' => $this->invoiceForm['payment_reference'] ?? null,
-                    'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
-                    'notes' => 'Pago registrado al actualizar factura '.$purchaseRequest->number,
+                    'amount_paid' => $amountPaid,
+                    'payment_method' => $amountPaid > 0 ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle) : null,
+                    'reference' => $this->invoiceForm['payment_reference'] ?? $purchaseRequest->number,
+                    'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now()) : null,
+                    'notes' => $amountPaid > 0 ? 'Pago registrado al actualizar factura '.$purchaseRequest->number : 'Factura emitida '.$purchaseRequest->number,
                 ]);
             }
 
@@ -1020,20 +1028,18 @@ class BillingIndex extends Component
             $amountPaid = $totalInvoiced;
         }
 
-        // Record initial payment if amount_paid > 0
-        if ($amountPaid > 0) {
-            Payment::create([
-                'customer_id' => $this->invoiceForm['customer_id'],
-                'billable_type' => PurchaseRequest::class,
-                'billable_id' => $purchaseRequest->id,
-                'invoice_total' => $totalInvoiced,
-                'amount_paid' => $amountPaid,
-                'payment_method' => PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle,
-                'reference' => $this->invoiceForm['payment_reference'] ?? null,
-                'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
-                'notes' => 'Pago registrado al emitir factura '.$purchaseRequest->number,
-            ]);
-        }
+        // Always record invoice in payments ledger so it appears in Payments index and tracks balance
+        Payment::create([
+            'customer_id' => $this->invoiceForm['customer_id'],
+            'billable_type' => PurchaseRequest::class,
+            'billable_id' => $purchaseRequest->id,
+            'invoice_total' => $totalInvoiced,
+            'amount_paid' => $amountPaid,
+            'payment_method' => $amountPaid > 0 ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle) : null,
+            'reference' => $this->invoiceForm['payment_reference'] ?? $purchaseRequest->number,
+            'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now()) : null,
+            'notes' => $amountPaid > 0 ? 'Pago registrado al emitir factura '.$purchaseRequest->number : 'Factura emitida '.$purchaseRequest->number,
+        ]);
 
         $purchaseRequest->load(['customer', 'costItems']);
 
@@ -1172,15 +1178,37 @@ class BillingIndex extends Component
             ->get()
             ->groupBy('billable_id');
 
-        $finance = app(FinanceService::class);
+        $standaloneInvoices = Payment::query()
+            ->where(function ($q) {
+                $q->whereNull('billable_type')
+                    ->orWhere('billable_type', '!=', PurchaseRequest::class);
+            })
+            ->where('invoice_total', '>', 0)
+            ->with('customer')
+            ->when(! empty($this->search), function ($query) {
+                $query->where(function ($q) {
+                    $q->where('number', 'like', "%{$this->search}%")
+                        ->orWhere('reference', 'like', "%{$this->search}%")
+                        ->orWhereHas('customer', function ($c) {
+                            $c->where('name', 'like', "%{$this->search}%")
+                                ->orWhere('phone', 'like', "%{$this->search}%")
+                                ->orWhere('email', 'like', "%{$this->search}%");
+                        });
+                });
+            })
+            ->latest()
+            ->get();
+
+        $financeMetrics = app(FinanceService::class)->getMetrics();
 
         return view('livewire.admin.billing.billing-index', [
             'requests' => $requests,
+            'standaloneInvoices' => $standaloneInvoices,
             'paymentsByRequest' => $paymentsByRequest,
-            'totalInvoiced' => $finance->getRequestsTotalInvoiced(),
-            'totalEarnings' => $finance->getRequestsTotalEarnings(),
-            'totalCollected' => $finance->getRequestsTotalCollected(),
-            'totalPending' => $finance->getRequestsTotalBalanceDue(),
+            'totalInvoiced' => $financeMetrics['total_invoiced'],
+            'totalEarnings' => $financeMetrics['total_earnings'],
+            'totalCollected' => $financeMetrics['total_collected'],
+            'totalPending' => $financeMetrics['total_balance_due'],
             'customers' => Customer::orderBy('name')->get(['id', 'name', 'phone', 'email', 'country']),
         ]);
     }

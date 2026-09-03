@@ -7,6 +7,7 @@ use App\Enums\ShipmentStatus;
 use App\Livewire\Admin\Billing\BillingIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Payments\PaymentsIndex;
+use App\Livewire\Admin\Reports\ReportsIndex;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
@@ -120,4 +121,113 @@ test('dashboard, billing, and payments sections render synchronized kpi totals',
         ->assertViewHas('totalInvoiced', $finance['total_invoiced'])
         ->assertViewHas('totalCollected', $finance['total_collected'])
         ->assertViewHas('totalBalanceDue', $finance['total_balance_due']);
+});
+
+test('creating invoice with zero paid creates payment ledger record and balances match exactly', function () {
+    $this->actingAs($this->admin);
+
+    $customer = Customer::factory()->create(['name' => 'Franchesca Liccien']);
+
+    Livewire::test(BillingIndex::class)
+        ->set('invoiceForm.customer_id', $customer->id)
+        ->set('invoiceType', 'pendiente')
+        ->set('invoiceForm.items', [
+            ['product_name' => 'Vestido', 'store' => 'Zara', 'quantity' => 1, 'unit_price' => 400.00],
+        ])
+        ->set('invoiceForm.costs', [
+            ['type' => CostType::ShopperFee->value, 'description' => 'Servicio', 'amount' => 61.87],
+        ])
+        ->set('invoiceForm.amount_paid', 0.00)
+        ->set('invoiceForm.payment_method', PaymentMethod::Zelle->value)
+        ->call('saveInvoice')
+        ->assertHasNoErrors();
+
+    $payment = Payment::where('customer_id', $customer->id)->first();
+    expect($payment)->not->toBeNull()
+        ->and((float) $payment->invoice_total)->toBeGreaterThan(0.0)
+        ->and((float) $payment->amount_paid)->toBe(0.0)
+        ->and((float) $payment->balance_due)->toBe((float) $payment->invoice_total);
+
+    // Payments index renders the record and balance matches
+    Livewire::test(PaymentsIndex::class)
+        ->assertSee('Franchesca Liccien')
+        ->assertSee(money($payment->balance_due));
+});
+
+test('billing index renders standalone direct invoices alongside request invoices', function () {
+    $this->actingAs($this->admin);
+
+    $customer = Customer::factory()->create(['name' => 'Rosa Cordova']);
+
+    $directInvoice = Payment::create([
+        'customer_id' => $customer->id,
+        'invoice_total' => 1941.60,
+        'amount_paid' => 1668.35,
+        'payment_method' => PaymentMethod::Zelle,
+        'notes' => 'Factura Directa Rosa',
+    ]);
+
+    Livewire::test(BillingIndex::class)
+        ->assertSee($directInvoice->number)
+        ->assertSee('Rosa Cordova')
+        ->assertSee('Directa')
+        ->assertSee('$1,941.60')
+        ->assertSee('$1,668.35')
+        ->assertSee('$273.25');
+});
+
+test('reports revenue chart plots exact amounts paid and does not confuse with service profit', function () {
+    $this->actingAs($this->admin);
+
+    $customerGrace = Customer::factory()->create(['name' => 'Grace']);
+    $customerTashira = Customer::factory()->create(['name' => 'Tashira']);
+
+    // 01/09: Grace pays $365.00
+    Payment::create([
+        'customer_id' => $customerGrace->id,
+        'invoice_total' => 365.00,
+        'amount_paid' => 365.00,
+        'payment_method' => PaymentMethod::Zelle,
+        'paid_at' => Carbon\Carbon::parse('2026-09-01 10:00:00'),
+        'created_at' => Carbon\Carbon::parse('2026-09-01 10:00:00'),
+    ]);
+
+    // 02/09: Tashira pays $526.89 for request REQ-0025 (which has service profit $104.48)
+    $req = PurchaseRequest::create([
+        'customer_id' => $customerTashira->id,
+        'product_name' => 'Electrónicos',
+        'status' => RequestStatus::Purchased,
+        'created_at' => Carbon\Carbon::parse('2026-09-02 12:00:00'),
+    ]);
+    $req->costItems()->createMany([
+        ['type' => CostType::ProductCost, 'description' => 'Producto', 'amount' => 422.41],
+        ['type' => CostType::ShopperFee, 'description' => 'Servicio', 'amount' => 104.48],
+    ]);
+
+    Payment::create([
+        'customer_id' => $customerTashira->id,
+        'billable_type' => PurchaseRequest::class,
+        'billable_id' => $req->id,
+        'invoice_total' => 526.89,
+        'amount_paid' => 526.89,
+        'payment_method' => PaymentMethod::Zelle,
+        'paid_at' => Carbon\Carbon::parse('2026-09-02 14:00:00'),
+        'created_at' => Carbon\Carbon::parse('2026-09-02 14:00:00'),
+    ]);
+
+    $reports = Livewire::test(ReportsIndex::class)
+        ->set('period', 'monthly')
+        ->set('month', '2026-09');
+
+    $reportPeriod = $reports->viewData('reportPeriod');
+    $revenue = $reportPeriod['revenue'];
+
+    expect($reportPeriod['collected'])->toBe(891.89);
+
+    // Verify revenue buckets sum exactly to 891.89 and contain 365.00 and 526.89
+    $day1 = collect($revenue)->first(fn ($r) => str_contains($r['label'], '01'));
+    $day2 = collect($revenue)->first(fn ($r) => str_contains($r['label'], '02'));
+
+    expect($day1['total'])->toBe(365.00)
+        ->and($day2['total'])->toBe(526.89);
 });

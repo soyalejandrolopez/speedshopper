@@ -931,16 +931,98 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="9" class="py-12 text-center text-gray-400">
-                                <i class="fa-solid fa-file-invoice text-4xl mb-3 text-gray-300"></i>
-                                <p class="text-sm">{{ __('No se encontraron facturas registradas.') }}</p>
-                                <button type="button" wire:click="openCreateForm" class="btn-primary mt-3 text-xs">
-                                    <i class="fa-solid fa-plus text-xs"></i> {{ __('Crear la primera factura') }}
-                                </button>
+                        @if ($standaloneInvoices->isEmpty())
+                            <tr>
+                                <td colspan="11" class="py-12 text-center text-gray-400">
+                                    <i class="fa-solid fa-file-invoice text-4xl mb-3 text-gray-300"></i>
+                                    <p class="text-sm">{{ __('No se encontraron facturas registradas.') }}</p>
+                                    <button type="button" wire:click="openCreateForm" class="btn-primary mt-3 text-xs">
+                                        <i class="fa-solid fa-plus text-xs"></i> {{ __('Crear la primera factura') }}
+                                    </button>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforelse
+
+                    @foreach ($standaloneInvoices as $directInvoice)
+                        @php
+                            $totalCost = (float) $directInvoice->invoice_total;
+                            $paidAmount = (float) $directInvoice->amount_paid;
+                            $balance = (float) $directInvoice->balance_due;
+                            $earnings = (float) $directInvoice->invoiced_service_earnings;
+                            $productCost = max(0.0, $totalCost - $earnings);
+                        @endphp
+                        <tr class="hover:bg-gray-50/80 transition-colors bg-teal-50/20">
+                            <td class="px-2 py-2 font-mono font-bold text-gray-900 whitespace-nowrap">
+                                <a href="{{ route('admin.payments.index', ['search' => $directInvoice->number]) }}" wire:navigate class="hover:text-teal-700 hover:underline inline-flex items-center gap-1.5">
+                                    {{ $directInvoice->number }}
+                                    <span class="rounded bg-teal-100 text-teal-800 text-[9px] px-1.5 py-0.5 font-sans font-bold uppercase tracking-wider">{{ __('Directa') }}</span>
+                                </a>
+                            </td>
+                            <td class="px-2 py-2 font-medium text-gray-900 max-w-[120px]">
+                                @if ($directInvoice->customer)
+                                    <a href="{{ route('admin.customers.show', $directInvoice->customer) }}" wire:navigate class="hover:text-emerald-700 block truncate">
+                                        {{ $directInvoice->customer->name }}
+                                    </a>
+                                    @if ($directInvoice->customer->whatsapp)
+                                        <p class="text-[10px] text-gray-400 font-normal truncate">{{ $directInvoice->customer->whatsapp }}</p>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 text-gray-700 max-w-[130px]">
+                                <span class="font-medium block truncate" title="{{ $directInvoice->notes ?: __('Factura Directa') }}">
+                                    {{ $directInvoice->notes ?: __('Factura Directa') }}
+                                </span>
+                                @if ($directInvoice->reference)
+                                    <span class="text-[10px] text-gray-400 font-mono">{{ $directInvoice->reference }}</span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 font-medium text-gray-600 whitespace-nowrap">
+                                {{ $productCost > 0 ? money($productCost) : '—' }}
+                            </td>
+                            <td class="px-2 py-2 font-bold text-gray-900 whitespace-nowrap">
+                                {{ money($totalCost) }}
+                            </td>
+                            <td class="px-2 py-2 font-bold text-emerald-700 whitespace-nowrap">
+                                {{ money($earnings) }}
+                            </td>
+                            <td class="px-2 py-2 font-semibold text-teal-700 whitespace-nowrap">
+                                {{ money($paidAmount) }}
+                            </td>
+                            <td class="px-2 py-2 whitespace-nowrap">
+                                @if ($balance <= 0.005)
+                                    <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                                        <i class="fa-solid fa-check text-[9px]"></i> {{ __('OK') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                                        {{ money($balance) }}
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 whitespace-nowrap">
+                                @if ($balance <= 0.005)
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                                        {{ __('Pagado') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold bg-amber-50 text-amber-700">
+                                        {{ __('Pendiente') }}
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 text-gray-500 whitespace-nowrap">
+                                {{ $directInvoice->paid_at?->format('d/m/Y') ?? $directInvoice->created_at?->format('d/m/Y') }}
+                            </td>
+                            <td class="px-2 py-2 text-end whitespace-nowrap">
+                                <a href="{{ route('admin.payments.index', ['search' => $directInvoice->number]) }}" wire:navigate class="btn-ghost p-1 text-teal-600 hover:text-teal-800" title="{{ __('Ver Pago') }}">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </a>
                             </td>
                         </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
