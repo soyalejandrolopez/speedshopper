@@ -118,7 +118,7 @@ class ClientRegistrationForm extends Component
     {
         $key = 'boxes_'.$type;
         if (array_key_exists($key, $this->form)) {
-            $this->form[$key] = ((int) ($this->form[$key] ?? 0)) + 1;
+            $this->form[$key] = min(9999, ((int) ($this->form[$key] ?? 0)) + 1);
         }
     }
 
@@ -399,7 +399,7 @@ class ClientRegistrationForm extends Component
             'form.services.*' => ['string'],
             'form.products' => ['required', 'string', 'max:2000'],
             'form.preferred_stores' => ['nullable', 'string', 'max:255'],
-            'form.budget' => ['nullable', 'numeric', 'min:0', 'max:1000000'],
+            'form.budget' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
             'form.has_links' => ['required', 'in:yes,no'],
             'form.product_links' => ['nullable', 'string', 'max:2000'],
             'form.find_deals' => ['required', 'in:yes,no'],
@@ -407,10 +407,10 @@ class ClientRegistrationForm extends Component
             'form.store_name' => ['nullable', 'string', 'max:255'],
             'form.order_number' => ['nullable', 'string', 'max:255'],
             'form.tracking_number' => ['nullable', 'string', 'max:255'],
-            'form.approx_packages' => ['nullable', 'numeric', 'min:0', 'max:999'],
-            'form.boxes_small' => ['nullable', 'integer', 'min:0', 'max:99'],
-            'form.boxes_medium' => ['nullable', 'integer', 'min:0', 'max:99'],
-            'form.boxes_large' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'form.approx_packages' => ['nullable', 'numeric', 'min:0', 'max:9999'],
+            'form.boxes_small' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'form.boxes_medium' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'form.boxes_large' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'form.courier' => ['nullable', 'in:yes,no'],
             'form.courier_name' => ['nullable', 'string', 'max:255'],
             'form.need_shipping_coordination' => ['nullable', 'in:yes,no'],

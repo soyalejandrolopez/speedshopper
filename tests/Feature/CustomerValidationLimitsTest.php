@@ -43,3 +43,43 @@ it('accepts valid boundary lengths in ClientRegistrationForm', function () {
         ->call('next')
         ->assertHasNoErrors(['form.name', 'form.whatsapp', 'form.email', 'form.country', 'form.city', 'form.address']);
 });
+
+it('validates step 2 field limits in ClientRegistrationForm', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('step', 2)
+        ->set('form.products', str_repeat('p', 2001))
+        ->set('form.preferred_stores', str_repeat('s', 256))
+        ->set('form.budget', 100000000)
+        ->set('form.boxes_small', 10000)
+        ->call('next')
+        ->assertHasErrors([
+            'form.products' => 'max',
+            'form.preferred_stores' => 'max',
+            'form.budget' => 'max',
+            'form.boxes_small' => 'max',
+        ]);
+});
+
+it('accepts valid step 2 boundary lengths in ClientRegistrationForm', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('step', 2)
+        ->set('form.products', str_repeat('p', 2000))
+        ->set('form.preferred_stores', str_repeat('s', 255))
+        ->set('form.budget', 99999999.99)
+        ->set('form.boxes_small', 9999)
+        ->set('form.boxes_medium', 9999)
+        ->set('form.boxes_large', 9999)
+        ->set('form.has_links', 'no')
+        ->set('form.find_deals', 'no')
+        ->call('next')
+        ->assertHasNoErrors([
+            'form.products',
+            'form.preferred_stores',
+            'form.budget',
+            'form.boxes_small',
+            'form.boxes_medium',
+            'form.boxes_large',
+            'form.has_links',
+            'form.find_deals',
+        ]);
+});

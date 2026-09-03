@@ -175,7 +175,7 @@
                                 <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs"></i>
                                 <span>{{ __('What products do you want to buy or send?') }} *</span>
                             </label>
-                            <textarea id="products" name="products" autocomplete="off" rows="3" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
+                            <textarea id="products" name="products" autocomplete="off" rows="3" maxlength="2000" wire:model="form.products" class="input" placeholder="{{ __('Ej. Nike Air Max 270, Zapatos Zara...') }}"></textarea>
                             @error('form.products') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -183,7 +183,7 @@
                                 <i class="fa-solid fa-store text-emerald-600 text-xs"></i>
                                 <span>{{ __('Preferred store(s)') }}</span>
                             </label>
-                            <input id="preferred_stores" name="preferred_stores" autocomplete="off" type="text" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
+                            <input id="preferred_stores" name="preferred_stores" autocomplete="off" type="text" maxlength="255" wire:model="form.preferred_stores" class="input" placeholder="Amazon, Nike, Zara...">
                         </div>
                         <div x-data="{
                             budget: $wire.entangle('form.budget', true),
@@ -220,7 +220,7 @@
                             </div>
                             <div class="flex">
                                 <span class="inline-flex items-center px-3.5 text-sm font-bold text-gray-500 bg-gray-100 border border-e-0 border-gray-300 rounded-s-lg">$</span>
-                                <input id="budget" name="budget" autocomplete="off" type="number" step="0.01" min="0" wire:model.live="form.budget" x-model="budget" class="input rounded-none rounded-e-lg" placeholder="0.00">
+                                <input id="budget" name="budget" autocomplete="off" type="number" step="0.01" min="0" max="99999999.99" maxlength="11" oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11);" wire:model.live="form.budget" x-model="budget" class="input rounded-none rounded-e-lg" placeholder="0.00">
                             </div>
                             @error('form.budget') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
 
