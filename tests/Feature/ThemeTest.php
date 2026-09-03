@@ -51,3 +51,15 @@ it('saves the theme color from settings', function () {
 
     expect(Setting::get('theme_color'))->toBe('#7c3aed');
 });
+
+it('injects #670753 custom color across emerald, teal and brand families', function () {
+    seedRoles();
+    Setting::set('theme_color', '#670753');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('--color-brand-500: #670753')
+        ->assertSee('--color-emerald-500: #670753')
+        ->assertSee('--color-teal-500: #670753')
+        ->assertSee('--theme-color: #670753');
+});

@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+@php
+    $themeRamp = theme_color_ramp(theme_color());
+@endphp
 <html lang="{{ $locale }}">
 <head>
     <meta charset="UTF-8">
@@ -8,9 +11,9 @@
     <table align="center" width="100%" max-width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
         {{-- Header banner --}}
         <tr>
-            <td style="background-color: #059669; padding: 24px 32px; text-align: center;">
+            <td style="background-color: {{ $themeRamp['600'] }}; padding: 24px 32px; text-align: center;">
                 <h1 style="color: #ffffff; font-size: 22px; font-weight: bold; margin: 0; letter-spacing: -0.5px;">{{ $companyName }}</h1>
-                <p style="color: #d1fae5; font-size: 13px; margin: 4px 0 0 0;">
+                <p style="color: {{ $themeRamp['100'] }}; font-size: 13px; margin: 4px 0 0 0;">
                     {{ $locale === 'es' ? 'Lista de Tarifas y Servicios' : 'Official Pricing & Services Guide' }}
                 </p>
             </td>
@@ -30,7 +33,7 @@
                 </p>
 
                 @if (! empty($customMessage))
-                    <div style="background-color: #f9fafb; border-left: 4px solid #059669; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
+                    <div style="background-color: #f9fafb; border-left: 4px solid {{ $themeRamp['600'] }}; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
                         <p style="font-size: 13.5px; line-height: 1.5; color: #374151; margin: 0; font-style: italic;">
                             "{{ $customMessage }}"
                         </p>
@@ -38,11 +41,11 @@
                 @endif
 
                 {{-- Highlights box --}}
-                <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                    <h3 style="font-size: 14px; font-weight: bold; color: #065f46; margin: 0 0 8px 0;">
+                <div style="background-color: {{ $themeRamp['50'] }}; border: 1px solid {{ $themeRamp['200'] }}; border-radius: 8px; padding: 16px; margin: 24px 0;">
+                    <h3 style="font-size: 14px; font-weight: bold; color: {{ $themeRamp['800'] }}; margin: 0 0 8px 0;">
                         {{ $locale === 'es' ? 'Resumen de Servicios Incluidos en el PDF:' : 'Summary of Services in Attached PDF:' }}
                     </h3>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #047857; line-height: 1.5;">
+                    <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: {{ $themeRamp['700'] }}; line-height: 1.5;">
                         <li>{{ $locale === 'es' ? 'Compras Personales por tramos (20% - 15%) con horas y tiendas asignadas' : 'Personal Shopper tiered commission (20% - 15%) with allocated stores & hours' }}</li>
                         <li>{{ $locale === 'es' ? 'Reempaque en Cajas Heavy Duty (Small $15, Medium $20, Large $25)' : 'Heavy Duty Box Repackaging (Small $15, Medium $20, Large $25)' }}</li>
                         <li>{{ $locale === 'es' ? 'Entrega y recepción en almacén' : 'Warehouse drop-off & receiving' }}</li>

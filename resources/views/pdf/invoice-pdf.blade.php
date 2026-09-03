@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+@php
+    $themeRamp = theme_color_ramp(theme_color());
+    $c50 = $themeRamp['50'];
+    $c100 = $themeRamp['100'];
+    $c500 = $themeRamp['500'];
+    $c600 = $themeRamp['600'];
+    $c700 = $themeRamp['700'];
+    $c800 = $themeRamp['800'];
+@endphp
 <html lang="{{ $locale }}">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +29,7 @@
         /* Header */
         .header-table {
             width: 100%;
-            border-bottom: 2px solid #059669;
+            border-bottom: 2px solid {{ $c600 }};
             padding-bottom: 14px;
             margin-bottom: 16px;
         }
@@ -31,7 +40,7 @@
         .company-title {
             font-size: 20px;
             font-weight: bold;
-            color: #047857;
+            color: {{ $c700 }};
             margin: 0;
         }
         .invoice-title {
@@ -47,7 +56,7 @@
             font-size: 13px;
             font-family: monospace;
             font-weight: bold;
-            color: #059669;
+            color: {{ $c600 }};
             text-align: right;
             margin-top: 2px;
         }
@@ -73,7 +82,7 @@
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
-            color: #059669;
+            color: {{ $c600 }};
             letter-spacing: 0.5px;
             margin-bottom: 4px;
         }
@@ -85,15 +94,15 @@
             margin-bottom: 14px;
         }
         .items-table th {
-            background-color: #ecfdf5;
-            color: #065f46;
+            background-color: {{ $c50 }};
+            color: {{ $c800 }};
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 8px 10px;
-            border-top: 1px solid #d1fae5;
-            border-bottom: 1px solid #a7f3d0;
+            border-top: 1px solid {{ $c100 }};
+            border-bottom: 1px solid {{ $themeRamp['200'] }};
             text-align: left;
         }
         .items-table th.text-right {
@@ -126,7 +135,7 @@
         }
         .totals-card {
             width: 100%;
-            border: 1.5px solid #d1fae5;
+            border: 1.5px solid {{ $c100 }};
             border-radius: 6px;
             background-color: #fafafa;
             border-collapse: collapse;
@@ -146,20 +155,20 @@
             border-bottom: 1px solid #f3f4f6;
         }
         .totals-card .paid-row td {
-            color: #047857;
+            color: {{ $c700 }};
             border-bottom: 1px solid #e5e7eb;
         }
         .totals-card .balance-row td {
-            background-color: #ecfdf5;
+            background-color: {{ $c50 }};
             font-size: 12px;
             font-weight: bold;
-            color: #065f46;
-            border-top: 2px solid #059669;
+            color: {{ $c800 }};
+            border-top: 2px solid {{ $c600 }};
             padding: 7px 10px;
         }
         .totals-card .balance-row .value-cell {
             font-size: 13.5px;
-            color: {{ $balance > 0 ? '#b45309' : '#047857' }};
+            color: {{ $balance > 0 ? '#b45309' : $c700 }};
         }
 
         .badge {
@@ -408,10 +417,10 @@
                     </tr>
                     @if ($paidAmount > 0)
                         <tr class="paid-row">
-                            <td class="label-cell" style="color: #047857;">
+                            <td class="label-cell" style="color: {{ $c700 }};">
                                 {{ $locale === 'es' ? 'Monto Pagado:' : 'Amount Paid:' }}
                             </td>
-                            <td class="value-cell" style="color: #047857;">
+                            <td class="value-cell" style="color: {{ $c700 }};">
                                 -${{ number_format($paidAmount, 2) }}
                             </td>
                         </tr>
@@ -439,15 +448,15 @@
                     </div>
                     <table style="width: 100%; font-size: 11px; margin-top: 2px;">
                         <tr>
-                            <td style="width: 22%; font-weight: bold; color: #15803d; padding: 2px 0;">Zelle:</td>
-                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">Gomez.Lilibeth1977@gmail.com</td>
+                            <td style="width: 22%; font-weight: bold; color: {{ $c700 }}; padding: 2px 0;">Zelle:</td>
+                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: {{ $c800 }}; padding: 2px 0;">Gomez.Lilibeth1977@gmail.com</td>
                         </tr>
                         <tr>
-                            <td style="width: 22%; font-weight: bold; color: #15803d; padding: 2px 0;">PayPal:</td>
-                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: #14532d; padding: 2px 0;">@speedingshopper</td>
+                            <td style="width: 22%; font-weight: bold; color: {{ $c700 }}; padding: 2px 0;">PayPal:</td>
+                            <td style="width: 78%; font-family: monospace; font-weight: bold; color: {{ $c800 }}; padding: 2px 0;">@speedingshopper</td>
                         </tr>
                     </table>
-                    <div style="margin-top: 4px; font-size: 9px; color: #166534;">
+                    <div style="margin-top: 4px; font-size: 9px; color: {{ $c700 }};">
                         {{ $locale === 'es'
                             ? '• Por favor enviar el comprobante indicando el número de factura #' . $request->number
                             : '• Please send payment confirmation referencing invoice #' . $request->number }}
@@ -455,20 +464,20 @@
                 </td>
                 @if ($paymentImageBase64)
                     <td style="width: 32%; text-align: center; vertical-align: middle;">
-                        <img src="{{ $paymentImageBase64 }}" style="max-height: 90px; max-width: 130px; border-radius: 4px; border: 1px solid #86efac;" alt="Info Pago">
+                        <img src="{{ $paymentImageBase64 }}" style="max-height: 90px; max-width: 130px; border-radius: 4px; border: 1px solid {{ $themeRamp['200'] }};" alt="Info Pago">
                     </td>
                 @endif
             </tr>
         </table>
     @else
         <!-- Paid in full banner with address -->
-        <div style="margin-top: 10px; background-color: #ecfdf5; border: 1.5px solid #059669; border-radius: 6px; padding: 10px 14px;">
-            <div style="font-size: 11.5px; font-weight: bold; color: #047857; letter-spacing: 0.5px; text-align: center; margin-bottom: 6px;">
+        <div style="margin-top: 10px; background-color: {{ $c50 }}; border: 1.5px solid {{ $c600 }}; border-radius: 6px; padding: 10px 14px;">
+            <div style="font-size: 11.5px; font-weight: bold; color: {{ $c700 }}; letter-spacing: 0.5px; text-align: center; margin-bottom: 6px;">
                 ✓ {{ $locale === 'es' ? 'FACTURA PAGADA EN SU TOTALIDAD - ¡GRACIAS POR SU PAGO!' : 'INVOICE PAID IN FULL - THANK YOU!' }}
             </div>
-            <table style="width: 100%; border-top: 1px dashed #a7f3d0; padding-top: 6px; margin-top: 4px; font-size: 10.5px;">
+            <table style="width: 100%; border-top: 1px dashed {{ $themeRamp['200'] }}; padding-top: 6px; margin-top: 4px; font-size: 10.5px;">
                 <tr>
-                    <td style="font-weight: bold; color: #065f46; width: 42%;">
+                    <td style="font-weight: bold; color: {{ $c800 }}; width: 42%;">
                         📍 {{ $locale === 'es' ? 'Dirección de Entrega / Almacén:' : 'Delivery / Warehouse Address:' }}
                     </td>
                     <td style="font-weight: bold; color: #111827; width: 58%;">
@@ -491,7 +500,7 @@
     <table class="footer-table">
         <tr>
             <td style="width: 75%; vertical-align: middle;">
-                <div style="font-size: 10px; font-weight: bold; color: #047857;">{{ $companyName }}</div>
+                <div style="font-size: 10px; font-weight: bold; color: {{ $c700 }};">{{ $companyName }}</div>
                 <div style="font-size: 9px; color: #6b7280;">
                     {{ $warehouseAddress }} &bull; {{ $whatsappPhone }} &bull; {{ $companyEmail }}
                 </div>

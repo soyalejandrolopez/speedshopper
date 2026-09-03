@@ -173,7 +173,7 @@
                     </label>
 
                     <div class="flex flex-wrap items-center gap-2">
-                        @foreach (['#059669', '#2563eb', '#4f46e5', '#7c3aed', '#e11d48', '#ea580c', '#d97706', '#0891b2', '#65a30d', '#475569'] as $preset)
+                        @foreach (['#670753', '#059669', '#2563eb', '#4f46e5', '#7c3aed', '#e11d48', '#ea580c', '#d97706', '#0891b2', '#65a30d', '#475569'] as $preset)
                             <button type="button" wire:click="$set('settings.theme_color', '{{ $preset }}')"
                                     class="h-8 w-8 rounded-full border-2 border-white shadow-md transition-transform hover:scale-110"
                                     style="background-color: {{ $preset }}"

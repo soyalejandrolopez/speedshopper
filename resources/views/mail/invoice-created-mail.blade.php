@@ -4,19 +4,21 @@
     $isPending = ! $isPaid && ! $isQuoted;
     $customerName = $purchaseRequest->customer?->name ? e($purchaseRequest->customer->name) : '';
 
+    $themeRamp = theme_color_ramp(theme_color());
+
     if ($isQuoted) {
         $headerColor = '#0284c7';
         $headerTitle = $isUpdate
-            ? ($locale === 'es' ? 'Actualización de Cotización' : 'Quotation Update')
-            : ($locale === 'es' ? 'Cotización Oficial' : 'Official Quotation');
+            ? ($locale === 'es' ? 'Cotización Actualizada' : 'Updated Quote')
+            : ($locale === 'es' ? 'Presupuesto / Cotización' : 'Quotation / Estimate');
         $greeting = $isUpdate
             ? ($locale === 'es' ? "¡Hola {$customerName}! Tu cotización ha sido actualizada." : "Hello {$customerName}! Your quote has been updated.")
-            : ($locale === 'es' ? "¡Hola {$customerName}! Tu cotización está lista." : "Hello {$customerName}! Your quotation is ready.");
+            : ($locale === 'es' ? "¡Hola {$customerName}! Hemos preparado tu cotización." : "Hello {$customerName}! We have prepared your quotation.");
         $messageBody = $isUpdate
             ? ($locale === 'es' ? 'Te informamos que se han actualizado los conceptos y costos de tu cotización. En el PDF adjunto encontrarás el presupuesto detallado.' : 'Please be advised that your quote has been updated. In the attached PDF, you will find the detailed estimate.')
             : ($locale === 'es' ? 'Te enviamos el presupuesto detallado correspondiente a tu solicitud. Puedes revisar el desglose en el PDF adjunto.' : 'We have prepared the quotation for your request. You can check the full breakdown in the attached PDF.');
     } elseif ($isPaid) {
-        $headerColor = '#059669';
+        $headerColor = $themeRamp['600'];
         $headerTitle = $isUpdate
             ? ($locale === 'es' ? 'Factura Pagada (Actualizada)' : 'Paid Invoice (Updated)')
             : ($locale === 'es' ? 'Factura Oficial Pagada' : 'Official Paid Invoice');
@@ -82,7 +84,7 @@
                                 @if ($isQuoted)
                                     <span style="color: #0284c7;">{{ $locale === 'es' ? 'Cotización' : 'Quote' }}</span>
                                 @elseif ($isPaid)
-                                    <span style="color: #059669;">{{ $locale === 'es' ? 'Pagado' : 'Paid' }}</span>
+                                    <span style="color: {{ $themeRamp['600'] }};">{{ $locale === 'es' ? 'Pagado' : 'Paid' }}</span>
                                 @else
                                     <span style="color: #d97706;">{{ $locale === 'es' ? 'Pendiente de Pago' : 'Pending Payment' }}</span>
                                 @endif
@@ -97,14 +99,14 @@
                             <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #111827;">${{ number_format($totalCost, 2) }}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 6px 0; color: #059669;">{{ $locale === 'es' ? 'Monto Pagado:' : 'Amount Paid:' }}</td>
-                            <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #059669;">${{ number_format($paidAmount, 2) }}</td>
+                            <td style="padding: 6px 0; color: {{ $themeRamp['600'] }};">{{ $locale === 'es' ? 'Monto Pagado:' : 'Amount Paid:' }}</td>
+                            <td style="padding: 6px 0; text-align: right; font-weight: bold; color: {{ $themeRamp['600'] }};">${{ number_format($paidAmount, 2) }}</td>
                         </tr>
                         <tr style="border-top: 1px dashed #d1d5db;">
-                            <td style="padding: 8px 0 0 0; font-weight: bold; color: {{ $balance > 0 ? '#b45309' : '#059669' }};">
+                            <td style="padding: 8px 0 0 0; font-weight: bold; color: {{ $balance > 0 ? '#b45309' : $themeRamp['600'] }};">
                                 {{ $locale === 'es' ? 'Balance Pendiente:' : 'Pending Balance:' }}
                             </td>
-                            <td style="padding: 8px 0 0 0; text-align: right; font-weight: bold; font-size: 14px; color: {{ $balance > 0 ? '#b45309' : '#059669' }};">
+                            <td style="padding: 8px 0 0 0; text-align: right; font-weight: bold; font-size: 14px; color: {{ $balance > 0 ? '#b45309' : $themeRamp['600'] }};">
                                 ${{ number_format($balance, 2) }}
                             </td>
                         </tr>

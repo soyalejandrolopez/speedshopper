@@ -155,7 +155,7 @@
                         <td class="amount">{{ number_format($p['invoice_total'], 2) }}</td>
                         <td class="amount">{{ number_format($p['service_profit'], 2) }}</td>
                         <td class="amount">{{ number_format($p['amount_paid'], 2) }}</td>
-                        <td class="amount" style="{{ $p['balance'] > 0.005 ? 'color: #b45309; font-weight: bold;' : 'color: #059669;' }}">
+                        <td class="amount" style="{{ $p['balance'] > 0.005 ? 'color: #b45309; font-weight: bold;' : 'color: '.$colors['600'].';' }}">
                             {{ number_format($p['balance'], 2) }}
                         </td>
                     </tr>

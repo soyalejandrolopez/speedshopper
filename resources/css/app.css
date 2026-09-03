@@ -76,9 +76,9 @@ input[type="month"]:focus,
 select:focus,
 textarea:focus {
     outline: none;
-    border-color: #059669;
+    border-color: var(--color-emerald-600, #059669);
     background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 0 4px var(--color-emerald-100, rgba(16, 185, 129, 0.15));
 }
 
 input[type="text"]::placeholder,
@@ -156,7 +156,7 @@ input[type="checkbox"],
 input[type="radio"] {
     width: 1.125rem;
     height: 1.125rem;
-    accent-color: #059669;
+    accent-color: var(--color-emerald-600, #059669);
     border-radius: 0.25rem;
     border: 1px solid #d1d5db;
     background-color: #f9fafb;
@@ -171,7 +171,7 @@ input[type="radio"] {
 input[type="checkbox"]:focus,
 input[type="radio"]:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 0 3px var(--color-emerald-200, rgba(16, 185, 129, 0.2));
 }
 
 ::selection {
@@ -757,7 +757,7 @@ button[type="submit"].border[data-loading]::after {
 
 /* ---------- Swiper UI Polish ---------- */
 .testimonials-swiper .swiper-pagination-bullet {
-    background: #d1fae5;
+    background: var(--color-emerald-100, #d1fae5);
     opacity: 0.8;
     width: 8px;
     height: 8px;
@@ -765,7 +765,7 @@ button[type="submit"].border[data-loading]::after {
 }
 
 .testimonials-swiper .swiper-pagination-bullet-active {
-    background: #059669 !important;
+    background: var(--color-emerald-600, #059669) !important;
     width: 24px;
     border-radius: 999px;
     opacity: 1;

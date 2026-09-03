@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+@php
+    $themeRamp = theme_color_ramp(theme_color());
+    $c50 = $themeRamp['50'];
+    $c100 = $themeRamp['100'];
+    $c500 = $themeRamp['500'];
+    $c600 = $themeRamp['600'];
+    $c700 = $themeRamp['700'];
+    $c800 = $themeRamp['800'];
+@endphp
 <html lang="{{ $locale }}">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +29,7 @@
         /* Header */
         .header-table {
             width: 100%;
-            border-bottom: 2px solid #059669;
+            border-bottom: 2px solid {{ $c600 }};
             padding-bottom: 14px;
             margin-bottom: 18px;
         }
@@ -31,7 +40,7 @@
         .company-title {
             font-size: 22px;
             font-weight: bold;
-            color: #047857;
+            color: {{ $c700 }};
             margin: 0;
             letter-spacing: -0.5px;
         }
@@ -53,8 +62,8 @@
 
         /* Section titles */
         .section-header {
-            background-color: #ecfdf5;
-            border-left: 4px solid #059669;
+            background-color: {{ $c50 }};
+            border-left: 4px solid {{ $c600 }};
             padding: 7px 12px;
             margin-top: 16px;
             margin-bottom: 10px;
@@ -97,12 +106,12 @@
         .text-center { text-align: center !important; }
         .text-right { text-align: right !important; }
         .font-semibold { font-weight: 600; }
-        .text-emerald { color: #059669; font-weight: bold; }
+        .text-emerald { color: {{ $c600 }}; font-weight: bold; }
         .text-amber { color: #d97706; font-weight: bold; }
         .tag-badge {
             display: inline-block;
-            background-color: #d1fae5;
-            color: #065f46;
+            background-color: {{ $c100 }};
+            color: {{ $c800 }};
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 10px;
@@ -188,7 +197,7 @@
                             <strong>{{ $companyName }}</strong><br>
                             {{ $warehouseAddress }}<br>
                             WhatsApp: {{ $whatsappPhone }}<br>
-                            <span style="color: #059669; font-weight: 600;">
+                            <span style="color: {{ $c600 }}; font-weight: 600;">
                                 {{ $locale === 'es' ? 'Válido para ' : 'Valid for ' }} {{ now()->translatedFormat('F Y') }}
                             </span>
                         </td>
@@ -314,7 +323,7 @@
     {{-- Conditions and Notes --}}
     <div class="info-card">
         <p class="info-title">
-            <span style="color: #059669;">●</span>
+            <span style="color: {{ $c600 }};">●</span>
             {{ $locale === 'es' ? 'Compras Online y Recepción' : 'Online Purchases & Receiving' }}
         </p>
         <p class="info-text">
