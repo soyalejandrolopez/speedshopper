@@ -165,22 +165,22 @@
                         <x-modal-body class="grid gap-5 sm:grid-cols-2">
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="name-{{ $this->getId() }}">{{ __('Name') }} *</label>
-                                <input id="name-{{ $this->getId() }}" name="name" type="text" wire:model="form.name" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="name-{{ $this->getId() }}" name="name" type="text" maxlength="255" wire:model="form.name" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="email-{{ $this->getId() }}">{{ __('Email') }}</label>
-                                <input id="email-{{ $this->getId() }}" name="email" type="email" wire:model="form.email" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="email-{{ $this->getId() }}" name="email" type="email" maxlength="255" wire:model="form.email" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="phone-{{ $this->getId() }}">{{ __('Phone') }}</label>
-                                <input id="phone-{{ $this->getId() }}" name="phone" type="text" wire:model="form.phone" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="phone-{{ $this->getId() }}" name="phone" type="text" maxlength="20" wire:model="form.phone" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="whatsapp-{{ $this->getId() }}">{{ __('WhatsApp') }}</label>
-                                <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" wire:model="form.whatsapp" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" maxlength="20" wire:model="form.whatsapp" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.whatsapp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
@@ -195,12 +195,12 @@
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="address-{{ $this->getId() }}">{{ __('Address') }}</label>
-                                <input id="address-{{ $this->getId() }}" name="address" type="text" wire:model="form.address" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="address-{{ $this->getId() }}" name="address" type="text" maxlength="500" wire:model="form.address" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.address') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700" for="city-{{ $this->getId() }}">{{ __('City') }}</label>
-                                <input id="city-{{ $this->getId() }}" name="city" type="text" wire:model="form.city" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+                                <input id="city-{{ $this->getId() }}" name="city" type="text" maxlength="255" wire:model="form.city" class="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
                                 @error('form.city') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>

@@ -114,7 +114,7 @@ class PublicRequestForm extends Component
         return [
             'form.name' => ['required', 'string', 'max:255'],
             'form.email' => ['required', 'email', 'max:255'],
-            'form.whatsapp' => ['nullable', 'string', 'max:50'],
+            'form.whatsapp' => ['nullable', 'string', 'max:20'],
             'form.services' => ['required', 'array', 'min:1'],
             'form.services.*' => ['string'],
             'form.create_account' => ['nullable', 'boolean'],

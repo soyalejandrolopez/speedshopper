@@ -51,7 +51,7 @@
                                 <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
                                 <span>{{ __('Full name') }} *</span>
                             </label>
-                            <input id="name" name="name" type="text" autocomplete="name" wire:model="form.name" class="input" placeholder="María González">
+                            <input id="name" name="name" type="text" autocomplete="name" maxlength="255" wire:model="form.name" class="input" placeholder="María González">
                             @error('form.name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -59,7 +59,7 @@
                                 <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
                                 <span>{{ __('WhatsApp number') }} *</span>
                             </label>
-                            <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
+                            <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" maxlength="20" wire:model="form.whatsapp" class="input" placeholder="+502 5555 0000">
                             @error('form.whatsapp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -67,7 +67,7 @@
                                 <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
                                 <span>{{ __('Email address') }} *</span>
                             </label>
-                            <input id="email" name="email" type="email" autocomplete="email" wire:model="form.email" class="input" placeholder="you@example.com">
+                            <input id="email" name="email" type="email" autocomplete="email" maxlength="255" wire:model="form.email" class="input" placeholder="you@example.com">
                             @error('form.email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -87,14 +87,14 @@
                                 <i class="fa-solid fa-city text-emerald-600 text-xs"></i>
                                 <span>{{ __('City / State / Province') }}</span>
                             </label>
-                            <input id="city" name="city" type="text" autocomplete="address-level2" wire:model="form.city" class="input">
+                            <input id="city" name="city" type="text" autocomplete="address-level2" maxlength="255" wire:model="form.city" class="input">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="label flex items-center gap-1.5" for="address">
                                 <i class="fa-solid fa-map-pin text-emerald-600 text-xs"></i>
                                 <span>{{ __('Delivery address') }}</span>
                             </label>
-                            <textarea id="address" name="address" autocomplete="street-address" rows="2" wire:model="form.address" class="input"></textarea>
+                            <textarea id="address" name="address" autocomplete="street-address" rows="2" maxlength="500" wire:model="form.address" class="input"></textarea>
                         </div>
                     </div>
                 </div>

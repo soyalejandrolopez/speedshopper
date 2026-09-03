@@ -50,8 +50,8 @@ class ContactForm extends Component
         return [
             'form.name' => ['required', 'string', 'max:255'],
             'form.email' => ['required', 'email', 'max:255'],
-            'form.whatsapp' => ['nullable', 'string', 'max:50'],
-            'form.country' => ['nullable', 'string', 'size:2'],
+            'form.whatsapp' => ['nullable', 'string', 'max:20'],
+            'form.country' => ['nullable', 'string', 'max:50'],
             'form.subject' => ['required', 'string', 'max:100'],
             'form.message' => ['required', 'string', 'min:5', 'max:2000'],
         ];

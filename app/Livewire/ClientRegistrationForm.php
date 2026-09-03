@@ -387,9 +387,9 @@ class ClientRegistrationForm extends Component
 
         return [
             'form.name' => ['required', 'string', 'max:255'],
-            'form.whatsapp' => ['required', 'string', 'max:50'],
+            'form.whatsapp' => ['required', 'string', 'max:20'],
             'form.email' => ['required', 'email', 'max:255'],
-            'form.country' => ['required', 'string', 'max:2'],
+            'form.country' => ['required', 'string', 'max:50'],
             'form.city' => ['nullable', 'string', 'max:255'],
             'form.address' => ['nullable', 'string', 'max:500'],
             'form.create_account' => ['nullable', 'boolean'],

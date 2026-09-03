@@ -31,7 +31,7 @@
                         <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
                         <span>{{ __('Nombre completo') }} *</span>
                     </label>
-                    <input id="contact-name" name="name" type="text" autocomplete="name" wire:model="form.name" class="input" placeholder="Tu nombre">
+                    <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="255" wire:model="form.name" class="input" placeholder="Tu nombre">
                     @error('form.name') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
 
@@ -40,7 +40,7 @@
                         <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
                         <span>{{ __('Correo electrónico') }} *</span>
                     </label>
-                    <input id="contact-email" name="email" type="email" autocomplete="email" wire:model="form.email" class="input" placeholder="tu@email.com">
+                    <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="255" wire:model="form.email" class="input" placeholder="tu@email.com">
                     @error('form.email') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
                         <span>{{ __('Teléfono o WhatsApp') }}</span>
                     </label>
-                    <input id="contact-whatsapp" name="whatsapp" type="tel" autocomplete="tel" wire:model="form.whatsapp" class="input" placeholder="+58 412 000 0000">
+                    <input id="contact-whatsapp" name="whatsapp" type="tel" autocomplete="tel" maxlength="20" wire:model="form.whatsapp" class="input" placeholder="+58 412 000 0000">
                     @error('form.whatsapp') <p class="helper-error">{{ $message }}</p> @enderror
                 </div>
 

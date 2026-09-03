@@ -59,7 +59,7 @@
                             <i class="fa-solid fa-user text-emerald-600 text-xs"></i>
                             <span>{{ __('Your full name') }} *</span>
                         </label>
-                        <input id="name-{{ $this->getId() }}" name="name" type="text" wire:model="form.name" autocomplete="name"
+                        <input id="name-{{ $this->getId() }}" name="name" type="text" wire:model="form.name" autocomplete="name" maxlength="255"
                                class="input" placeholder="{{ __('Name') }}">
                         @error('form.name') <p class="helper-error">{{ $message }}</p> @enderror
                     </div>
@@ -68,7 +68,7 @@
                             <i class="fa-solid fa-envelope text-emerald-600 text-xs"></i>
                             <span>{{ __('Your email') }} *</span>
                         </label>
-                        <input id="email-{{ $this->getId() }}" name="email" type="email" wire:model="form.email" autocomplete="email"
+                        <input id="email-{{ $this->getId() }}" name="email" type="email" wire:model="form.email" autocomplete="email" maxlength="255"
                                class="input" placeholder="you@example.com">
                         @error('form.email') <p class="helper-error">{{ $message }}</p> @enderror
                     </div>
@@ -77,7 +77,7 @@
                             <i class="fa-solid fa-phone text-emerald-600 text-xs"></i>
                             <span>{{ __('Your phone or WhatsApp') }}</span>
                         </label>
-                        <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" wire:model="form.whatsapp" autocomplete="tel"
+                        <input id="whatsapp-{{ $this->getId() }}" name="whatsapp" type="text" wire:model="form.whatsapp" autocomplete="tel" maxlength="20"
                                class="input" placeholder="+502 5555 0000">
                     </div>
                 </div>

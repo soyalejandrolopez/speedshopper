@@ -21,7 +21,7 @@ class StoreShipmentRequest extends FormRequest
             'package_ids' => ['sometimes', 'array'],
             'package_ids.*' => ['integer', 'exists:packages,id'],
             'carrier' => ['nullable', 'string', 'max:255'],
-            'destination_country' => ['nullable', 'string', 'size:2'],
+            'destination_country' => ['nullable', 'string', 'max:50'],
             'final_weight_lb' => ['nullable', 'numeric', 'min:0'],
             'dimensions' => ['nullable', 'string', 'max:100'],
             'international_tracking' => ['nullable', 'string', 'max:255'],
