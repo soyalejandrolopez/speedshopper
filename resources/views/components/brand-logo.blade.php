@@ -2,10 +2,11 @@
 
 @php
     $dimensionMap = [
-        'sm' => ['maxH' => '28px', 'maxW' => '100px', 'box' => 'h-7 w-7', 'icon' => 'h-4 w-4'],
-        'md' => ['maxH' => '36px', 'maxW' => '130px', 'box' => 'h-9 w-9', 'icon' => 'h-5 w-5'],
-        'lg' => ['maxH' => '44px', 'maxW' => '160px', 'box' => 'h-11 w-11', 'icon' => 'h-6 w-6'],
-        'xl' => ['maxH' => '56px', 'maxW' => '200px', 'box' => 'h-14 w-14', 'icon' => 'h-7 w-7'],
+        'sm' => ['maxH' => '32px', 'maxW' => '120px', 'box' => 'h-8 w-8', 'icon' => 'h-5 w-5'],
+        'md' => ['maxH' => '44px', 'maxW' => '160px', 'box' => 'h-11 w-11', 'icon' => 'h-6 w-6'],
+        'lg' => ['maxH' => '56px', 'maxW' => '220px', 'box' => 'h-14 w-14', 'icon' => 'h-8 w-8'],
+        'xl' => ['maxH' => '68px', 'maxW' => '280px', 'box' => 'h-16 w-16', 'icon' => 'h-9 w-9'],
+        '2xl' => ['maxH' => '88px', 'maxW' => '360px', 'box' => 'h-22 w-22', 'icon' => 'h-12 w-12'],
     ];
     $cfg = $dimensionMap[$size] ?? $dimensionMap['md'];
     $name = \App\Models\Setting::get('company_name', config('app.name'));
