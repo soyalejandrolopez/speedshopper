@@ -14,7 +14,9 @@
     <nav class="mx-auto flex h-20 sm:h-22 max-w-7xl items-center justify-between px-4 sm:px-6">
         <a href="{{ route('home') }}" class="group flex items-center gap-3 font-bold transition-colors"
            :class="scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-900' : 'text-white drop-shadow-md'">
-            <x-brand-logo size="xl" class="transition-transform duration-300 group-hover:scale-105" />
+            <div class="flex items-center justify-center rounded-2xl bg-white p-2 shadow-md shadow-black/10 border border-white/80 transition-transform duration-300 group-hover:scale-105">
+                <x-brand-logo size="lg" />
+            </div>
             <span class="text-xl font-extrabold tracking-tight sm:text-2xl">{{ \App\Models\Setting::get('company_name', config('app.name')) }}</span>
         </a>
 

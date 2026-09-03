@@ -13,7 +13,7 @@
 @endphp
 
 @if ($logo = brand_logo_url())
-    <div class="flex items-center justify-center shrink-0 overflow-hidden" style="max-height: {{ $cfg['maxH'] }};">
+    <div class="flex items-center justify-center shrink-0 overflow-hidden rounded-xl bg-white p-1.5 shadow-sm" style="max-height: {{ $cfg['maxH'] }};">
         <img src="{{ $logo }}" alt="{{ $name }}"
              style="max-height: {{ $cfg['maxH'] }}; max-width: {{ $cfg['maxW'] }}; height: auto; width: auto; object-fit: contain;"
              class="shrink-0 rounded-lg {{ $class }}">
