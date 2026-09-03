@@ -10,7 +10,6 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Shipment;
-use App\Services\FinanceService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -192,16 +191,16 @@ class PaymentsIndex extends Component
             ->latest()
             ->paginate(10);
 
-        $financeMetrics = app(FinanceService::class)->getMetrics();
-        $totalInvoiced = $financeMetrics['total_invoiced'];
-        $totalCollected = $financeMetrics['total_collected'];
-        $totalBalanceDue = $financeMetrics['total_balance_due'];
+        $totalTransactions = Payment::count();
+        $totalCollected = (float) Payment::sum('amount_paid');
+        $totalInvoiced = (float) Payment::sum('invoice_total');
+        $totalBalanceDue = max(0.0, (float) Payment::all()->sum('balance_due'));
 
         return view('livewire.admin.payments.payments-index', [
             'payments' => $payments,
             'customers' => Customer::orderBy('name')->get(),
             'methods' => PaymentMethod::cases(),
-            'totalTransactions' => Payment::count(),
+            'totalTransactions' => $totalTransactions,
             'totalCollected' => $totalCollected,
             'totalInvoiced' => $totalInvoiced,
             'totalBalanceDue' => $totalBalanceDue,

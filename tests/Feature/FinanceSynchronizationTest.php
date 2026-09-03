@@ -116,42 +116,49 @@ test('dashboard, billing, and payments sections render synchronized kpi totals',
         ->assertViewHas('totalCollected', $finance['total_collected'])
         ->assertViewHas('totalPending', $finance['total_balance_due']);
 
-    // Verify Payments section view
+    // Verify Payments section view sums strictly registered payments
     Livewire::test(PaymentsIndex::class)
-        ->assertViewHas('totalInvoiced', $finance['total_invoiced'])
-        ->assertViewHas('totalCollected', $finance['total_collected'])
-        ->assertViewHas('totalBalanceDue', $finance['total_balance_due']);
+        ->assertViewHas('totalInvoiced', (float) Payment::sum('invoice_total'))
+        ->assertViewHas('totalCollected', (float) Payment::sum('amount_paid'))
+        ->assertViewHas('totalBalanceDue', max(0.0, (float) Payment::all()->sum('balance_due')))
+        ->assertViewHas('totalTransactions', Payment::count());
 });
 
-test('creating invoice with zero paid creates payment ledger record and balances match exactly', function () {
+test('payments section strictly sums registered payments and shows zero when no payments exist', function () {
     $this->actingAs($this->admin);
 
-    $customer = Customer::factory()->create(['name' => 'Franchesca Liccien']);
+    // If there is a purchased request with $155.00 but NO payment record exists in payments
+    $customer = Customer::factory()->create(['name' => 'Cliente Test']);
+    $req = PurchaseRequest::create([
+        'customer_id' => $customer->id,
+        'product_name' => 'Pedido Comprado',
+        'status' => RequestStatus::Purchased,
+        'unit_price' => 155.00,
+        'quantity' => 1,
+    ]);
 
-    Livewire::test(BillingIndex::class)
-        ->set('invoiceForm.customer_id', $customer->id)
-        ->set('invoiceType', 'pendiente')
-        ->set('invoiceForm.items', [
-            ['product_name' => 'Vestido', 'store' => 'Zara', 'quantity' => 1, 'unit_price' => 400.00],
-        ])
-        ->set('invoiceForm.costs', [
-            ['type' => CostType::ShopperFee->value, 'description' => 'Servicio', 'amount' => 61.87],
-        ])
-        ->set('invoiceForm.amount_paid', 0.00)
-        ->set('invoiceForm.payment_method', PaymentMethod::Zelle->value)
-        ->call('saveInvoice')
-        ->assertHasNoErrors();
+    // Verify Payments module shows ZERO because no payment transaction is registered
+    expect(Payment::count())->toBe(0);
 
-    $payment = Payment::where('customer_id', $customer->id)->first();
-    expect($payment)->not->toBeNull()
-        ->and((float) $payment->invoice_total)->toBeGreaterThan(0.0)
-        ->and((float) $payment->amount_paid)->toBe(0.0)
-        ->and((float) $payment->balance_due)->toBe((float) $payment->invoice_total);
-
-    // Payments index renders the record and balance matches
     Livewire::test(PaymentsIndex::class)
-        ->assertSee('Franchesca Liccien')
-        ->assertSee(money($payment->balance_due));
+        ->assertViewHas('totalTransactions', 0)
+        ->assertViewHas('totalCollected', 0.0)
+        ->assertViewHas('totalInvoiced', 0.0)
+        ->assertViewHas('totalBalanceDue', 0.0);
+
+    // When a payment IS registered, it reflects only registered payments
+    Payment::create([
+        'customer_id' => $customer->id,
+        'invoice_total' => 155.00,
+        'amount_paid' => 155.00,
+        'payment_method' => PaymentMethod::Zelle,
+    ]);
+
+    Livewire::test(PaymentsIndex::class)
+        ->assertViewHas('totalTransactions', 1)
+        ->assertViewHas('totalCollected', 155.0)
+        ->assertViewHas('totalInvoiced', 155.0)
+        ->assertViewHas('totalBalanceDue', 0.0);
 });
 
 test('billing index renders standalone direct invoices alongside request invoices', function () {

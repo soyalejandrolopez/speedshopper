@@ -940,17 +940,17 @@ class BillingIndex extends Component
                     'payment_method' => $this->invoiceForm['payment_method'] ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? $existingPayment->payment_method) : $existingPayment->payment_method,
                     'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : ($existingPayment->paid_at ?? now())) : $existingPayment->paid_at,
                 ]);
-            } else {
+            } elseif ($amountPaid > 0) {
                 Payment::create([
                     'customer_id' => $purchaseRequest->customer_id,
                     'billable_type' => PurchaseRequest::class,
                     'billable_id' => $purchaseRequest->id,
                     'invoice_total' => $totalInvoiced,
                     'amount_paid' => $amountPaid,
-                    'payment_method' => $amountPaid > 0 ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle) : null,
+                    'payment_method' => PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle,
                     'reference' => $this->invoiceForm['payment_reference'] ?? $purchaseRequest->number,
-                    'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now()) : null,
-                    'notes' => $amountPaid > 0 ? 'Pago registrado al actualizar factura '.$purchaseRequest->number : 'Factura emitida '.$purchaseRequest->number,
+                    'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
+                    'notes' => 'Pago registrado al actualizar factura '.$purchaseRequest->number,
                 ]);
             }
 
@@ -1028,18 +1028,20 @@ class BillingIndex extends Component
             $amountPaid = $totalInvoiced;
         }
 
-        // Always record invoice in payments ledger so it appears in Payments index and tracks balance
-        Payment::create([
-            'customer_id' => $this->invoiceForm['customer_id'],
-            'billable_type' => PurchaseRequest::class,
-            'billable_id' => $purchaseRequest->id,
-            'invoice_total' => $totalInvoiced,
-            'amount_paid' => $amountPaid,
-            'payment_method' => $amountPaid > 0 ? (PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle) : null,
-            'reference' => $this->invoiceForm['payment_reference'] ?? $purchaseRequest->number,
-            'paid_at' => $amountPaid > 0 ? ($this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now()) : null,
-            'notes' => $amountPaid > 0 ? 'Pago registrado al emitir factura '.$purchaseRequest->number : 'Factura emitida '.$purchaseRequest->number,
-        ]);
+        // Record payment in ledger if an amount was paid
+        if ($amountPaid > 0) {
+            Payment::create([
+                'customer_id' => $this->invoiceForm['customer_id'],
+                'billable_type' => PurchaseRequest::class,
+                'billable_id' => $purchaseRequest->id,
+                'invoice_total' => $totalInvoiced,
+                'amount_paid' => $amountPaid,
+                'payment_method' => PaymentMethod::tryFrom($this->invoiceForm['payment_method']) ?? PaymentMethod::Zelle,
+                'reference' => $this->invoiceForm['payment_reference'] ?? $purchaseRequest->number,
+                'paid_at' => $this->invoiceForm['paid_at'] ? now()->parse($this->invoiceForm['paid_at']) : now(),
+                'notes' => 'Pago registrado al emitir factura '.$purchaseRequest->number,
+            ]);
+        }
 
         $purchaseRequest->load(['customer', 'costItems']);
 
