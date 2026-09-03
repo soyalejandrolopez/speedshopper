@@ -11,6 +11,12 @@ cd "$APP_DIR"
 
 echo "==> Deploying SpeedShopper in $APP_DIR"
 
+# 0) Actualizar desde GitHub
+if [ -d .git ]; then
+    echo "==> Descargando cambios desde GitHub"
+    git pull origin main || true
+fi
+
 # 1) Permisos de escritura
 echo "==> Permisos"
 chmod -R 775 storage bootstrap/cache || true

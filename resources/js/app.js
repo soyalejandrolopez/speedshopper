@@ -104,13 +104,27 @@ const revealObserver = new IntersectionObserver(
 );
 
 function observeReveals() {
+    document.documentElement.classList.add('js-ready');
     document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
-        revealObserver.observe(el);
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 150) {
+            el.classList.add('is-revealed');
+        } else {
+            revealObserver.observe(el);
+        }
     });
 }
 
 observeReveals();
+document.addEventListener('DOMContentLoaded', observeReveals);
 document.addEventListener('livewire:navigated', observeReveals);
+
+// Safety fallback: ensure every element is revealed after 1 second
+setTimeout(() => {
+    document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+        el.classList.add('is-revealed');
+    });
+}, 1000);
 
 /* ---------- Animated counters ---------- */
 

@@ -52,7 +52,7 @@
     "src": "node_modules/slick-carousel/slick/fonts/slick.woff"
   },
   "resources/css/app.css": {
-    "file": "assets/app-C3ARw7G7.css",
+    "file": "assets/app-CPUMhxLj.css",
     "name": "app",
     "names": [
       "app.css"
@@ -65,7 +65,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-Df1ZLjG4.js",
+    "file": "assets/app-5rpW8iqE.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

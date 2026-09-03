@@ -521,17 +521,22 @@ input[type="radio"]:focus {
     animation: shimmer 1.6s linear infinite;
 }
 
-/* Scroll reveal (JS añade .is-revealed) */
+/* Scroll reveal (Fail-safe: contenido visible por defecto, solo anima si JS está listo) */
 [data-reveal] {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
 }
 
+html.js-ready [data-reveal]:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(16px);
+}
+
 [data-reveal].is-revealed {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

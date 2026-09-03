@@ -80,7 +80,7 @@
             <div class="grid gap-8 lg:grid-cols-12 lg:items-start">
                 
                 <!-- Left Details & Value Props (2nd on mobile, 1st on desktop) -->
-                <div class="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-between" data-reveal>
+                <div class="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-between">
                     <div>
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 uppercase tracking-wide">
                             <i class="fa-solid fa-bolt text-xs text-emerald-600"></i>
@@ -158,7 +158,7 @@
                 </div>
 
                 <!-- Right Form: Client Registration Form (1st on mobile, 2nd on desktop) -->
-                <div class="order-1 lg:order-2 lg:col-span-7" data-reveal style="--reveal-delay: 100ms">
+                <div class="order-1 lg:order-2 lg:col-span-7">
                     <div class="w-full rounded-3xl border border-gray-200 bg-white p-4 sm:p-6 lg:p-8 shadow-xl shadow-emerald-950/5 ring-1 ring-black/5">
                         <div class="border-b border-gray-100 pb-4 mb-6">
                             <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
