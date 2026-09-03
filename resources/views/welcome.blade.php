@@ -29,8 +29,8 @@
             </picture>
             <!-- Top vignette for navbar visibility -->
             <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent via-25% to-transparent"></div>
-            <!-- Bottom subtle gradient to keep photo visible all the way to the bottom while maintaining text contrast -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 via-50% to-transparent"></div>
+            <!-- Bottom gradient for high contrast behind text and buttons, keeping upper face area clear -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/75 via-45% to-transparent"></div>
         </div>
 
         <div class="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-4 pt-24 pb-16 text-center sm:px-6">
