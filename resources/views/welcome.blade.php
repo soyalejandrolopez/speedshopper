@@ -27,13 +27,15 @@
                 <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
                      class="h-full w-full object-cover hero-bg-cover" width="1920" height="1080" decoding="async" fetchpriority="high">
             </picture>
-            <!-- Top vignette for navbar visibility -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent via-25% to-transparent"></div>
-            <!-- Bottom gradient for high contrast behind text and buttons, keeping upper face area clear -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/75 via-45% to-transparent"></div>
+            <!-- Sombra general en toda la imagen para contraste y nitidez completa -->
+            <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.52);"></div>
+            <!-- Viñeta superior para legibilidad óptima del menú y enlaces -->
+            <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 25%, transparent 50%);"></div>
+            <!-- Sombra inferior para resaltar el titular, botones y acreditaciones -->
+            <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 40%, transparent 70%);"></div>
         </div>
 
-        <div class="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-4 pt-24 pb-16 text-center sm:px-6">
+        <div class="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-end px-4 pt-32 pb-20 sm:pb-28 lg:pb-32 text-center sm:px-6">
             <div class="flex flex-col items-center">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md">
                     <span class="relative flex h-2 w-2">
@@ -60,7 +62,7 @@
                     @endguest
                 </div>
 
-                <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-gray-200 drop-shadow-sm">
+                <div class="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-gray-200 drop-shadow-sm">
                     <span class="inline-flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
                         Zelle
@@ -70,13 +72,12 @@
                         PayPal
                     </span>
                 </div>
-            </div>
 
-            <!-- Subtle scroll indicator at the bottom edge -->
-            <div class="absolute bottom-5 inset-x-0 flex justify-center animate-bounce text-white/70">
-                <a href="#quick-quote" aria-label="{{ __('Scroll down') }}" class="p-2 transition-transform hover:scale-110">
-                    <i class="fa-solid fa-chevron-down text-xl"></i>
-                </a>
+                <div class="mt-4 flex justify-center animate-bounce text-white/70">
+                    <a href="#quick-quote" aria-label="{{ __('Scroll down') }}" class="p-1.5 transition-transform hover:scale-110">
+                        <i class="fa-solid fa-chevron-down text-lg"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
