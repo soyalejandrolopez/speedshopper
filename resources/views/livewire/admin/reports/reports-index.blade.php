@@ -62,7 +62,7 @@
                     <p class="mt-0.5 text-lg font-extrabold text-emerald-800">💰 {{ money($reportPeriod['earnings']) }}</p>
                 </div>
                 <div class="rounded-xl border border-teal-200 bg-teal-50/70 p-3 shadow-2xs">
-                    <p class="text-xs font-medium text-teal-800">{{ __('Total Cobrado') }}</p>
+                    <p class="text-xs font-medium text-teal-800">{{ __('Total Pagado por Clientes') }}</p>
                     <p class="mt-0.5 text-lg font-bold text-teal-700">{{ money($reportPeriod['collected']) }}</p>
                 </div>
                 <div class="rounded-xl border border-amber-200 bg-amber-50/70 p-3 shadow-2xs">
@@ -105,6 +105,185 @@
                     {{ __('Download CSV') }}
                 </button>
             </div>
+        </div>
+    </div>
+
+    {{-- TABLA 1: LO FACTURADO --}}
+    <div class="card mt-6 overflow-hidden animate-fade-up" style="animation-delay: 150ms">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-5 py-4 bg-gray-50/70">
+            <div class="flex items-center gap-2.5">
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </span>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-sm font-bold text-gray-900">{{ __('Lo Facturado (Facturas del Período)') }}</h2>
+                        <span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-200">
+                            {{ count($reportPeriod['invoicesList']) }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ __('Detalle independiente de facturas emitidas en el período seleccionado.') }}</p>
+                </div>
+            </div>
+            <div class="rounded-xl bg-white border border-emerald-200 px-3.5 py-1.5 shadow-2xs">
+                <span class="text-xs text-gray-500">{{ __('Total Facturado') }}:</span>
+                <span class="ml-1 text-sm font-extrabold text-gray-900">{{ money($reportPeriod['invoiced']) }}</span>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-gray-50/80 border-b border-gray-200 text-gray-600 font-semibold uppercase tracking-wider text-[11px]">
+                    <tr>
+                        <th class="px-4 py-3">{{ __('Number') }}</th>
+                        <th class="px-4 py-3">{{ __('Customer') }}</th>
+                        <th class="px-4 py-3">{{ __('Date') }}</th>
+                        <th class="px-4 py-3">{{ __('Details') }}</th>
+                        <th class="px-4 py-3">{{ __('Status') }}</th>
+                        <th class="px-4 py-3 text-right">{{ __('Total Facturado') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white">
+                    @forelse ($reportPeriod['invoicesList'] as $inv)
+                        <tr class="hover:bg-gray-50/80 transition-colors">
+                            <td class="px-4 py-2.5 font-mono font-bold text-gray-900 whitespace-nowrap">
+                                <a href="{{ route('admin.requests.show', $inv['id']) }}" wire:navigate class="hover:text-emerald-700 hover:underline">
+                                    {{ $inv['number'] }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-2.5 font-medium text-gray-900 whitespace-nowrap">
+                                @if ($inv['customer_id'])
+                                    <a href="{{ route('admin.customers.show', $inv['customer_id']) }}" wire:navigate class="hover:text-emerald-700">
+                                        {{ $inv['customer'] }}
+                                    </a>
+                                @else
+                                    {{ $inv['customer'] }}
+                                @endif
+                            </td>
+                            <td class="px-4 py-2.5 text-gray-500 whitespace-nowrap">
+                                {{ $inv['date'] }}
+                            </td>
+                            <td class="px-4 py-2.5 text-gray-600 max-w-xs truncate">
+                                {{ $inv['details'] ?: '—' }}
+                            </td>
+                            <td class="px-4 py-2.5 whitespace-nowrap">
+                                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold bg-gray-100 text-gray-700">
+                                    {{ $inv['status'] }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2.5 text-right font-mono font-bold text-gray-900 whitespace-nowrap">
+                                {{ money($inv['invoice_total']) }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="p-4 text-center">
+                                <x-empty-state :message="__('No records found.')" icon="card" />
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                @if (count($reportPeriod['invoicesList']) > 0)
+                    <tfoot class="bg-gray-50 border-t-2 border-gray-300 font-bold text-gray-900">
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-right uppercase tracking-wider text-[11px] text-gray-600">
+                                {{ __('Total Facturado') }}:
+                            </td>
+                            <td class="px-4 py-3 text-right font-mono text-sm font-extrabold text-emerald-800">
+                                {{ money($reportPeriod['invoiced']) }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                @endif
+            </table>
+        </div>
+    </div>
+
+    {{-- TABLA 2: PAGOS POR CLIENTE --}}
+    <div class="card mt-6 overflow-hidden animate-fade-up" style="animation-delay: 200ms">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-5 py-4 bg-gray-50/70">
+            <div class="flex items-center gap-2.5">
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-100 text-teal-700">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                </span>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-sm font-bold text-gray-900">{{ __('Pagos por Cliente (Cobrado en el Período)') }}</h2>
+                        <span class="inline-flex items-center rounded-full bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700 border border-teal-200">
+                            {{ count($reportPeriod['customerPaymentsList']) }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ __('Total de pagos efectivamente cobrados agrupados por cada cliente.') }}</p>
+                </div>
+            </div>
+            <div class="rounded-xl bg-white border border-teal-200 px-3.5 py-1.5 shadow-2xs">
+                <span class="text-xs text-gray-500">{{ __('Total Pagado por Clientes') }}:</span>
+                <span class="ml-1 text-sm font-extrabold text-teal-700">{{ money($reportPeriod['collected']) }}</span>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-gray-50/80 border-b border-gray-200 text-gray-600 font-semibold uppercase tracking-wider text-[11px]">
+                    <tr>
+                        <th class="px-4 py-3">{{ __('Customer') }}</th>
+                        <th class="px-4 py-3 text-center">{{ __('Number of Payments') }}</th>
+                        <th class="px-4 py-3">{{ __('Method') }}</th>
+                        <th class="px-4 py-3">{{ __('Last Payment Date') }}</th>
+                        <th class="px-4 py-3 text-right">{{ __('Total Pagado') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white">
+                    @forelse ($reportPeriod['customerPaymentsList'] as $cp)
+                        <tr class="hover:bg-gray-50/80 transition-colors">
+                            <td class="px-4 py-2.5 font-medium text-gray-900 whitespace-nowrap">
+                                @if ($cp['customer_id'])
+                                    <a href="{{ route('admin.customers.show', $cp['customer_id']) }}" wire:navigate class="hover:text-teal-700 font-semibold">
+                                        {{ $cp['customer'] }}
+                                    </a>
+                                @else
+                                    <span class="font-semibold">{{ $cp['customer'] }}</span>
+                                @endif
+                                @if (!empty($cp['customer_whatsapp']))
+                                    <span class="block text-[11px] text-gray-400 font-mono">{{ $cp['customer_whatsapp'] }}</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-2.5 text-center whitespace-nowrap">
+                                <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-bold text-gray-700">
+                                    {{ $cp['payments_count'] }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2.5 text-gray-600 whitespace-nowrap">
+                                <span class="inline-flex items-center gap-1 rounded bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700 border border-teal-100">
+                                    {{ $cp['methods'] ?: '—' }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2.5 text-gray-500 whitespace-nowrap">
+                                {{ $cp['latest_date'] }}
+                            </td>
+                            <td class="px-4 py-2.5 text-right font-mono font-bold text-teal-700 whitespace-nowrap">
+                                {{ money($cp['total_paid']) }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="p-4 text-center">
+                                <x-empty-state :message="__('No records found.')" icon="card" />
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                @if (count($reportPeriod['customerPaymentsList']) > 0)
+                    <tfoot class="bg-gray-50 border-t-2 border-gray-300 font-bold text-gray-900">
+                        <tr>
+                            <td colspan="4" class="px-4 py-3 text-right uppercase tracking-wider text-[11px] text-gray-600">
+                                {{ __('Total Pagado por Clientes') }}:
+                            </td>
+                            <td class="px-4 py-3 text-right font-mono text-sm font-extrabold text-teal-700">
+                                {{ money($reportPeriod['collected']) }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                @endif
+            </table>
         </div>
     </div>
 

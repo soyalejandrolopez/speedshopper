@@ -429,9 +429,10 @@ class BillingIndex extends Component
 
         if ($request->status === RequestStatus::AwaitingPayment) {
             $this->invoiceType = 'pendiente';
+        } elseif (in_array($request->status, [RequestStatus::Purchased, RequestStatus::InTransit, RequestStatus::Received, RequestStatus::Packing, RequestStatus::Ready, RequestStatus::Shipped, RequestStatus::Delivered], true)) {
+            $this->invoiceType = 'pagado';
         } else {
             // Default to 'cotizacion' (Cotización / Presupuesto informativo).
-            // Nunca preseleccionar 'pagado' (Paid / Full payment received) por defecto.
             $this->invoiceType = 'cotizacion';
         }
 
@@ -924,6 +925,9 @@ class BillingIndex extends Component
             // Sync payments if updated
             $totalInvoiced = $this->invoicedTotal;
             $amountPaid = (float) ($this->invoiceForm['amount_paid'] ?? 0);
+            if ($targetStatus === RequestStatus::Purchased && $amountPaid < $totalInvoiced) {
+                $amountPaid = $totalInvoiced;
+            }
             $alreadyPaid = (float) Payment::where('billable_type', PurchaseRequest::class)
                 ->where('billable_id', $purchaseRequest->id)
                 ->sum('amount_paid');
@@ -1012,6 +1016,9 @@ class BillingIndex extends Component
 
         $totalInvoiced = $this->invoicedTotal;
         $amountPaid = (float) ($this->invoiceForm['amount_paid'] ?? 0);
+        if ($targetStatus === RequestStatus::Purchased && $amountPaid < $totalInvoiced) {
+            $amountPaid = $totalInvoiced;
+        }
 
         // Record initial payment if amount_paid > 0
         if ($amountPaid > 0) {

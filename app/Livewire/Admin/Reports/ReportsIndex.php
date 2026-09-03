@@ -113,6 +113,52 @@ class ReportsIndex extends Component
         $periodCollected = (float) $payments->sum('amount_paid');
         $periodBalance = max(0.0, $periodInvoiced - $periodCollected);
 
+        $invoicesList = $requests->map(function (PurchaseRequest $r) {
+            $totalCost = (float) $r->total_cost;
+            if ($totalCost == 0.0 && $r->unit_price) {
+                $totalCost = (float) $r->unit_price * max(1, $r->quantity);
+            }
+            $earnings = (float) $r->costItems->where('type', '!=', CostType::ProductCost)->sum('amount');
+
+            return [
+                'id' => $r->id,
+                'number' => $r->number,
+                'customer' => $r->customer?->name ?? '—',
+                'customer_id' => $r->customer?->id,
+                'date' => $r->created_at?->format('Y-m-d') ?? '',
+                'details' => $r->product_name.($r->quantity > 1 ? " (x{$r->quantity})" : ''),
+                'status' => $r->status?->label() ?? ucfirst($r->status?->value ?? '—'),
+                'status_color' => $r->status?->color() ?? 'gray',
+                'invoice_total' => $totalCost,
+                'service_profit' => $earnings,
+            ];
+        })->sortByDesc('date')->values();
+
+        $customerPaymentsList = $payments->groupBy('customer_id')->map(function ($custPayments) {
+            $first = $custPayments->first();
+            $customer = $first->customer;
+            $totalPaid = (float) $custPayments->sum('amount_paid');
+            $methods = $custPayments->map(fn (Payment $p) => $p->payment_method?->label() ?? '—')->filter()->unique()->join(', ');
+            $latestDate = $custPayments->max(fn (Payment $p) => $p->paid_at ?? $p->created_at);
+
+            return [
+                'customer' => $customer?->name ?? '—',
+                'customer_id' => $customer?->id,
+                'customer_whatsapp' => $customer?->whatsapp,
+                'payments_count' => $custPayments->count(),
+                'methods' => $methods ?: '—',
+                'latest_date' => $latestDate ? Carbon::parse($latestDate)->format('Y-m-d') : '—',
+                'total_paid' => $totalPaid,
+                'payments' => $custPayments->map(fn (Payment $p) => [
+                    'number' => $p->number,
+                    'amount' => (float) $p->amount_paid,
+                    'method' => $p->payment_method?->label() ?? '—',
+                    'date' => $p->paid_at?->format('Y-m-d') ?? $p->created_at?->format('Y-m-d') ?? '',
+                    'reference' => $p->reference,
+                ])->values()->all(),
+            ];
+        })->sortByDesc('total_paid')->values();
+
         return view('livewire.admin.reports.reports-index', [
             'totalInvoiced' => $totalInvoiced,
             'totalEarnings' => $totalEarnings,
@@ -139,6 +185,8 @@ class ReportsIndex extends Component
                 'shipments' => Shipment::whereBetween('created_at', [$start, $end])->count(),
                 'payments' => $payments,
                 'revenue' => $this->revenueBuckets($payments),
+                'invoicesList' => $invoicesList,
+                'customerPaymentsList' => $customerPaymentsList,
             ],
             'balanceByCustomer' => $balanceByCustomer,
             'maxCustomerBalance' => max($balanceByCustomer->max('balance') ?? 1, 1),
@@ -161,21 +209,35 @@ class ReportsIndex extends Component
             foreach ($data['summary'] as $label => $value) {
                 fputcsv($out, [$label, is_numeric($value) ? number_format($value, 2) : $value]);
             }
-            fputcsv($out, []);
-            fputcsv($out, ['Payments & Invoices']);
-            fputcsv($out, ['Number', 'Customer', 'Method', 'Date', 'Total Invoiced', 'Service Profit', 'Amount Paid', 'Balance']);
-            foreach ($data['payments'] as $p) {
+            // TABLA 1: LO FACTURADO
+            fputcsv($out, [__('Lo Facturado (Facturas del Período)')]);
+            fputcsv($out, [__('Number'), __('Customer'), __('Date'), __('Method'), __('Total Facturado'), __('Ganancia Servicios')]);
+            foreach ($data['invoices'] as $inv) {
                 fputcsv($out, [
-                    $p['number'],
-                    $p['customer'],
-                    $p['method'],
-                    $p['date'],
-                    number_format($p['invoice_total'], 2),
-                    number_format($p['service_profit'], 2),
-                    number_format($p['amount_paid'], 2),
-                    number_format($p['balance'], 2),
+                    $inv['number'],
+                    $inv['customer'],
+                    $inv['date'],
+                    $inv['method'] ?? '—',
+                    number_format($inv['invoice_total'], 2),
+                    number_format($inv['service_profit'], 2),
                 ]);
             }
+            fputcsv($out, ['', '', '', __('Total Facturado'), number_format($data['period']['invoiced'], 2)]);
+            fputcsv($out, []);
+
+            // TABLA 2: PAGOS POR CLIENTE
+            fputcsv($out, [__('Pagos por Cliente (Cobrado en el Período)')]);
+            fputcsv($out, [__('Customer'), __('Number of Payments'), __('Method'), __('Last Payment Date'), __('Total Pagado')]);
+            foreach ($data['customerPayments'] as $cp) {
+                fputcsv($out, [
+                    $cp['customer'],
+                    $cp['payments_count'],
+                    $cp['methods'],
+                    $cp['latest_date'],
+                    number_format($cp['total_paid'], 2),
+                ]);
+            }
+            fputcsv($out, ['', '', '', __('Total Pagado por Clientes'), number_format($data['period']['collected'], 2)]);
 
             fclose($out);
         }, $name, ['Content-Type' => 'text/csv']);
@@ -293,30 +355,56 @@ class ReportsIndex extends Component
         $sheet->getStyle('B'.($revenueHeader + 1).':B'.($row - 1))->getNumberFormat()->setFormatCode($money);
 
         $row += 2;
-        $sheet->setCellValue("A{$row}", __('Payments').' ('.count($data['payments']).')');
+        // TABLA 1: LO FACTURADO
+        $sheet->setCellValue("A{$row}", __('Lo Facturado (Facturas del Período)').' ('.count($data['invoices']).')');
+        $sheet->getStyle("A{$row}")->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($color800);
+        $row++;
+
+        $invoicesHeader = $row;
+        $sheet->fromArray([__('Number'), __('Customer'), __('Date'), __('Method'), __('Total Facturado')], null, "A{$row}");
+        $this->styleTableHeader($sheet, "A{$row}:E{$row}");
+        $row++;
+
+        foreach ($data['invoices'] as $inv) {
+            $sheet->setCellValue("A{$row}", $inv['number']);
+            $sheet->setCellValue("B{$row}", $inv['customer']);
+            $sheet->setCellValue("C{$row}", $inv['date']);
+            $sheet->setCellValue("D{$row}", $inv['method'] ?? '—');
+            $sheet->setCellValue("E{$row}", $inv['invoice_total']);
+            $row++;
+        }
+        $sheet->setCellValue("D{$row}", __('Total Facturado'));
+        $sheet->setCellValue("E{$row}", $data['period']['invoiced']);
+        $sheet->getStyle("D{$row}:E{$row}")->getFont()->setBold(true);
+        $sheet->getStyle('E'.($invoicesHeader + 1).":E{$row}")->getNumberFormat()->setFormatCode($money);
+        $sheet->getStyle('A'.($invoicesHeader + 1).":E{$row}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+        $row += 3;
+        // TABLA 2: PAGOS POR CLIENTE
+        $sheet->setCellValue("A{$row}", __('Pagos por Cliente (Cobrado en el Período)').' ('.count($data['customerPayments']).')');
         $sheet->getStyle("A{$row}")->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($color800);
         $row++;
 
         $paymentsHeader = $row;
-        $sheet->fromArray([__('Number'), __('Customer'), __('Method'), __('Date'), __('Total Facturado'), __('Ganancia Servicios'), __('Pagado'), __('Saldo')], null, "A{$row}");
-        $this->styleTableHeader($sheet, "A{$row}:H{$row}");
+        $sheet->fromArray([__('Customer'), __('Number of Payments'), __('Method'), __('Last Payment Date'), __('Total Pagado')], null, "A{$row}");
+        $this->styleTableHeader($sheet, "A{$row}:E{$row}");
         $row++;
 
-        foreach ($data['payments'] as $p) {
-            $sheet->setCellValue("A{$row}", $p['number']);
-            $sheet->setCellValue("B{$row}", $p['customer']);
-            $sheet->setCellValue("C{$row}", $p['method']);
-            $sheet->setCellValue("D{$row}", $p['date']);
-            $sheet->setCellValue("E{$row}", $p['invoice_total']);
-            $sheet->setCellValue("F{$row}", $p['service_profit']);
-            $sheet->setCellValue("G{$row}", $p['amount_paid']);
-            $sheet->setCellValue("H{$row}", $p['balance']);
+        foreach ($data['customerPayments'] as $cp) {
+            $sheet->setCellValue("A{$row}", $cp['customer']);
+            $sheet->setCellValue("B{$row}", $cp['payments_count']);
+            $sheet->setCellValue("C{$row}", $cp['methods']);
+            $sheet->setCellValue("D{$row}", $cp['latest_date']);
+            $sheet->setCellValue("E{$row}", $cp['total_paid']);
             $row++;
         }
-        $sheet->getStyle('E'.($paymentsHeader + 1).':H'.($row - 1))->getNumberFormat()->setFormatCode($money);
-        $sheet->getStyle('A'.($paymentsHeader + 1).':H'.($row - 1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        $sheet->setCellValue("D{$row}", __('Total Pagado por Clientes'));
+        $sheet->setCellValue("E{$row}", $data['period']['collected']);
+        $sheet->getStyle("D{$row}:E{$row}")->getFont()->setBold(true);
+        $sheet->getStyle('E'.($paymentsHeader + 1).":E{$row}")->getNumberFormat()->setFormatCode($money);
+        $sheet->getStyle('A'.($paymentsHeader + 1).":E{$row}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
-        foreach (['A' => 20, 'B' => 28, 'C' => 15, 'D' => 16, 'E' => 16, 'F' => 16, 'G' => 16, 'H' => 14] as $col => $width) {
+        foreach (['A' => 20, 'B' => 28, 'C' => 16, 'D' => 28, 'E' => 18] as $col => $width) {
             $sheet->getColumnDimension($col)->setWidth($width);
         }
 
@@ -429,6 +517,22 @@ class ReportsIndex extends Component
             ->values()
             ->all();
 
+        $customerPaymentsList = $payments->groupBy('customer_id')->map(function ($custPayments) {
+            $first = $custPayments->first();
+            $customer = $first->customer;
+            $totalPaid = (float) $custPayments->sum('amount_paid');
+            $methods = $custPayments->map(fn (Payment $p) => $p->payment_method?->label() ?? '—')->filter()->unique()->join(', ');
+            $latestDate = $custPayments->max(fn (Payment $p) => $p->paid_at ?? $p->created_at);
+
+            return [
+                'customer' => $customer?->name ?? '—',
+                'payments_count' => $custPayments->count(),
+                'methods' => $methods ?: '—',
+                'latest_date' => $latestDate ? Carbon::parse($latestDate)->format('Y-m-d') : '—',
+                'total_paid' => $totalPaid,
+            ];
+        })->sortByDesc('total_paid')->values();
+
         return [
             'logo' => $this->logoDataUri(),
             'company' => Setting::get('company_name', config('app.name')),
@@ -452,13 +556,15 @@ class ReportsIndex extends Component
             'summary' => [
                 __('Total Facturado') => $invoiced,
                 __('Ganancia Servicios') => $earnings,
-                __('Total Cobrado') => $collected,
+                __('Total Pagado por Clientes') => $collected,
                 __('Saldo por Cobrar') => $balance,
                 __('New Customers') => Customer::whereBetween('created_at', [$start, $end])->count(),
                 __('Requests') => $requests->count(),
                 __('Packages') => Package::whereBetween('created_at', [$start, $end])->count(),
                 __('Shipments') => Shipment::whereBetween('created_at', [$start, $end])->count(),
             ],
+            'invoices' => $invoicesList->all(),
+            'customerPayments' => $customerPaymentsList->all(),
             'payments' => $allRecords,
             'balanceByCustomer' => $balanceByCustomer,
             'revenue' => $this->revenueBuckets($payments),

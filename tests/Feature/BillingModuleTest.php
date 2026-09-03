@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\PurchaseRequest;
 use App\Models\Setting;
+use App\Services\FinanceService;
 use App\Services\InvoicePdfService;
 use App\Services\PricingRateService;
 use Illuminate\Support\Facades\Mail;
@@ -757,4 +758,54 @@ test('editInvoice does not preselect Paid / Full payment received by default', f
         ->assertSet('invoiceType', 'cotizacion')
         ->assertSet('invoiceForm.invoice_type', 'cotizacion')
         ->assertNotSet('invoiceType', 'pagado');
+});
+
+test('purchased invoice reflects zero pending balance and full total cobrado', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Purchased,
+        'unit_price' => 350.0,
+        'quantity' => 1,
+    ]);
+    CostItem::create([
+        'costable_type' => PurchaseRequest::class,
+        'costable_id' => $request->id,
+        'type' => CostType::ProductCost,
+        'description' => 'Test Item',
+        'amount' => 350.0,
+    ]);
+
+    $finance = app(FinanceService::class);
+    expect($finance->getRequestsTotalBalanceDue())->toBe(0.0)
+        ->and($finance->getRequestsTotalCollected())->toBe(350.0)
+        ->and($customer->fresh()->balance_due)->toBe(0.0);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->assertSee('OK');
+});
+
+test('unpurchased invoice reflects balance in pending balance', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Quoted,
+        'unit_price' => 200.0,
+        'quantity' => 1,
+    ]);
+    CostItem::create([
+        'costable_type' => PurchaseRequest::class,
+        'costable_id' => $request->id,
+        'type' => CostType::ProductCost,
+        'description' => 'Unpaid Item',
+        'amount' => 200.0,
+    ]);
+
+    $finance = app(FinanceService::class);
+    expect($finance->getRequestsTotalBalanceDue())->toBe(200.0)
+        ->and($finance->getRequestsTotalCollected())->toBe(0.0)
+        ->and($customer->fresh()->balance_due)->toBe(200.0);
 });

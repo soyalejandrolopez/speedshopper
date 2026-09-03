@@ -71,27 +71,46 @@ class Customer extends Model
 
     public function getBalanceDueAttribute(): float
     {
-        $requestsInvoiced = (float) $this->purchaseRequests()
+        $purchasedStatuses = [
+            RequestStatus::Purchased->value,
+            RequestStatus::InTransit->value,
+            RequestStatus::Received->value,
+            RequestStatus::Packing->value,
+            RequestStatus::Ready->value,
+            RequestStatus::Shipped->value,
+            RequestStatus::Delivered->value,
+        ];
+
+        // 1. Requests NOT marked as purchased contribute to pending balance
+        $unsettledRequests = $this->purchaseRequests()
             ->where('status', '!=', RequestStatus::Cancelled->value)
-            ->with('costItems')
-            ->get()
-            ->sum(fn (PurchaseRequest $r) => (float) $r->total_cost);
+            ->whereNotIn('status', $purchasedStatuses)
+            ->with(['costItems', 'payments'])
+            ->get();
 
-        $shipmentsInvoiced = (float) $this->shipments()
-            ->where('status', '!=', 'cancelled')
-            ->with('costItems')
-            ->get()
-            ->sum(fn (Shipment $s) => (float) $s->total_cost);
+        $requestsBalance = (float) $unsettledRequests->sum(function (PurchaseRequest $r) {
+            $paid = (float) $r->payments->sum('amount_paid');
 
-        $unlinkedPaymentsInvoiced = (float) $this->payments()
+            return max(0.0, (float) $r->total_cost - $paid);
+        });
+
+        // 2. Shipments: shipping_cost minus payments linked to shipments
+        $shipmentsInvoiced = (float) $this->shipments()->sum('shipping_cost');
+
+        $shipmentsPaid = (float) Payment::where('customer_id', $this->id)
+            ->where('billable_type', Shipment::class)
+            ->sum('amount_paid');
+
+        $shipmentsBalance = max(0.0, $shipmentsInvoiced - $shipmentsPaid);
+
+        // 3. Standalone payments
+        $unlinkedPaymentsBalance = (float) $this->payments()
             ->where(function ($q) {
                 $q->whereNull('billable_type')->orWhere('billable_type', '');
             })
-            ->sum('invoice_total');
+            ->get()
+            ->sum(fn (Payment $p) => (float) $p->balance_due);
 
-        $totalInvoiced = $requestsInvoiced + $shipmentsInvoiced + $unlinkedPaymentsInvoiced;
-        $totalPaid = (float) $this->payments()->sum('amount_paid');
-
-        return max(0.0, $totalInvoiced - $totalPaid);
+        return max(0.0, $requestsBalance + $shipmentsBalance + $unlinkedPaymentsBalance);
     }
 }

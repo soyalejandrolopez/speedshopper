@@ -1467,5 +1467,14 @@
     "Por cobrar": "Por cobrar",
     "Al día": "Al día",
     "Bandeja al día": "Bandeja al día",
-    "Total Pagos": "Total Pagos"
+    "Total Pagos": "Total Pagos",
+    "Lo Facturado (Facturas del Período)": "Lo Facturado (Facturas del Período)",
+    "Pagos por Cliente (Cobrado en el Período)": "Pagos por Cliente (Cobrado en el Período)",
+    "Total Pagado por Clientes": "Total Pagado por Clientes",
+    "Total Pagado por Clientes:": "Total Pagado por Clientes:",
+    "Total Pagado": "Total Pagado",
+    "Number of Payments": "Cantidad de Pagos",
+    "Last Payment Date": "Fecha del Último Pago",
+    "Detalle independiente de facturas emitidas en el período seleccionado.": "Detalle independiente de facturas emitidas en el período seleccionado.",
+    "Total de pagos efectivamente cobrados agrupados por cada cliente.": "Total de pagos efectivamente cobrados agrupados por cada cliente."
 }

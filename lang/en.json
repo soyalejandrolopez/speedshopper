@@ -1469,7 +1469,15 @@
     "Al día": "All settled",
     "Bandeja al día": "Inbox clear",
     "Total Pagos": "Total Payments",
-    "Tu Balance Pendiente": "Your Pending Balance",
     "Balance Pendiente por Cliente": "Pending Balance by Customer",
-    "Balance pendiente:": "Pending balance:"
+    "Balance pendiente:": "Pending balance:",
+    "Lo Facturado (Facturas del Período)": "Invoiced (Invoices in Period)",
+    "Pagos por Cliente (Cobrado en el Período)": "Payments by Customer (Collected in Period)",
+    "Total Pagado por Clientes": "Total Paid by Customers",
+    "Total Pagado por Clientes:": "Total Paid by Customers:",
+    "Total Pagado": "Total Paid",
+    "Number of Payments": "Number of Payments",
+    "Last Payment Date": "Last Payment Date",
+    "Detalle independiente de facturas emitidas en el período seleccionado.": "Independent breakdown of invoices issued in the selected period.",
+    "Total de pagos efectivamente cobrados agrupados por cada cliente.": "Total payments collected grouped by each customer."
 }

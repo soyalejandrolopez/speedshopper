@@ -844,9 +844,19 @@
                                 $productCost = (float) $request->unit_price * max(1, $request->quantity);
                             }
                             $earnings = (float) $request->costItems->where('type', '!=', \App\Enums\CostType::ProductCost)->sum('amount');
+                            $isPurchased = in_array($request->status?->value ?? $request->status, [
+                                \App\Enums\RequestStatus::Purchased->value,
+                                \App\Enums\RequestStatus::InTransit->value,
+                                \App\Enums\RequestStatus::Received->value,
+                                \App\Enums\RequestStatus::Packing->value,
+                                \App\Enums\RequestStatus::Ready->value,
+                                \App\Enums\RequestStatus::Shipped->value,
+                                \App\Enums\RequestStatus::Delivered->value,
+                            ], true);
                             $payments = $paymentsByRequest->get($request->id) ?? collect();
-                            $paidAmount = (float) $payments->sum('amount_paid');
-                            $balance = max(0.0, $totalCost - $paidAmount);
+                            $registeredPaid = (float) $payments->sum('amount_paid');
+                            $paidAmount = $isPurchased ? max($registeredPaid, $totalCost) : $registeredPaid;
+                            $balance = $isPurchased ? 0.0 : max(0.0, $totalCost - $registeredPaid);
                         @endphp
                         <tr class="hover:bg-gray-50/80 transition-colors">
                             <td class="px-2 py-2 font-mono font-bold text-gray-900 whitespace-nowrap">

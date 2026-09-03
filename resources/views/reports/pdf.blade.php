@@ -130,42 +130,65 @@
         </table>
     @endif
 
-    <div class="section-title">{{ __('Facturas, Cobros y Saldos') }} ({{ count($payments) }})</div>
-    @if ($payments)
+    <div class="section-title">{{ __('Lo Facturado (Facturas del Período)') }} ({{ count($invoices ?? []) }})</div>
+    @if (!empty($invoices))
         <table class="data" cellspacing="0">
             <thead>
                 <tr>
                     <th>{{ __('Number') }}</th>
                     <th>{{ __('Customer') }}</th>
-                    <th>{{ __('Method') }}</th>
                     <th>{{ __('Date') }}</th>
+                    <th>{{ __('Details') }}</th>
+                    <th>{{ __('Status') }}</th>
                     <th class="amount">{{ __('Total Facturado') }}</th>
-                    <th class="amount">{{ __('Ganancia Servicios') }}</th>
-                    <th class="amount">{{ __('Pagado') }}</th>
-                    <th class="amount">{{ __('Saldo') }}</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($payments as $p)
+                @foreach ($invoices as $inv)
                     <tr>
-                        <td>{{ $p['number'] }}</td>
-                        <td>{{ $p['customer'] }}</td>
-                        <td>{{ $p['method'] }}</td>
-                        <td>{{ $p['date'] }}</td>
-                        <td class="amount">{{ number_format($p['invoice_total'], 2) }}</td>
-                        <td class="amount">{{ number_format($p['service_profit'], 2) }}</td>
-                        <td class="amount">{{ number_format($p['amount_paid'], 2) }}</td>
-                        <td class="amount" style="{{ $p['balance'] > 0.005 ? 'color: #b45309; font-weight: bold;' : 'color: '.$colors['600'].';' }}">
-                            {{ number_format($p['balance'], 2) }}
-                        </td>
+                        <td class="strong">{{ $inv['number'] }}</td>
+                        <td>{{ $inv['customer'] }}</td>
+                        <td>{{ $inv['date'] }}</td>
+                        <td>{{ $inv['details'] ?? '—' }}</td>
+                        <td>{{ $inv['status'] ?? '—' }}</td>
+                        <td class="amount strong">{{ number_format($inv['invoice_total'], 2) }}</td>
                     </tr>
                 @endforeach
                 <tr class="total-row">
-                    <td colspan="4">{{ __('Total') }}</td>
+                    <td colspan="5">{{ __('Total Facturado') }}</td>
                     <td class="amount">{{ number_format($period['invoiced'], 2) }}</td>
-                    <td class="amount">{{ number_format($period['earnings'], 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @else
+        <p>{{ __('No records found.') }}</p>
+    @endif
+
+    <div class="section-title" style="margin-top: 18px;">{{ __('Pagos por Cliente (Cobrado en el Período)') }} ({{ count($customerPayments ?? []) }})</div>
+    @if (!empty($customerPayments))
+        <table class="data" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>{{ __('Customer') }}</th>
+                    <th>{{ __('Number of Payments') }}</th>
+                    <th>{{ __('Method') }}</th>
+                    <th>{{ __('Last Payment Date') }}</th>
+                    <th class="amount">{{ __('Total Pagado') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($customerPayments as $cp)
+                    <tr>
+                        <td class="strong">{{ $cp['customer'] }}</td>
+                        <td>{{ $cp['payments_count'] }}</td>
+                        <td>{{ $cp['methods'] }}</td>
+                        <td>{{ $cp['latest_date'] }}</td>
+                        <td class="amount strong">{{ number_format($cp['total_paid'], 2) }}</td>
+                    </tr>
+                @endforeach
+                <tr class="total-row">
+                    <td colspan="4">{{ __('Total Pagado por Clientes') }}</td>
                     <td class="amount">{{ number_format($period['collected'], 2) }}</td>
-                    <td class="amount">{{ number_format($period['balance'], 2) }}</td>
                 </tr>
             </tbody>
         </table>

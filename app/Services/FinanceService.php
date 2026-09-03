@@ -41,7 +41,12 @@ class FinanceService
      */
     public function getTotalCollected(): float
     {
-        return (float) Payment::sum('amount_paid');
+        $requestsCollected = $this->getRequestsTotalCollected();
+        $standalonePayments = (float) Payment::where(function ($q) {
+            $q->whereNull('billable_type')->orWhere('billable_type', '!=', PurchaseRequest::class);
+        })->sum('amount_paid');
+
+        return (float) ($requestsCollected + $standalonePayments);
     }
 
     /**
@@ -130,7 +135,23 @@ class FinanceService
      */
     public function getRequestsTotalCollected(): float
     {
-        return (float) Payment::where('billable_type', PurchaseRequest::class)->sum('amount_paid');
+        return (float) PurchaseRequest::where('status', '!=', RequestStatus::Cancelled->value)
+            ->with(['costItems', 'payments'])
+            ->get()
+            ->sum(function (PurchaseRequest $r) {
+                $registeredPaid = (float) $r->payments->sum('amount_paid');
+                $isPurchased = in_array($r->status?->value ?? $r->status, [
+                    RequestStatus::Purchased->value,
+                    RequestStatus::InTransit->value,
+                    RequestStatus::Received->value,
+                    RequestStatus::Packing->value,
+                    RequestStatus::Ready->value,
+                    RequestStatus::Shipped->value,
+                    RequestStatus::Delivered->value,
+                ], true);
+
+                return $isPurchased ? max($registeredPaid, (float) $r->total_cost) : $registeredPaid;
+            });
     }
 
     /**
@@ -142,7 +163,22 @@ class FinanceService
             ->with(['costItems', 'payments'])
             ->get()
             ->sum(function (PurchaseRequest $r) {
-                $paid = $r->payments->sum('amount_paid');
+                $isPurchased = in_array($r->status?->value ?? $r->status, [
+                    RequestStatus::Purchased->value,
+                    RequestStatus::InTransit->value,
+                    RequestStatus::Received->value,
+                    RequestStatus::Packing->value,
+                    RequestStatus::Ready->value,
+                    RequestStatus::Shipped->value,
+                    RequestStatus::Delivered->value,
+                ], true);
+
+                if ($isPurchased) {
+                    return 0.0;
+                }
+
+                $paid = (float) $r->payments->sum('amount_paid');
+
                 return max(0.0, (float) $r->total_cost - $paid);
             });
     }

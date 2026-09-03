@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RequestStatus;
 use App\Livewire\Admin\Reports\ReportsIndex;
 use App\Models\Customer;
 use App\Models\Package;
@@ -146,4 +147,60 @@ it('renders reports and exports payments even with null payment method', functio
         ->assertOk()
         ->call('exportPayments')
         ->assertFileDownloaded();
+});
+
+it('renders separate tables for lo facturado and pagos por cliente without mixing them', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['user_id' => $admin->id]);
+
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Purchased,
+        'unit_price' => 450.0,
+        'quantity' => 1,
+    ]);
+
+    Payment::factory()->create([
+        'customer_id' => $customer->id,
+        'invoice_total' => 120.0,
+        'amount_paid' => 120.0,
+        'created_at' => now(),
+    ]);
+
+    $this->actingAs($admin);
+
+    Livewire::test(ReportsIndex::class)
+        ->assertOk()
+        ->assertSee(__('Lo Facturado (Facturas del Período)'))
+        ->assertSee(__('Pagos por Cliente (Cobrado en el Período)'))
+        ->assertSee(__('Total Facturado'))
+        ->assertSee(__('Total Pagado por Clientes'))
+        ->assertSee($request->number)
+        ->assertSee($customer->name);
+});
+
+it('exports csv containing separated sections for lo facturado and pagos por cliente', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create(['user_id' => $admin->id]);
+
+    PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::Purchased,
+        'unit_price' => 250.0,
+        'quantity' => 1,
+    ]);
+
+    Payment::factory()->create([
+        'customer_id' => $customer->id,
+        'invoice_total' => 250.0,
+        'amount_paid' => 250.0,
+        'created_at' => now(),
+    ]);
+
+    $this->actingAs($admin);
+
+    $component = Livewire::test(ReportsIndex::class)
+        ->call('exportReportCsv');
+
+    $component->assertFileDownloaded();
 });
