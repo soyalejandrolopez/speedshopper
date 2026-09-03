@@ -144,22 +144,24 @@
 
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('What service do you need?') }} *</h3>
-                    <p class="mt-1 text-xs text-gray-500">{{ __('Select one or more options.') }}</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Selecciona el servicio principal (Personal Shopper o Comprar Online). Puedes añadir Reempaque si requieres embalaje.') }}</p>
                     <div class="mt-3 grid gap-3 sm:grid-cols-3">
                         @foreach ($this->serviceDefinitions() as $key => $svc)
-                            <label class="relative flex flex-col justify-between rounded-2xl border-2 p-3.5 cursor-pointer transition-all duration-200 hover:shadow-sm {{ in_array($key, $form['services'], true) ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-500' : 'border-gray-200 bg-white hover:border-emerald-300' }}">
+                            <button type="button" wire:click="selectService('{{ $key }}')"
+                                    class="relative flex flex-col justify-between text-start rounded-2xl border-2 p-3.5 cursor-pointer transition-all duration-200 hover:shadow-sm {{ in_array($key, $form['services'], true) ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-500' : 'border-gray-200 bg-white hover:border-emerald-300' }}">
                                 <div class="flex items-start justify-between gap-2">
                                     <div class="flex h-9 w-9 items-center justify-center rounded-xl {{ in_array($key, $form['services'], true) ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600' }}">
                                         <i class="fa-solid {{ $svc['icon'] }} text-sm"></i>
                                     </div>
-                                    <input type="checkbox" value="{{ $key }}" wire:model.live="form.services"
-                                           class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                    <span class="flex h-5 w-5 items-center justify-center rounded-md border {{ in_array($key, $form['services'], true) ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-gray-300 bg-white text-transparent' }}">
+                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                    </span>
                                 </div>
                                 <div class="mt-3">
                                     <p class="text-sm font-bold text-gray-900">{{ $svc['title'] }}</p>
                                     <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $svc['subtitle'] }}</p>
                                 </div>
-                            </label>
+                            </button>
                         @endforeach
                     </div>
                     @error('form.services') <p class="mt-1.5 text-xs text-red-600 font-semibold">{{ $message }}</p> @enderror
@@ -437,26 +439,28 @@
                     </div>
                 </div>
 
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ __('For Online Shopping or Package Reception') }}</h3>
-                    <div class="mt-3 space-y-3">
-                        <div>
-                            <span class="label">{{ __('Did you already make the purchase?') }}</span>
-                            <div class="flex gap-4 text-sm text-gray-700">
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
-                                <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
+                @if (in_array('online_shopping', $form['services'], true))
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-900">{{ __('For Online Shopping or Package Reception') }}</h3>
+                        <div class="mt-3 space-y-3">
+                            <div>
+                                <span class="label">{{ __('Did you already make the purchase?') }}</span>
+                                <div class="flex gap-4 text-sm text-gray-700">
+                                    <label class="inline-flex items-center gap-2"><input type="radio" value="yes" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('Yes') }}</label>
+                                    <label class="inline-flex items-center gap-2"><input type="radio" value="no" wire:model="form.already_purchased" class="text-emerald-600 focus:ring-emerald-500"> {{ __('No') }}</label>
+                                </div>
                             </div>
+                            @if ($this->form['already_purchased'] === 'yes')
+                                <div class="grid gap-3 sm:grid-cols-2">
+                                    <div><label class="label" for="store_name">{{ __('Store name') }}</label><input id="store_name" name="store_name" autocomplete="off" type="text" wire:model="form.store_name" class="input"></div>
+                                    <div><label class="label" for="order_number">{{ __('Order number') }}</label><input id="order_number" name="order_number" autocomplete="off" type="text" wire:model="form.order_number" class="input"></div>
+                                    <div><label class="label" for="tracking_number">{{ __('Tracking number') }}</label><input id="tracking_number" name="tracking_number" autocomplete="off" type="text" wire:model="form.tracking_number" class="input"></div>
+                                    <div><label class="label" for="approx_packages">{{ __('Approximate number of packages') }}</label><input id="approx_packages" name="approx_packages" autocomplete="off" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
+                                </div>
+                            @endif
                         </div>
-                        @if ($this->form['already_purchased'] === 'yes')
-                            <div class="grid gap-3 sm:grid-cols-2">
-                                <div><label class="label" for="store_name">{{ __('Store name') }}</label><input id="store_name" name="store_name" autocomplete="off" type="text" wire:model="form.store_name" class="input"></div>
-                                <div><label class="label" for="order_number">{{ __('Order number') }}</label><input id="order_number" name="order_number" autocomplete="off" type="text" wire:model="form.order_number" class="input"></div>
-                                <div><label class="label" for="tracking_number">{{ __('Tracking number') }}</label><input id="tracking_number" name="tracking_number" autocomplete="off" type="text" wire:model="form.tracking_number" class="input"></div>
-                                <div><label class="label" for="approx_packages">{{ __('Approximate number of packages') }}</label><input id="approx_packages" name="approx_packages" autocomplete="off" type="number" min="0" wire:model="form.approx_packages" class="input"></div>
-                            </div>
-                        @endif
                     </div>
-                </div>
+                @endif
             @endif
 
             @if ($this->step === 3)

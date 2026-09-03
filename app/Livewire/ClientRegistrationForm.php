@@ -130,10 +130,54 @@ class ClientRegistrationForm extends Component
         }
     }
 
+    public function selectService(string $key): void
+    {
+        $current = $this->form['services'];
+
+        if ($key === 'personal_shopper') {
+            if (in_array('personal_shopper', $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, ['personal_shopper']));
+            } else {
+                $this->form['services'] = array_values(array_unique(array_merge(
+                    array_diff($current, ['online_shopping']),
+                    ['personal_shopper']
+                )));
+            }
+        } elseif ($key === 'online_shopping') {
+            if (in_array('online_shopping', $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, ['online_shopping']));
+            } else {
+                $this->form['services'] = array_values(array_unique(array_merge(
+                    array_diff($current, ['personal_shopper']),
+                    ['online_shopping']
+                )));
+            }
+        } else {
+            if (in_array($key, $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, [$key]));
+            } else {
+                $this->form['services'][] = $key;
+            }
+        }
+    }
+
+    public function updatedFormServices(mixed $value): void
+    {
+        if (! is_array($value)) {
+            return;
+        }
+
+        if (in_array('personal_shopper', $value, true) && in_array('online_shopping', $value, true)) {
+            $last = end($value);
+            $toRemove = $last === 'personal_shopper' ? 'online_shopping' : 'personal_shopper';
+            $this->form['services'] = array_values(array_filter($value, fn ($s) => $s !== $toRemove));
+        }
+    }
+
     public function next(): void
     {
         $this->validateStep($this->step);
-        $this->step = min(self::TOTAL_STEPS, $this->step + 1);
+        $this->step++;
     }
 
     public function back(): void
@@ -143,7 +187,7 @@ class ClientRegistrationForm extends Component
 
     public function submit(): void
     {
-        $this->validate($this->rules());
+        $this->validate();
 
         $customer = Customer::firstOrCreate(
             ['email' => $this->form['email']],
@@ -153,19 +197,25 @@ class ClientRegistrationForm extends Component
                 'country' => $this->form['country'] ?: null,
                 'city' => $this->form['city'] ?: null,
                 'address' => $this->form['address'] ?: null,
-                'registered_at' => today(),
+                'registered_at' => now(),
             ]
         );
 
-        // Create User Account if password provided
-        if (! empty($this->form['password'])) {
+        $customer->update([
+            'name' => $this->form['name'],
+            'whatsapp' => $this->form['whatsapp'] ?: $customer->whatsapp,
+            'country' => $this->form['country'] ?: $customer->country,
+            'city' => $this->form['city'] ?: $customer->city,
+            'address' => $this->form['address'] ?: $customer->address,
+        ]);
+
+        if ($this->form['create_account'] && ! empty($this->form['password'])) {
             $user = User::where('email', $this->form['email'])->first();
             if (! $user) {
                 $user = User::create([
                     'name' => $this->form['name'],
                     'email' => $this->form['email'],
                     'password' => Hash::make($this->form['password']),
-                    'phone' => $this->form['whatsapp'] ?: null,
                     'whatsapp' => $this->form['whatsapp'] ?: null,
                     'country' => $this->form['country'] ?: null,
                 ]);
@@ -190,6 +240,11 @@ class ClientRegistrationForm extends Component
             $services[] = 'packing';
         }
 
+        // Evitar superposición: personal_shopper y online_shopping son modalidades de compra mutuamente excluyentes
+        if (in_array('personal_shopper', $services, true) && in_array('online_shopping', $services, true)) {
+            $services = array_values(array_filter($services, fn ($s) => $s !== 'online_shopping'));
+        }
+
         $budget = ! empty($this->form['budget']) ? (float) $this->form['budget'] : null;
 
         $request = $customer->purchaseRequests()->create([
@@ -208,7 +263,7 @@ class ClientRegistrationForm extends Component
         $largeRate = (float) ($rates['box_large_heavy_duty'] ?? 25.0);
         $deliveryRate = (float) ($rates['warehouse_delivery_fee'] ?? 20.0);
 
-        // 1. Personal Shopper Cost Items
+        // 1. Personal Shopper Cost Items (Compras en tiendas físicas)
         if (in_array('personal_shopper', $services, true) || empty($services)) {
             if ($budget !== null && $budget > 0) {
                 CostItem::create([
@@ -230,17 +285,15 @@ class ClientRegistrationForm extends Component
                     'amount' => $commAmount,
                 ]);
             }
-        }
-
-        // 2. Comprar Online Cost Items
-        if (in_array('online_shopping', $services, true)) {
+        } elseif (in_array('online_shopping', $services, true)) {
+            // 2. Comprar Online Cost Items (Cliente compra por su cuenta en tiendas online)
             if ($budget !== null && $budget > 0) {
                 CostItem::create([
                     'costable_type' => PurchaseRequest::class,
                     'costable_id' => $request->id,
                     'type' => CostType::ProductCost,
                     'description' => 'Valor Pagado en Internet: $'.number_format($budget, 2).' (No se cobra en factura)',
-                    'amount' => $budget,
+                    'amount' => 0.0,
                 ]);
 
                 $onlinePercent = (float) ($rates['warehouse_percent'] ?? 15.0);

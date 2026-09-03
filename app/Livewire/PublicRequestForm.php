@@ -95,6 +95,37 @@ class PublicRequestForm extends Component
         }
     }
 
+    public function selectService(string $key): void
+    {
+        $current = $this->form['services'];
+
+        if ($key === 'personal_shopper') {
+            if (in_array('personal_shopper', $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, ['personal_shopper']));
+            } else {
+                $this->form['services'] = array_values(array_unique(array_merge(
+                    array_diff($current, ['online_shopping']),
+                    ['personal_shopper']
+                )));
+            }
+        } elseif ($key === 'online_shopping') {
+            if (in_array('online_shopping', $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, ['online_shopping']));
+            } else {
+                $this->form['services'] = array_values(array_unique(array_merge(
+                    array_diff($current, ['personal_shopper']),
+                    ['online_shopping']
+                )));
+            }
+        } else {
+            if (in_array($key, $current, true)) {
+                $this->form['services'] = array_values(array_diff($current, [$key]));
+            } else {
+                $this->form['services'][] = $key;
+            }
+        }
+    }
+
     /** @return array{product_name: string, product_url: string, description: string, quantity: int, unit_price: ?float} */
     protected function emptyItem(): array
     {
@@ -266,17 +297,15 @@ class PublicRequestForm extends Component
                         'amount' => $commAmount,
                     ]);
                 }
-            }
-
-            // 2. Buy Online Cost Items
-            if (in_array('online_shopping', $services, true)) {
+            } elseif (in_array('online_shopping', $services, true)) {
+                // 2. Buy Online Cost Items
                 if ($itemSubtotal > 0) {
                     CostItem::create([
                         'costable_type' => PurchaseRequest::class,
                         'costable_id' => $req->id,
                         'type' => CostType::ProductCost,
                         'description' => 'Valor Pagado en Internet: $'.number_format($itemSubtotal, 2).' (No se cobra en factura)',
-                        'amount' => $itemSubtotal,
+                        'amount' => 0.0,
                     ]);
 
                     $onlinePercent = (float) ($rates['warehouse_percent'] ?? 15.0);
