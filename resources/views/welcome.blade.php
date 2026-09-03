@@ -27,12 +27,12 @@
                 <img src="{{ asset('images/hero-bg.jpg') }}" alt="{{ __('A couple shopping with bags from the United States') }}"
                      class="h-full w-full object-cover hero-bg-cover" width="1920" height="1080" decoding="async" fetchpriority="high">
             </picture>
-            <!-- Sombra general en toda la imagen para contraste y nitidez completa -->
-            <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.52);"></div>
-            <!-- Viñeta superior para legibilidad óptima del menú y enlaces -->
-            <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 25%, transparent 50%);"></div>
-            <!-- Sombra inferior para resaltar el titular, botones y acreditaciones -->
-            <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 40%, transparent 70%);"></div>
+            <!-- Sombra general en toda la imagen (más clara para mayor vitalidad y brillo) -->
+            <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.32);"></div>
+            <!-- Viñeta superior suave para legibilidad del menú -->
+            <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 20%, transparent 40%);"></div>
+            <!-- Sombra inferior suave para resaltar titular y botones -->
+            <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.40) 35%, transparent 65%);"></div>
         </div>
 
         <div class="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-end px-4 pt-32 pb-20 sm:pb-28 lg:pb-32 text-center sm:px-6">
