@@ -471,7 +471,7 @@
                             </div>
                         </div>
                         @if ($this->form['courier'] === 'yes')
-                            <div><label class="label" for="courier_name">{{ __('Company name') }}</label><input id="courier_name" name="courier_name" autocomplete="off" type="text" wire:model="form.courier_name" class="input"></div>
+                            <div><label class="label" for="courier_name">{{ __('Company name') }}</label><input id="courier_name" name="courier_name" autocomplete="off" type="text" maxlength="255" wire:model="form.courier_name" class="input"></div>
                         @endif
                         <div>
                             <span class="label">{{ __('Do you need help coordinating the shipment?') }}</span>
@@ -485,7 +485,8 @@
 
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('Comments or Special Instructions') }}</h3>
-                    <textarea rows="3" wire:model="form.comments" class="input mt-3"></textarea>
+                    <textarea id="comments" name="comments" rows="3" maxlength="2000" wire:model="form.comments" class="input mt-3"></textarea>
+                    @error('form.comments') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>

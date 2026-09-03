@@ -414,7 +414,7 @@ class ClientRegistrationForm extends Component
             'form.courier' => ['nullable', 'in:yes,no'],
             'form.courier_name' => ['nullable', 'string', 'max:255'],
             'form.need_shipping_coordination' => ['nullable', 'in:yes,no'],
-            'form.comments' => ['nullable', 'string', 'max:3000'],
+            'form.comments' => ['nullable', 'string', 'max:2000'],
             'form.confirm_correct' => ['accepted'],
             'form.accept_costs' => ['accepted'],
             'form.accept_contact' => ['accepted'],

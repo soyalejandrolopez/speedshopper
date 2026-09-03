@@ -83,3 +83,42 @@ it('accepts valid step 2 boundary lengths in ClientRegistrationForm', function (
             'form.find_deals',
         ]);
 });
+
+it('validates step 3 field limits and confirmations in ClientRegistrationForm', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('step', 3)
+        ->set('form.courier_name', str_repeat('c', 256))
+        ->set('form.comments', str_repeat('m', 2001))
+        ->set('form.confirm_correct', false)
+        ->set('form.accept_costs', false)
+        ->set('form.accept_contact', false)
+        ->call('submit')
+        ->assertHasErrors([
+            'form.courier_name' => 'max',
+            'form.comments' => 'max',
+            'form.confirm_correct' => 'accepted',
+            'form.accept_costs' => 'accepted',
+            'form.accept_contact' => 'accepted',
+        ]);
+});
+
+it('accepts valid step 3 boundary lengths in ClientRegistrationForm', function () {
+    Livewire::test(ClientRegistrationForm::class)
+        ->set('step', 3)
+        ->set('form.courier', 'yes')
+        ->set('form.courier_name', str_repeat('c', 255))
+        ->set('form.need_shipping_coordination', 'no')
+        ->set('form.comments', str_repeat('m', 2000))
+        ->set('form.confirm_correct', true)
+        ->set('form.accept_costs', true)
+        ->set('form.accept_contact', true)
+        ->assertHasNoErrors([
+            'form.courier',
+            'form.courier_name',
+            'form.need_shipping_coordination',
+            'form.comments',
+            'form.confirm_correct',
+            'form.accept_costs',
+            'form.accept_contact',
+        ]);
+});
