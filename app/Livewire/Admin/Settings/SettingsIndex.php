@@ -112,6 +112,24 @@ class SettingsIndex extends Component
         $this->swalUpdated();
     }
 
+    public function saveThemeColor(?string $color = null): void
+    {
+        abort_unless(auth()->user()->isAdmin(), 403);
+
+        $color = $color ?: ($this->settings['theme_color'] ?? '#059669');
+        $color = trim((string) $color);
+
+        if (! str_starts_with($color, '#')) {
+            $color = '#'.$color;
+        }
+
+        $this->settings['theme_color'] = $color;
+        Setting::set('theme_color', $color);
+
+        $this->dispatch('theme-color-saved', color: $color);
+        $this->swalSaved(__('Color del tema sincronizado en todo el proyecto.'));
+    }
+
     public function sendTestEmail(): void
     {
         abort_unless(auth()->user()->isAdmin(), 403);

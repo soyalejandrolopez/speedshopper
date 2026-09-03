@@ -215,14 +215,24 @@
                     <label class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5">
                         <span class="h-8 w-8 rounded-lg border border-gray-300 shadow-inner" style="background-color: {{ $settings['theme_color'] }}"></span>
                         <input type="color" wire:model.live="settings.theme_color"
+                               @change="$wire.saveThemeColor(activeColor)"
                                class="h-8 w-12 cursor-pointer rounded border border-gray-300 bg-white p-0">
                         <input type="text" wire:model.live="settings.theme_color"
+                               @change="$wire.saveThemeColor(activeColor)"
                                class="w-24 rounded-lg border border-gray-300 text-sm uppercase focus:border-emerald-500 focus:ring-emerald-500">
                     </label>
 
+                    <button type="button" wire:click="saveThemeColor"
+                            class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-95">
+                        <i class="fa-solid fa-palette text-xs"></i>
+                        {{ __('Guardar y Aplicar Color') }}
+                    </button>
+
                     <div class="flex flex-wrap items-center gap-2">
-                        @foreach (['#670753', '#059669', '#2563eb', '#4f46e5', '#7c3aed', '#e11d48', '#ea580c', '#d97706', '#0891b2', '#65a30d', '#475569'] as $preset)
-                            <button type="button" wire:click="$set('settings.theme_color', '{{ $preset }}')"
+                        @foreach (['#d86ec1', '#670753', '#059669', '#2563eb', '#4f46e5', '#7c3aed', '#e11d48', '#ea580c', '#d97706', '#0891b2', '#65a30d', '#475569'] as $preset)
+                            <button type="button"
+                                    @click="activeColor = '{{ $preset }}'"
+                                    wire:click="saveThemeColor('{{ $preset }}')"
                                     class="h-8 w-8 rounded-full border-2 border-white shadow-md transition-transform hover:scale-110"
                                     style="background-color: {{ $preset }}"
                                     title="{{ $preset }}"></button>

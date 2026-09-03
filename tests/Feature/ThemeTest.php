@@ -63,3 +63,20 @@ it('injects #670753 custom color across emerald, teal and brand families', funct
         ->assertSee('--color-teal-500: #670753')
         ->assertSee('--theme-color: #670753');
 });
+
+it('saves and synchronizes theme color immediately with saveThemeColor', function () {
+    $this->actingAs(createAdmin());
+
+    Livewire::test(SettingsIndex::class)
+        ->call('saveThemeColor', '#d86ec1')
+        ->assertDispatched('theme-color-saved', color: '#d86ec1');
+
+    expect(Setting::get('theme_color'))->toBe('#d86ec1');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('--color-emerald-500: #d86ec1')
+        ->assertSee('--color-teal-500: #d86ec1')
+        ->assertSee('--color-brand-500: #d86ec1')
+        ->assertSee('--theme-color: #d86ec1');
+});
