@@ -1,5 +1,12 @@
 @php
     $isHome = request()->routeIs('home');
+    $isEs = app()->getLocale() === 'es';
+    $esClass = $isEs
+        ? "(scrolled || !".($isHome ? 'true' : 'false')." ? 'font-bold text-emerald-700' : 'font-bold text-white')"
+        : "(scrolled || !".($isHome ? 'true' : 'false')." ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')";
+    $enClass = !$isEs
+        ? "(scrolled || !".($isHome ? 'true' : 'false')." ? 'font-bold text-emerald-700' : 'font-bold text-white')"
+        : "(scrolled || !".($isHome ? 'true' : 'false')." ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')";
 @endphp
 
 <header x-data="{ open: false, scrolled: false }"
@@ -30,11 +37,9 @@
         <div class="hidden items-center gap-3.5 lg:flex">
             <div class="flex items-center gap-1 border-e pe-3 text-xs transition-colors"
                  :class="scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'border-gray-200' : 'border-white/30'">
-                <a href="{{ route('locale.switch', 'es') }}"
-                   :class="app()->getLocale() === 'es' ? (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'font-bold text-emerald-700' : 'font-bold text-white') : (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')">ES</a>
+                <a href="{{ route('locale.switch', 'es') }}" :class="{{ $esClass }}">ES</a>
                 <span :class="scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-300' : 'text-white/50'">/</span>
-                <a href="{{ route('locale.switch', 'en') }}"
-                   :class="app()->getLocale() === 'en' ? (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'font-bold text-emerald-700' : 'font-bold text-white') : (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')">EN</a>
+                <a href="{{ route('locale.switch', 'en') }}" :class="{{ $enClass }}">EN</a>
             </div>
 
             <a href="{{ route('request') }}" class="btn-primary px-5 py-2.5 shadow-md shadow-emerald-950/20" wire:navigate>
@@ -63,11 +68,9 @@
 
         <div class="flex items-center gap-3 lg:hidden">
             <div class="flex items-center gap-1 text-xs">
-                <a href="{{ route('locale.switch', 'es') }}"
-                   :class="app()->getLocale() === 'es' ? (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'font-bold text-emerald-700' : 'font-bold text-white') : (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')">ES</a>
+                <a href="{{ route('locale.switch', 'es') }}" :class="{{ $esClass }}">ES</a>
                 <span :class="scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-300' : 'text-white/50'">/</span>
-                <a href="{{ route('locale.switch', 'en') }}"
-                   :class="app()->getLocale() === 'en' ? (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'font-bold text-emerald-700' : 'font-bold text-white') : (scrolled || !{{ $isHome ? 'true' : 'false' }} ? 'text-gray-400 hover:text-gray-600' : 'text-white/70 hover:text-white')">EN</a>
+                <a href="{{ route('locale.switch', 'en') }}" :class="{{ $enClass }}">EN</a>
             </div>
 
             <button @click="open = ! open" class="rounded-xl p-2.5 transition-colors"
