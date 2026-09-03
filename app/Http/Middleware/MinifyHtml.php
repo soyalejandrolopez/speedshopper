@@ -30,7 +30,7 @@ class MinifyHtml
 
             // Extraer y preservar bloques sensibles a saltos de línea (scripts, estilos, pre, textarea)
             $html = preg_replace_callback('/<(script|style|pre|textarea)\b[^>]*>.*?<\/\1>/is', function ($matches) use (&$placeholders) {
-                $id = '<!--_PRESERVE_BLOCK_'.count($placeholders).'_-->';
+                $id = '@@@_PRESERVE_BLOCK_'.count($placeholders).'_@@@';
                 $placeholders[$id] = $matches[0];
 
                 return $id;
@@ -39,7 +39,7 @@ class MinifyHtml
             // Extraer y preservar el arte ASCII para no dañar sus espacios
             $html = preg_replace_callback('/<!--(.*?)-->/s', function ($matches) use (&$placeholders) {
                 if (str_contains($matches[0], '██')) {
-                    $id = '<!--_ASCII_ART_'.count($placeholders).'_-->';
+                    $id = '@@@_ASCII_ART_'.count($placeholders).'_@@@';
                     $placeholders[$id] = "\n".$matches[0]."\n";
 
                     return $id;

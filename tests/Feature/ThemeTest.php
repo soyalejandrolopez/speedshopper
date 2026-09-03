@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Middleware\MinifyHtml;
 use App\Livewire\Admin\Settings\SettingsIndex;
 use App\Models\Setting;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Livewire\Livewire;
 
 it('builds a shade ramp from a base color', function () {
@@ -79,4 +82,21 @@ it('saves and synchronizes theme color immediately with saveThemeColor', functio
         ->assertSee('--color-teal-500: #d86ec1')
         ->assertSee('--color-brand-500: #d86ec1')
         ->assertSee('--theme-color: #d86ec1');
+});
+
+it('preserves the theme override style tag when MinifyHtml runs in production', function () {
+    seedRoles();
+    Setting::set('theme_color', '#d86ec1');
+
+    $request = Request::create('/', 'GET');
+    $middleware = new MinifyHtml;
+    $rawHtml = view('welcome')->render();
+    $response = new Response($rawHtml, 200, ['Content-Type' => 'text/html']);
+
+    app()->detectEnvironment(fn () => 'production');
+
+    $minified = $middleware->handle($request, fn () => $response)->getContent();
+
+    expect($minified)->toContain('id="site-theme-override"')
+        ->toContain('--color-emerald-500: #d86ec1');
 });
