@@ -157,7 +157,55 @@
             </div>
         </div>
 
-        <div class="rounded-xl border border-gray-200 bg-white">
+        <div x-data="{
+                activeColor: @entangle('settings.theme_color').live,
+                applyLiveTheme(hex) {
+                    if (!hex || typeof hex !== 'string') return;
+                    hex = hex.trim().replace(/^#/, '');
+                    if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                    if (hex.length !== 6 || !/^[0-9a-fA-F]{6}$/.test(hex)) return;
+
+                    const r = parseInt(hex.substring(0, 2), 16);
+                    const g = parseInt(hex.substring(2, 4), 16);
+                    const b = parseInt(hex.substring(4, 6), 16);
+
+                    const lighter = { 50: 0.90, 100: 0.80, 200: 0.66, 300: 0.50, 400: 0.33 };
+                    const darker  = { 600: 0.22, 700: 0.38, 800: 0.52, 900: 0.64, 950: 0.80 };
+
+                    const toHex = (n) => ('0' + Math.max(0, Math.min(255, Math.round(n))).toString(16)).slice(-2);
+                    const ramp = { '500': '#' + hex.toLowerCase() };
+
+                    for (const [shade, w] of Object.entries(lighter)) {
+                        ramp[shade] = '#' + toHex(r + (255 - r) * w) + toHex(g + (255 - g) * w) + toHex(b + (255 - b) * w);
+                    }
+                    for (const [shade, k] of Object.entries(darker)) {
+                        ramp[shade] = '#' + toHex(r * (1 - k)) + toHex(g * (1 - k)) + toHex(b * (1 - k));
+                    }
+
+                    let styleTag = document.getElementById('site-theme-override');
+                    if (!styleTag) {
+                        styleTag = document.createElement('style');
+                        styleTag.id = 'site-theme-override';
+                        document.head.appendChild(styleTag);
+                    }
+
+                    let css = `--theme-color: ${ramp['500']}; --theme-primary: ${ramp['600']}; --theme-primary-hover: ${ramp['700']}; --theme-primary-light: ${ramp['50']}; `;
+                    ['emerald', 'teal', 'brand'].forEach(family => {
+                        for (const [shade, val] of Object.entries(ramp)) {
+                            css += `--color-${family}-${shade}: ${val}; `;
+                        }
+                    });
+
+                    styleTag.textContent = `:root { ${css} }`;
+
+                    let meta = document.querySelector('meta[name="theme-color-custom"]');
+                    if (meta) {
+                        meta.content = css;
+                    }
+                }
+            }"
+            x-init="applyLiveTheme(activeColor); $watch('activeColor', val => applyLiveTheme(val))"
+            class="rounded-xl border border-gray-200 bg-white">
             <div class="border-b border-gray-200 px-5 py-3">
                 <h3 class="text-sm font-semibold text-gray-900">{{ __('Site Theme') }}</h3>
                 <p class="mt-0.5 text-xs text-gray-500">{{ __('Pick the main color of the website, portal and reports. It applies everywhere automatically.') }}</p>

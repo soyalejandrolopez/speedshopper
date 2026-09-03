@@ -9,7 +9,21 @@
             }
         }
     @endphp
-    <style>:root { {{ $css }} }</style>
+    <style id="site-theme-override">:root { {{ $css }} }</style>
     <meta name="theme-color-custom" content="{{ $css }}">
+    <script>
+        document.addEventListener('livewire:navigated', function() {
+            var meta = document.querySelector('meta[name="theme-color-custom"]');
+            if (meta && meta.content) {
+                var style = document.getElementById('site-theme-override');
+                if (!style) {
+                    style = document.createElement('style');
+                    style.id = 'site-theme-override';
+                    document.head.appendChild(style);
+                }
+                style.textContent = ':root { ' + meta.content + ' }';
+            }
+        });
+    </script>
 @endunless
 

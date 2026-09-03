@@ -342,7 +342,7 @@
                     ['fa-solid fa-boxes-stacked', __('Smart consolidation'), __('We join all your packages into one box to save you on international shipping.'), 'from-teal-500 to-cyan-600'],
                     ['fa-solid fa-table-cells', __('Real-time tracking'), __('Follow every package from Baytown to your door from your private account.'), 'from-emerald-500 to-lime-500'],
                     ['fa-solid fa-fire', __('Deals and discounts'), __('We look for the best promotions and coupons so you always pay less.'), 'from-amber-500 to-orange-500'],
-                    ['fa-solid fa-shield-halved', __('Secure packing'), __('Your items are packed with care and protection so they arrive in perfect condition.'), 'from-emerald-500 to-green-600'],
+                    ['fa-solid fa-shield-halved', __('Secure packing'), __('Your items are packed with care and protection so they arrive in perfect condition.'), 'from-emerald-500 to-emerald-600'],
                     ['fa-brands fa-whatsapp', __('Personal attention'), __('Direct communication by WhatsApp at every step of your order.'), 'from-sky-500 to-indigo-500'],
                 ]; @endphp
 

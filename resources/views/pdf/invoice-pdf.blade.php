@@ -251,7 +251,7 @@
                     <img src="{{ $logoBase64 }}" class="logo-img" alt="{{ $companyName }}">
                 @else
                     <h1 class="company-title">{{ $companyName }}</h1>
-                    <div style="font-size: 10px; color: #059669; font-weight: bold; text-transform: uppercase;">
+                    <div style="font-size: 10px; color: {{ $c600 }}; font-weight: bold; text-transform: uppercase;">
                         {{ $locale === 'es' ? 'Personal Shopper & Logística' : 'Personal Shopper & Logistics' }}
                     </div>
                 @endif

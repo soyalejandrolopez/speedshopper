@@ -105,6 +105,10 @@ class SettingsIndex extends Component
 
         app()->getProvider(MailConfigServiceProvider::class)?->apply();
 
+        if (isset($validated['settings']['theme_color'])) {
+            $this->dispatch('theme-color-saved', color: (string) $validated['settings']['theme_color']);
+        }
+
         $this->swalUpdated();
     }
 
