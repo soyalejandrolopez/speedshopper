@@ -297,8 +297,10 @@ class PublicRequestForm extends Component
                         'amount' => $commAmount,
                     ]);
                 }
-            } elseif (in_array('online_shopping', $services, true)) {
-                // 2. Buy Online Cost Items
+            }
+
+            // 2. Buy Online Cost Items
+            if (in_array('online_shopping', $services, true)) {
                 if ($itemSubtotal > 0) {
                     CostItem::create([
                         'costable_type' => PurchaseRequest::class,

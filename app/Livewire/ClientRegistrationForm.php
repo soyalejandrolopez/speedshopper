@@ -134,43 +134,10 @@ class ClientRegistrationForm extends Component
     {
         $current = $this->form['services'];
 
-        if ($key === 'personal_shopper') {
-            if (in_array('personal_shopper', $current, true)) {
-                $this->form['services'] = array_values(array_diff($current, ['personal_shopper']));
-            } else {
-                $this->form['services'] = array_values(array_unique(array_merge(
-                    array_diff($current, ['online_shopping']),
-                    ['personal_shopper']
-                )));
-            }
-        } elseif ($key === 'online_shopping') {
-            if (in_array('online_shopping', $current, true)) {
-                $this->form['services'] = array_values(array_diff($current, ['online_shopping']));
-            } else {
-                $this->form['services'] = array_values(array_unique(array_merge(
-                    array_diff($current, ['personal_shopper']),
-                    ['online_shopping']
-                )));
-            }
+        if (in_array($key, $current, true)) {
+            $this->form['services'] = array_values(array_diff($current, [$key]));
         } else {
-            if (in_array($key, $current, true)) {
-                $this->form['services'] = array_values(array_diff($current, [$key]));
-            } else {
-                $this->form['services'][] = $key;
-            }
-        }
-    }
-
-    public function updatedFormServices(mixed $value): void
-    {
-        if (! is_array($value)) {
-            return;
-        }
-
-        if (in_array('personal_shopper', $value, true) && in_array('online_shopping', $value, true)) {
-            $last = end($value);
-            $toRemove = $last === 'personal_shopper' ? 'online_shopping' : 'personal_shopper';
-            $this->form['services'] = array_values(array_filter($value, fn ($s) => $s !== $toRemove));
+            $this->form['services'][] = $key;
         }
     }
 
@@ -240,11 +207,6 @@ class ClientRegistrationForm extends Component
             $services[] = 'packing';
         }
 
-        // Evitar superposición: personal_shopper y online_shopping son modalidades de compra mutuamente excluyentes
-        if (in_array('personal_shopper', $services, true) && in_array('online_shopping', $services, true)) {
-            $services = array_values(array_filter($services, fn ($s) => $s !== 'online_shopping'));
-        }
-
         $budget = ! empty($this->form['budget']) ? (float) $this->form['budget'] : null;
 
         $request = $customer->purchaseRequests()->create([
@@ -285,8 +247,10 @@ class ClientRegistrationForm extends Component
                     'amount' => $commAmount,
                 ]);
             }
-        } elseif (in_array('online_shopping', $services, true)) {
-            // 2. Comprar Online Cost Items (Cliente compra por su cuenta en tiendas online)
+        }
+
+        // 2. Comprar Online Cost Items (Cliente compra por su cuenta en tiendas online)
+        if (in_array('online_shopping', $services, true)) {
             if ($budget !== null && $budget > 0) {
                 CostItem::create([
                     'costable_type' => PurchaseRequest::class,

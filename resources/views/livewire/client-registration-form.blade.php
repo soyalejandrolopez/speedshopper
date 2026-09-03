@@ -144,7 +144,7 @@
 
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">{{ __('What service do you need?') }} *</h3>
-                    <p class="mt-1 text-xs text-gray-500">{{ __('Selecciona el servicio principal (Personal Shopper o Comprar Online). Puedes añadir Reempaque si requieres embalaje.') }}</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Select one or more options.') }}</p>
                     <div class="mt-3 grid gap-3 sm:grid-cols-3">
                         @foreach ($this->serviceDefinitions() as $key => $svc)
                             <button type="button" wire:click="selectService('{{ $key }}')"
