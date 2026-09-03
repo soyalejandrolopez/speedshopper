@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "laravel.vscode-laravel",
+        "bmewburn.vscode-intelephense-client",
+        "bradlc.vscode-tailwindcss",
+        "onecentlin.laravel-blade",
+        "shufo.vscode-blade-formatter",
+        "open-southeners.laravel-pint",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "mikestead.dotenv",
+        "editorconfig.editorconfig"
+    ]
+}

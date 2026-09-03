@@ -1,0 +1,16 @@
+{
+    "css.lint.unknownAtRules": "ignore",
+    "files.associations": {
+        "*.blade.php": "blade"
+    },
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+    },
+    "[php]": {
+        "editor.defaultFormatter": "open-southeners.laravel-pint"
+    },
+    "tailwindCSS.includeLanguages": {
+        "blade": "html"
+    },
+    "intelephense.diagnostics.undefinedMethods": false
+}
