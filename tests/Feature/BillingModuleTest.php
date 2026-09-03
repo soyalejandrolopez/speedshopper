@@ -741,3 +741,20 @@ test('billing index supports multi-service selection combining personal shopper 
         ->assertSet('selectedServices', ['personal_shopper', 'repack'])
         ->assertSet('invoicedTotal', 170.0);
 });
+
+test('editInvoice does not preselect Paid / Full payment received by default', function () {
+    $admin = createAdmin();
+    $customer = Customer::factory()->create();
+    $request = PurchaseRequest::factory()->create([
+        'customer_id' => $customer->id,
+        'status' => RequestStatus::New,
+        'unit_price' => 500.0,
+    ]);
+
+    Livewire::actingAs($admin)
+        ->test(BillingIndex::class)
+        ->call('editInvoice', $request->id)
+        ->assertSet('invoiceType', 'cotizacion')
+        ->assertSet('invoiceForm.invoice_type', 'cotizacion')
+        ->assertNotSet('invoiceType', 'pagado');
+});

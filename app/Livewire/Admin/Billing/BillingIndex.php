@@ -427,12 +427,12 @@ class BillingIndex extends Component
             ->where('billable_id', $request->id)
             ->sum('amount_paid');
 
-        if ($request->status === RequestStatus::Quoted) {
-            $this->invoiceType = 'cotizacion';
-        } elseif ($request->status === RequestStatus::AwaitingPayment) {
+        if ($request->status === RequestStatus::AwaitingPayment) {
             $this->invoiceType = 'pendiente';
         } else {
-            $this->invoiceType = 'pagado';
+            // Default to 'cotizacion' (Cotización / Presupuesto informativo).
+            // Nunca preseleccionar 'pagado' (Paid / Full payment received) por defecto.
+            $this->invoiceType = 'cotizacion';
         }
 
         $this->invoiceForm = [
@@ -1115,7 +1115,7 @@ class BillingIndex extends Component
                 'required',
                 'numeric',
                 'min:0.01',
-                'max:' . ($this->paymentForm['pending_balance'] ?? 0),
+                'max:'.($this->paymentForm['pending_balance'] ?? 0),
             ],
             'paymentForm.payment_method' => ['required', 'string'],
         ], [
